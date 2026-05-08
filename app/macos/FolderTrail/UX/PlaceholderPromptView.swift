@@ -14,6 +14,7 @@ struct PlaceholderPromptView: View {
     @State private var prompt = ""
     @State private var selectedFolderURL: URL
     @State private var showPreflight = false
+    @State private var showConsentModal = false
     @FocusState private var promptFocused: Bool
     @ObservedObject private var providerSettings: OpenRouterProviderSettings
 
@@ -66,7 +67,13 @@ struct PlaceholderPromptView: View {
             keyboardShortcutButtons
 
             if showPreflight {
-                PreflightView(folderURL: selectedFolderURL)
+                PreflightView(
+                    folderURL: selectedFolderURL,
+                    runner: PreflightRunner(),
+                    providerSettings: providerSettings
+                ) {
+                    showConsentModal = true
+                }
             }
 
             HStack {
@@ -87,6 +94,14 @@ struct PlaceholderPromptView: View {
         }
         .padding(24)
         .frame(minWidth: 520, minHeight: 360)
+        .sheet(isPresented: $showConsentModal) {
+            ConsentModalView(sourceFolderURL: selectedFolderURL) { _ in
+                showConsentModal = false
+            } onCancel: {
+                showConsentModal = false
+            }
+            .interactiveDismissDisabled(true)
+        }
     }
 
     private var keyboardShortcutButtons: some View {
