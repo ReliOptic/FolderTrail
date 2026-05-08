@@ -1,5 +1,17 @@
 import AppKit
 
+enum FolderTrailServiceSelection {
+    static func firstExistingFolderURL(
+        from urls: [URL],
+        fileManager: FileManager = .default
+    ) -> URL? {
+        urls.first { url in
+            var isDirectory: ObjCBool = false
+            return fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) && isDirectory.boolValue
+        }
+    }
+}
+
 @MainActor
 final class FolderTrailServiceProvider: NSObject {
     @objc func openFolderTrail(
@@ -19,14 +31,11 @@ final class FolderTrailServiceProvider: NSObject {
 
     private func firstFolderURL(from pasteboard: NSPasteboard) -> URL? {
         let objects = pasteboard.readObjects(forClasses: [NSURL.self], options: nil)
-        return objects?
+        let urls = objects?
             .compactMap { object in
                 if let url = object as? URL { return url }
                 return (object as? NSURL) as URL?
             }
-            .first(where: { url in
-                var isDirectory: ObjCBool = false
-                return FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory) && isDirectory.boolValue
-            })
+        return FolderTrailServiceSelection.firstExistingFolderURL(from: urls ?? [])
     }
 }
