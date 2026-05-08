@@ -61,10 +61,10 @@ class ProviderConnectContractTests(unittest.TestCase):
         self.assertNotIn("apiKey =", settings, "settings model must not persist the raw API key outside Keychain")
 
         provider_view = read(APP / "UX" / "ProviderConnectView.swift")
-        self.assertIn("Connect OpenRouter", provider_view)
-        self.assertIn("connected", provider_view)
-        self.assertIn("notConnected", provider_view)
-        self.assertIn("Retry", provider_view)
+        self.assertIn("OpenRouter 연결", provider_view)
+        self.assertIn("OpenRouter 연결됨", provider_view)
+        self.assertIn("OpenRouter 연결 필요", provider_view)
+        self.assertIn("다시 연결", provider_view)
         self.assertIn("connectWithBrowser", provider_view)
         self.assertNotRegex(provider_view, r"Text\([^\n]*apiKey", "Provider UI must not render a raw API key")
 

@@ -32,7 +32,7 @@ struct PreflightView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Preflight")
+            Text("시작 전 확인")
                 .font(.headline)
 
             ForEach(runner.checks) { check in
@@ -53,7 +53,7 @@ struct PreflightView: View {
             recoveryActions
 
             if runner.canProceedToConsent {
-                Button("동의 단계로 계속") {
+                Button("안전 작업공간 만들기") {
                     onProceed()
                 }
                 .keyboardShortcut(.defaultAction)

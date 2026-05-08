@@ -23,15 +23,15 @@ enum PreflightCheckID: String, CaseIterable {
     var title: String {
         switch self {
         case .folderReadable:
-            return "Folder is readable"
+            return "폴더를 읽을 수 있음"
         case .workspaceWritable:
-            return "Sibling workspace can be created"
+            return "안전 작업공간을 만들 수 있음"
         case .providerConnected:
-            return "OpenRouter provider is connected"
+            return "OpenRouter 연결됨"
         case .codexAvailable:
-            return "Codex CLI fallback is available"
+            return "Codex fallback 설치됨"
         case .codexAuthenticated:
-            return "Codex CLI fallback is authenticated"
+            return "Codex fallback 로그인됨"
         }
     }
 }
@@ -93,7 +93,7 @@ enum PreflightCheck {
     ) -> PreflightCheckResult {
         fileManager.isReadableFile(atPath: folderURL.path)
             ? .passed
-            : .failed(reason: "FolderTrail cannot read this folder yet.")
+            : .failed(reason: "이 폴더를 아직 읽을 수 없습니다.")
     }
 
     private static func checkSiblingWorkspaceWritable(
@@ -115,7 +115,7 @@ enum PreflightCheck {
             return .passed
         } catch {
             try? fileManager.removeItem(at: probeURL)
-            return .failed(reason: "FolderTrail cannot create a sibling workspace next to this folder.")
+            return .failed(reason: "이 폴더 옆에 안전 작업공간을 만들 수 없습니다.")
         }
     }
 
@@ -125,7 +125,7 @@ enum PreflightCheck {
                 .trimmingCharacters(in: .whitespacesAndNewlines)
             return savedKey?.isEmpty == false
                 ? .passed
-                : .failed(reason: "Connect OpenRouter before running FolderTrail.")
+                : .failed(reason: "OpenRouter를 연결해야 AI 정리를 시작할 수 있습니다.")
         } catch {
             return .failed(reason: error.localizedDescription)
         }
@@ -148,7 +148,7 @@ enum PreflightCheck {
         }
 
         return .failed(
-            reason: "`codex --version` did not succeed from the app environment."
+            reason: "앱 환경에서 `codex --version`이 성공하지 않았습니다."
         )
     }
 
@@ -173,7 +173,7 @@ enum PreflightCheck {
         }
 
         return .failed(
-            reason: "Codex CLI is installed but not authenticated. Run `codex login` in Terminal and finish OAuth, then retry."
+            reason: "Codex CLI는 설치되어 있지만 로그인되어 있지 않습니다. 터미널에서 `codex login`으로 OAuth 로그인을 완료한 뒤 다시 시도해 주세요."
         )
     }
 

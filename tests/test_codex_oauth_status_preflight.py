@@ -11,19 +11,19 @@ class CodexOAuthStatusPreflightTests(unittest.TestCase):
 
         self.assertIn("case codexAvailable", source)
         self.assertIn("case codexAuthenticated", source)
-        self.assertIn("Codex CLI fallback is authenticated", source)
+        self.assertIn("Codex fallback 로그인됨", source)
         self.assertIn("checkCodexAuthenticated", source)
         self.assertIn('"login"', source)
         self.assertIn('"status"', source)
         self.assertIn("codex login status", source)
         self.assertIn("runCodexLoginStatus", source)
-        self.assertIn("Run `codex login`", source)
+        self.assertIn("`codex login`", source)
 
     def test_issue_34_preflight_keeps_install_and_login_failures_distinct(self):
         source = PREFLIGHT.read_text(encoding="utf-8")
 
-        install_failure = "`codex --version` did not succeed from the app environment."
-        auth_failure = "Codex CLI is installed but not authenticated. Run `codex login` in Terminal and finish OAuth, then retry."
+        install_failure = "앱 환경에서 `codex --version`이 성공하지 않았습니다."
+        auth_failure = "Codex CLI는 설치되어 있지만 로그인되어 있지 않습니다. 터미널에서 `codex login`으로 OAuth 로그인을 완료한 뒤 다시 시도해 주세요."
 
         self.assertIn(install_failure, source)
         self.assertIn(auth_failure, source)
