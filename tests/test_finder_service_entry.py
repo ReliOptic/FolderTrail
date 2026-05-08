@@ -15,6 +15,8 @@ PROVIDER_CONNECT_VIEW = APP / "UX" / "ProviderConnectView.swift"
 OPENROUTER_SETTINGS = APP / "Intelligence" / "OpenRouterProviderSettings.swift"
 OPENROUTER_PKCE = APP / "Intelligence" / "OpenRouterPKCE.swift"
 OPENROUTER_KEYCHAIN = APP / "Safety" / "OpenRouterKeychain.swift"
+PREFLIGHT_CHECK = APP / "Safety" / "PreflightCheck.swift"
+PREFLIGHT_VIEW = APP / "UX" / "PreflightView.swift"
 
 
 class FinderServiceEntryContractTests(unittest.TestCase):
@@ -95,6 +97,8 @@ class FinderServiceEntryContractTests(unittest.TestCase):
                     str(OPENROUTER_SETTINGS),
                     str(OPENROUTER_PKCE),
                     str(OPENROUTER_KEYCHAIN),
+                    str(PREFLIGHT_CHECK),
+                    str(PREFLIGHT_VIEW),
                     str(main),
                     "-o",
                     str(exe),

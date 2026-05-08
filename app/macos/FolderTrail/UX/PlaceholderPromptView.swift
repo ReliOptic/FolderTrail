@@ -13,6 +13,7 @@ struct PlaceholderPromptView: View {
 
     @State private var prompt = ""
     @State private var selectedFolderURL: URL
+    @State private var showPreflight = false
     @FocusState private var promptFocused: Bool
     @ObservedObject private var providerSettings: OpenRouterProviderSettings
 
@@ -64,6 +65,10 @@ struct PlaceholderPromptView: View {
 
             keyboardShortcutButtons
 
+            if showPreflight {
+                PreflightView(folderURL: selectedFolderURL)
+            }
+
             HStack {
                 Button("개발용 폴더 선택…") {
                     chooseFolder()
@@ -72,7 +77,9 @@ struct PlaceholderPromptView: View {
                 Spacer()
 
                 if providerSettings.isConnected {
-                    Button("안전 복사본에서 실행") {}
+                    Button("안전 복사본에서 실행") {
+                        showPreflight = true
+                    }
                         .keyboardShortcut(.defaultAction)
                         .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
@@ -108,6 +115,7 @@ struct PlaceholderPromptView: View {
 
         if openPanel.runModal() == .OK, let url = openPanel.url {
             selectedFolderURL = url
+            showPreflight = false
         }
     }
 }
