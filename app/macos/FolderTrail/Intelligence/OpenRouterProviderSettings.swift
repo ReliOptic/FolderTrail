@@ -3,6 +3,7 @@ import Foundation
 enum ProviderConnectionStatus: Equatable {
     case connected(maskedAPIKey: String)
     case notConnected
+    case keychainPermissionNeeded(String)
     case failed(String)
 
     var isConnected: Bool {
@@ -18,10 +19,9 @@ final class OpenRouterProviderSettings: ObservableObject {
     static let shared = OpenRouterProviderSettings()
 
     @Published private(set) var status: ProviderConnectionStatus = .notConnected
+    private var hasCheckedStoredCredentials = false
 
-    init() {
-        refreshStatus()
-    }
+    init() {}
 
     var isConnected: Bool {
         status.isConnected
@@ -32,13 +32,21 @@ final class OpenRouterProviderSettings: ObservableObject {
         case .connected(let maskedValue):
             return maskedValue
         case .notConnected:
-            return "Not connected"
+            return "OpenRouter 연결 필요"
+        case .keychainPermissionNeeded:
+            return "Keychain 허용 필요"
         case .failed:
-            return "Connection failed"
+            return "OpenRouter 연결 실패"
         }
     }
 
-    func refreshStatus() {
+    func refreshStatus(force: Bool = false) {
+        guard force || !hasCheckedStoredCredentials else {
+            return
+        }
+
+        hasCheckedStoredCredentials = true
+
         do {
             if let storedSecret = try OpenRouterKeychain.load(), !storedSecret.isEmpty {
                 status = .connected(maskedAPIKey: mask(storedSecret))
@@ -46,7 +54,7 @@ final class OpenRouterProviderSettings: ObservableObject {
                 status = .notConnected
             }
         } catch {
-            status = .failed(error.localizedDescription)
+            status = .keychainPermissionNeeded(error.localizedDescription)
         }
     }
 
@@ -59,6 +67,7 @@ final class OpenRouterProviderSettings: ObservableObject {
 
         do {
             try OpenRouterKeychain.save(trimmed)
+            hasCheckedStoredCredentials = true
             status = .connected(maskedAPIKey: mask(trimmed))
         } catch {
             status = .failed(error.localizedDescription)
@@ -75,6 +84,7 @@ final class OpenRouterProviderSettings: ObservableObject {
             let code = try await callbackServer.waitForCode()
             let response = try await exchangeAuthorizationCode(code, verifier: verifier)
             try OpenRouterKeychain.save(response.key)
+            hasCheckedStoredCredentials = true
             status = .connected(maskedAPIKey: mask(response.key))
         } catch {
             callbackServer.stop()

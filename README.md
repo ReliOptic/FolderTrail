@@ -115,3 +115,5 @@ Human checkpoints:
 - Keychain에 `Developer ID Application` 인증서가 있는지 확인합니다.
 - `app/macos/ExportOptions.plist`의 signing 설정과 Team ID를 검토합니다.
 - notarization 후 stapled DMG를 빌드 머신이 아닌 깨끗한 Mac에서 Gatekeeper 검증합니다.
+
+개발용 ad-hoc 빌드에서는 macOS Keychain이 저장된 OpenRouter 키 접근을 다시 허용하라고 요청할 수 있습니다. 최종 배포판은 Developer ID 서명과 notarization을 거친 뒤 이 동작을 깨끗한 Mac에서 검증해야 합니다.
