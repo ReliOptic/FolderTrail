@@ -41,6 +41,8 @@ struct ProviderConnectView: View {
             await settings.connectWithBrowser { url in
                 NSWorkspace.shared.open(url)
             }
+            NSApp.activate(ignoringOtherApps: true)
+            FolderTrailAppController.shared.bringPromptToFront()
         }
     }
 }

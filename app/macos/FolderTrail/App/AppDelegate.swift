@@ -8,6 +8,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.setServicesProvider(serviceProvider)
         FolderTrailAppController.shared.openDevelopmentPromptIfNeeded()
     }
+
+    func applicationShouldHandleReopen(
+        _ sender: NSApplication,
+        hasVisibleWindows flag: Bool
+    ) -> Bool {
+        if flag {
+            FolderTrailAppController.shared.bringPromptToFront()
+        } else {
+            FolderTrailAppController.shared.openPrompt(for: FileManager.default.homeDirectoryForCurrentUser)
+        }
+        return true
+    }
 }
 
 private extension NSApplication {
