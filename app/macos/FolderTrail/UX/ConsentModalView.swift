@@ -47,7 +47,8 @@ struct ConsentModalView: View {
                 Spacer()
 
                 Button("허용하고 시작") {
-                    let workspaceURL = workspaceCopyService.startCopy(sourceFolderURL: sourceFolderURL)
+                    let workspaceURL = workspaceCopyService.workspaceURL(for: sourceFolderURL)
+                    _ = workspaceCopyService.startCopy(sourceFolderURL: sourceFolderURL)
                     onAllow(workspaceURL)
                 }
                 .keyboardShortcut(.defaultAction)
