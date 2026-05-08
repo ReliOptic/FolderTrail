@@ -108,6 +108,29 @@ struct PreflightView: View {
             if hasFailed(.providerConnected) {
                 ProviderConnectView(settings: providerSettings)
             }
+
+            if hasFailed(.codexAuthenticated) {
+                codexLoginRecovery
+            }
+        }
+    }
+
+    private var codexLoginRecovery: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("터미널에서 `codex login`을 실행하고 OAuth 로그인을 완료해 주세요. 토큰을 FolderTrail에 붙여넣지 마세요.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: 8) {
+                Button("codex login 명령 복사") {
+                    copyCodexLoginCommand()
+                }
+
+                Button("다시 확인") {
+                    rerunPreflight()
+                }
+            }
+            .controlSize(.small)
         }
     }
 
@@ -158,5 +181,17 @@ struct PreflightView: View {
     private func openPrivacySettings() {
         let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy")!
         NSWorkspace.shared.open(url)
+    }
+
+    private func copyCodexLoginCommand() {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString("codex login", forType: .string)
+    }
+
+    private func rerunPreflight() {
+        Task {
+            await runner.run(for: folderURL)
+        }
     }
 }
