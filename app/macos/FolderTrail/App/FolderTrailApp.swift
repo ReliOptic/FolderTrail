@@ -6,7 +6,13 @@ struct FolderTrailApp: App {
 
     var body: some Scene {
         Settings {
-            EmptyView()
+            VStack(alignment: .leading, spacing: 20) {
+                ProviderConnectView(settings: OpenRouterProviderSettings.shared)
+                Divider()
+                OpenRouterSettingsView(settings: OpenRouterProviderSettings.shared)
+            }
+                .padding(20)
+                .frame(width: 420)
         }
     }
 }
