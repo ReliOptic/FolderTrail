@@ -43,6 +43,8 @@ struct PreflightCheckState: Identifiable, Equatable {
 }
 
 enum PreflightCheck {
+    private static let codexExecutableName = "codex"
+
     static func runAll(
         for folderURL: URL,
         fileManager: FileManager = .default
@@ -125,9 +127,44 @@ enum PreflightCheck {
     }
 
     private static func checkCodexAvailable() -> PreflightCheckResult {
+        for candidateURL in codexCandidateURLs() where runCodexVersion(
+            executableURL: candidateURL,
+            arguments: ["--version"]
+        ) {
+            return .passed
+        }
+
+        let loginShellCommand = """
+        command -v \(codexExecutableName) >/dev/null && \(codexExecutableName) --version >/dev/null
+        """
+
+        if runCodexVersion(
+            executableURL: URL(fileURLWithPath: "/bin/zsh"),
+            arguments: ["-lc", loginShellCommand]
+        ) {
+            return .passed
+        }
+
+        return .failed(
+            reason: "`codex --version` did not succeed from the app environment."
+        )
+    }
+
+    private static func codexCandidateURLs() -> [URL] {
+        let homeDirectory = FileManager.default.homeDirectoryForCurrentUser
+
+        return [
+            URL(fileURLWithPath: "/opt/homebrew/bin/codex"),
+            URL(fileURLWithPath: "/usr/local/bin/codex"),
+            homeDirectory.appendingPathComponent(".local/bin/codex"),
+            homeDirectory.appendingPathComponent(".bun/bin/codex")
+        ]
+    }
+
+    private static func runCodexVersion(executableURL: URL, arguments: [String]) -> Bool {
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-        process.arguments = ["codex", "--version"]
+        process.executableURL = executableURL
+        process.arguments = arguments
         process.standardOutput = Pipe()
         process.standardError = Pipe()
 
@@ -135,10 +172,8 @@ enum PreflightCheck {
             try process.run()
             process.waitUntilExit()
             return process.terminationStatus == 0
-                ? .passed
-                : .failed(reason: "`codex --version` did not succeed.")
         } catch {
-            return .failed(reason: "`codex` CLI is not available.")
+            return false
         }
     }
 }
