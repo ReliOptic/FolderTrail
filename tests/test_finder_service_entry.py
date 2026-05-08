@@ -11,6 +11,10 @@ INFO = APP / "Info.plist"
 SERVICE_PROVIDER = APP / "Entry" / "FolderTrailServiceProvider.swift"
 APP_CONTROLLER = APP / "App" / "FolderTrailAppController.swift"
 PROMPT_VIEW = APP / "UX" / "PlaceholderPromptView.swift"
+PROVIDER_CONNECT_VIEW = APP / "UX" / "ProviderConnectView.swift"
+OPENROUTER_SETTINGS = APP / "Intelligence" / "OpenRouterProviderSettings.swift"
+OPENROUTER_PKCE = APP / "Intelligence" / "OpenRouterPKCE.swift"
+OPENROUTER_KEYCHAIN = APP / "Safety" / "OpenRouterKeychain.swift"
 
 
 class FinderServiceEntryContractTests(unittest.TestCase):
@@ -87,6 +91,10 @@ class FinderServiceEntryContractTests(unittest.TestCase):
                     str(SERVICE_PROVIDER),
                     str(APP_CONTROLLER),
                     str(PROMPT_VIEW),
+                    str(PROVIDER_CONNECT_VIEW),
+                    str(OPENROUTER_SETTINGS),
+                    str(OPENROUTER_PKCE),
+                    str(OPENROUTER_KEYCHAIN),
                     str(main),
                     "-o",
                     str(exe),
