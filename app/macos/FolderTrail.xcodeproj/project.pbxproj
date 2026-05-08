@@ -23,6 +23,8 @@
 		AA0000000000000000000118 /* ConsentModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000218 /* ConsentModalView.swift */; };
 		AA0000000000000000000119 /* ManifestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000219 /* ManifestBuilder.swift */; };
 		AA0000000000000000000120 /* ManifestConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000220 /* ManifestConfirmationView.swift */; };
+		AA0000000000000000000121 /* OpenRouterPlannerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000221 /* OpenRouterPlannerAdapter.swift */; };
+		AA0000000000000000000122 /* PlannerModelSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000222 /* PlannerModelSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +47,8 @@
 		AA0000000000000000000218 /* ConsentModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/ConsentModalView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000219 /* ManifestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intelligence/ManifestBuilder.swift; sourceTree = "<group>"; };
 		AA0000000000000000000220 /* ManifestConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/ManifestConfirmationView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000221 /* OpenRouterPlannerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intelligence/OpenRouterPlannerAdapter.swift; sourceTree = "<group>"; };
+		AA0000000000000000000222 /* PlannerModelSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/PlannerModelSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +89,8 @@
 				AA0000000000000000000218 /* ConsentModalView.swift */,
 				AA0000000000000000000219 /* ManifestBuilder.swift */,
 				AA0000000000000000000220 /* ManifestConfirmationView.swift */,
+				AA0000000000000000000221 /* OpenRouterPlannerAdapter.swift */,
+				AA0000000000000000000222 /* PlannerModelSettingsView.swift */,
 				AA0000000000000000000206 /* Info.plist */,
 				AA0000000000000000000207 /* FolderTrail.entitlements */,
 			);
@@ -172,6 +178,8 @@
 				AA0000000000000000000118 /* ConsentModalView.swift in Sources */,
 				AA0000000000000000000119 /* ManifestBuilder.swift in Sources */,
 				AA0000000000000000000120 /* ManifestConfirmationView.swift in Sources */,
+				AA0000000000000000000121 /* OpenRouterPlannerAdapter.swift in Sources */,
+				AA0000000000000000000122 /* PlannerModelSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
