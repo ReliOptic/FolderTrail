@@ -18,6 +18,7 @@ enum PreflightCheckID: String, CaseIterable {
     case workspaceWritable
     case providerConnected
     case codexAvailable
+    case codexAuthenticated
 
     var title: String {
         switch self {
@@ -29,6 +30,8 @@ enum PreflightCheckID: String, CaseIterable {
             return "OpenRouter provider is connected"
         case .codexAvailable:
             return "Codex CLI fallback is available"
+        case .codexAuthenticated:
+            return "Codex CLI fallback is authenticated"
         }
     }
 }
@@ -79,6 +82,8 @@ enum PreflightCheck {
             return checkProviderConnected()
         case .codexAvailable:
             return checkCodexAvailable()
+        case .codexAuthenticated:
+            return checkCodexAuthenticated()
         }
     }
 
@@ -127,10 +132,7 @@ enum PreflightCheck {
     }
 
     private static func checkCodexAvailable() -> PreflightCheckResult {
-        for candidateURL in codexCandidateURLs() where runCodexVersion(
-            executableURL: candidateURL,
-            arguments: ["--version"]
-        ) {
+        if firstWorkingCodexExecutableURL() != nil {
             return .passed
         }
 
@@ -150,6 +152,37 @@ enum PreflightCheck {
         )
     }
 
+    private static func checkCodexAuthenticated() -> PreflightCheckResult {
+        // Keep OAuth/auth failure separate from install failure by running codex login status.
+        if let candidateURL = firstWorkingCodexExecutableURL(), runCodexLoginStatus(
+            executableURL: candidateURL,
+            arguments: ["login", "status"]
+        ) {
+            return .passed
+        }
+
+        let loginShellCommand = """
+        command -v \(codexExecutableName) >/dev/null && \(codexExecutableName) login status >/dev/null
+        """
+
+        if runCodexLoginStatus(
+            executableURL: URL(fileURLWithPath: "/bin/zsh"),
+            arguments: ["-lc", loginShellCommand]
+        ) {
+            return .passed
+        }
+
+        return .failed(
+            reason: "Codex CLI is installed but not authenticated. Run `codex login` in Terminal and finish OAuth, then retry."
+        )
+    }
+
+    private static func firstWorkingCodexExecutableURL() -> URL? {
+        codexCandidateURLs().first {
+            runCodexVersion(executableURL: $0, arguments: ["--version"])
+        }
+    }
+
     private static func codexCandidateURLs() -> [URL] {
         let homeDirectory = FileManager.default.homeDirectoryForCurrentUser
 
@@ -162,6 +195,14 @@ enum PreflightCheck {
     }
 
     private static func runCodexVersion(executableURL: URL, arguments: [String]) -> Bool {
+        runCodexCommand(executableURL: executableURL, arguments: arguments)
+    }
+
+    private static func runCodexLoginStatus(executableURL: URL, arguments: [String]) -> Bool {
+        runCodexCommand(executableURL: executableURL, arguments: arguments)
+    }
+
+    private static func runCodexCommand(executableURL: URL, arguments: [String]) -> Bool {
         let process = Process()
         process.executableURL = executableURL
         process.arguments = arguments
