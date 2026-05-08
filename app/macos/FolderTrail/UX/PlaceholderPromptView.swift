@@ -34,7 +34,7 @@ struct PlaceholderPromptView: View {
                 .font(.title2.weight(.semibold))
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("선택된 폴더")
+                Text("정리할 폴더")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Text(selectedFolderURL.lastPathComponent.isEmpty ? selectedFolderURL.path : selectedFolderURL.lastPathComponent)
@@ -77,14 +77,14 @@ struct PlaceholderPromptView: View {
             }
 
             HStack {
-                Button("개발용 폴더 선택…") {
+                Button("정리할 폴더 바꾸기…") {
                     chooseFolder()
                 }
 
                 Spacer()
 
                 if providerSettings.isConnected {
-                    Button("안전 복사본에서 실행") {
+                    Button("안전 작업공간에서 시작") {
                         showPreflight = true
                     }
                         .keyboardShortcut(.defaultAction)
@@ -106,12 +106,12 @@ struct PlaceholderPromptView: View {
 
     private var keyboardShortcutButtons: some View {
         HStack {
-            Button("Focus Prompt") {
+            Button("요청 입력") {
                 promptFocused = true
             }
             .keyboardShortcut("k", modifiers: .command)
 
-            Button("Close") {
+            Button("창 닫기") {
                 NSApp.keyWindow?.close()
             }
             .keyboardShortcut("w", modifiers: .command)

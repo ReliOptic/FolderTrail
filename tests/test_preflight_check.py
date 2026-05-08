@@ -39,7 +39,7 @@ class PreflightCheckContractTests(unittest.TestCase):
         self.assertIn("시스템 설정 열기", view)
         self.assertIn("x-apple.systempreferences:com.apple.preference.security?Privacy", view)
         self.assertIn("ProviderConnectView", view)
-        self.assertIn("Connect OpenRouter", (APP / "UX" / "ProviderConnectView.swift").read_text(encoding="utf-8"))
+        self.assertIn("OpenRouter 연결", (APP / "UX" / "ProviderConnectView.swift").read_text(encoding="utf-8"))
 
         self.assertIn("PreflightCheck.swift", project)
         self.assertIn("PreflightView.swift", project)

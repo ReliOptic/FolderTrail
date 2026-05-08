@@ -9,11 +9,11 @@ struct OpenRouterSettingsView: View {
             Text("OpenRouter")
                 .font(.headline)
 
-            SecureField("OpenRouter API key", text: $manualKey)
+            SecureField("OpenRouter API 키", text: $manualKey)
                 .textFieldStyle(.roundedBorder)
 
             HStack {
-                Button("Save API Key") {
+                Button("API 키 저장") {
                     settings.saveManualAPIKey(manualKey)
                     manualKey = ""
                 }

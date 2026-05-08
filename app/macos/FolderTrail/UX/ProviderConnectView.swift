@@ -6,29 +6,29 @@ struct ProviderConnectView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Provider")
+            Text("AI 연결")
                 .font(.headline)
 
             switch settings.status {
             case .connected:
-                Label("connected", systemImage: "checkmark.circle.fill")
+                Label("OpenRouter 연결됨", systemImage: "checkmark.circle.fill")
                     .foregroundStyle(.green)
                 Text(settings.maskedAPIKey)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             case .notConnected:
-                Label("notConnected", systemImage: "circle")
+                Label("OpenRouter 연결 필요", systemImage: "circle")
                     .foregroundStyle(.secondary)
-                Button("Connect OpenRouter") {
+                Button("OpenRouter 연결") {
                     connectWithBrowser()
                 }
             case .failed(let message):
-                Label("failed", systemImage: "exclamationmark.triangle.fill")
+                Label("OpenRouter 연결 실패", systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
                 Text(message)
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Button("Retry") {
+                Button("다시 연결") {
                     connectWithBrowser()
                 }
             }
