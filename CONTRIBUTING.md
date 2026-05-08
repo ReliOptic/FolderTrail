@@ -30,19 +30,22 @@ Before coding, keep the design note short:
 - acceptance criteria,
 - UI/UX impact,
 - safety invariants,
-- test plan.
+- test plan,
+- out-of-scope decisions.
 
-For v0.1, follow the dependency map in [`docs/ISSUE_MAP.md`](docs/ISSUE_MAP.md). Do not bundle unrelated milestones into one PR.
+For v0.1, follow the dependency map in [`docs/ISSUE_MAP.md`](docs/ISSUE_MAP.md). Do not bundle unrelated milestones into one PR. If a QA pass finds new work, create or update an issue instead of silently expanding the current PR.
 
 ### 3. Branch and open a draft PR early
 
-Use one focused branch per issue:
+Use one focused branch per issue. Each issue should be an independently reviewable vertical slice with clear blockers, not a vague phase of a large plan:
 
 ```text
 issue-<number>-<short-slug>
 ```
 
 Open a draft PR once the first test or skeleton exists. The PR is the development reference: record decisions, RED/GREEN evidence, screenshots when useful, and remaining gaps there.
+
+Mark tasks that require human judgement, credentials, signing, or visual taste as HITL. Keep autonomous tasks small enough that an agent can complete them inside one focused context.
 
 After the PR is merged, delete the issue branch. Deleting the branch only removes the temporary pointer; the PR, commits, discussion, issue timeline, and release-note references remain on GitHub.
 
@@ -56,18 +59,24 @@ GREEN: add the smallest implementation that passes
 REFACTOR: simplify while tests stay green
 ```
 
-Tests should describe public behavior, not private implementation details.
+Tests should describe public behavior, not private implementation details. Prefer deep modules: small public interfaces with meaningful behavior behind them, tested from the outside. If a behavior is hard to test, improve the feedback loop before adding more implementation.
 
 ### 5. Review and merge
 
 Before marking a PR ready:
 
 - map the PR back to the issue acceptance criteria,
+- review the tests first, then the implementation,
 - paste verification commands and results,
+- manually QA user-visible flows when UI or Finder behavior changes,
 - call out known gaps honestly,
 - keep the diff small enough to review.
 
 After merge, close the issue with a short summary and link the PR.
+
+## Keep records lightweight
+
+Use issues and PRs as the durable history for planning, trade-offs, and TDD evidence. Avoid keeping stale one-off planning documents in the repo after the work is complete; convert lasting decisions into product docs, architecture docs, or follow-up issues instead.
 
 ## v0.1 issue order
 
