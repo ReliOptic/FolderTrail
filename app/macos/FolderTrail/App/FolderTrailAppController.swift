@@ -2,13 +2,13 @@ import AppKit
 import SwiftUI
 
 @MainActor
-final class FolderTrailAppController {
+final class FolderTrailAppController: NSObject, NSWindowDelegate {
     static let shared = FolderTrailAppController()
 
     private var promptPanel: NSPanel?
     private var hasOpenedDevelopmentPrompt = false
 
-    private init() {}
+    private override init() {}
 
     func openDevelopmentPromptIfNeeded() {
         guard !hasOpenedDevelopmentPrompt else { return }
@@ -22,7 +22,12 @@ final class FolderTrailAppController {
         }
 
         promptPanel?.contentView = NSHostingView(rootView: PlaceholderPromptView(folderURL: folderURL))
-        promptPanel?.makeKeyAndOrderFront(nil)
+        bringPromptToFront()
+    }
+
+    func bringPromptToFront() {
+        guard let promptPanel else { return }
+        promptPanel.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
 
@@ -44,8 +49,18 @@ final class FolderTrailAppController {
         panel.title = "FolderTrail"
         panel.isFloatingPanel = true
         panel.level = .floating
+        panel.hidesOnDeactivate = false
+        panel.isReleasedWhenClosed = false
         panel.collectionBehavior = [.transient, .ignoresCycle]
+        panel.delegate = self
         panel.center()
         return panel
+    }
+
+    nonisolated func windowWillClose(_ notification: Notification) {
+        Task { @MainActor in
+            self.promptPanel = nil
+            NSApp.terminate(nil)
+        }
     }
 }
