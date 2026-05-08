@@ -98,8 +98,8 @@ v0.1 배포 빌드는 Developer ID 서명과 Apple notarization을 전제로 합
 사용자 설치:
 
 1. 릴리스 페이지에서 `FolderTrail-0.1.dmg`를 다운로드합니다.
-2. DMG를 열고 `FolderTrail.app`을 Applications 폴더로 이동합니다.
-3. 첫 실행 후 Finder를 다시 열거나 로그아웃/로그인하면 Finder Services 메뉴에 `New FolderTrail`이 표시됩니다.
+2. DMG를 열고 `FolderTrail.app`을 `/Applications` 폴더로 이동합니다.
+3. 첫 실행 후 Finder를 재실행하거나 로그아웃/로그인하면 Finder Services 메뉴에 `New FolderTrail`이 표시됩니다.
 4. Gatekeeper 경고 없이 열려야 합니다. 문제가 있으면 `spctl --assess --verbose` 결과를 이슈에 첨부해 주세요.
 
 릴리스 빌드 담당자:
