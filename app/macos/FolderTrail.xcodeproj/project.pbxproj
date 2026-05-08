@@ -12,6 +12,7 @@
 		AA0000000000000000000103 /* FolderTrailAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000203 /* FolderTrailAppController.swift */; };
 		AA0000000000000000000104 /* FolderTrailServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000204 /* FolderTrailServiceProvider.swift */; };
 		AA0000000000000000000105 /* PlaceholderPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000205 /* PlaceholderPromptView.swift */; };
+		AA0000000000000000000128 /* FolderTrailDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000228 /* FolderTrailDesign.swift */; };
 		AA0000000000000000000110 /* OpenRouterPKCE.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000210 /* OpenRouterPKCE.swift */; };
 		AA0000000000000000000111 /* OpenRouterProviderSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000211 /* OpenRouterProviderSettings.swift */; };
 		AA0000000000000000000112 /* OpenRouterKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000212 /* OpenRouterKeychain.swift */; };
@@ -38,6 +39,7 @@
 		AA0000000000000000000203 /* FolderTrailAppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App/FolderTrailAppController.swift; sourceTree = "<group>"; };
 		AA0000000000000000000204 /* FolderTrailServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry/FolderTrailServiceProvider.swift; sourceTree = "<group>"; };
 		AA0000000000000000000205 /* PlaceholderPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/PlaceholderPromptView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000228 /* FolderTrailDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/FolderTrailDesign.swift; sourceTree = "<group>"; };
 		AA0000000000000000000206 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA0000000000000000000207 /* FolderTrail.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FolderTrail.entitlements; sourceTree = "<group>"; };
 		AA0000000000000000000208 /* FolderTrail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FolderTrail.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +90,7 @@
 				AA0000000000000000000203 /* FolderTrailAppController.swift */,
 				AA0000000000000000000204 /* FolderTrailServiceProvider.swift */,
 				AA0000000000000000000205 /* PlaceholderPromptView.swift */,
+				AA0000000000000000000228 /* FolderTrailDesign.swift */,
 				AA0000000000000000000210 /* OpenRouterPKCE.swift */,
 				AA0000000000000000000211 /* OpenRouterProviderSettings.swift */,
 				AA0000000000000000000212 /* OpenRouterKeychain.swift */,
@@ -182,6 +185,7 @@
 				AA0000000000000000000103 /* FolderTrailAppController.swift in Sources */,
 				AA0000000000000000000104 /* FolderTrailServiceProvider.swift in Sources */,
 				AA0000000000000000000105 /* PlaceholderPromptView.swift in Sources */,
+				AA0000000000000000000128 /* FolderTrailDesign.swift in Sources */,
 				AA0000000000000000000110 /* OpenRouterPKCE.swift in Sources */,
 				AA0000000000000000000111 /* OpenRouterProviderSettings.swift in Sources */,
 				AA0000000000000000000112 /* OpenRouterKeychain.swift in Sources */,

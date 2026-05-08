@@ -29,15 +29,15 @@ struct PlaceholderPromptView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
             statusStrip
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("정리할 폴더")
-                    .font(.caption)
+                    .font(FolderTrailDesign.Typography.meta)
                     .foregroundStyle(.secondary)
                 Text(selectedFolderURL.lastPathComponent.isEmpty ? selectedFolderURL.path : selectedFolderURL.lastPathComponent)
-                    .font(.headline)
+                    .font(FolderTrailDesign.Typography.section)
                     .lineLimit(1)
             }
 
@@ -55,11 +55,11 @@ struct PlaceholderPromptView: View {
             }
 
             TextEditor(text: $prompt)
-                .font(.body)
+                .font(FolderTrailDesign.Typography.body)
                 .frame(minHeight: 120)
                 .focused($promptFocused)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: FolderTrailDesign.Radius.sm)
                         .stroke(Color.secondary.opacity(0.25))
                 )
 
@@ -86,12 +86,13 @@ struct PlaceholderPromptView: View {
                     Button("안전 작업공간에서 시작") {
                         showPreflight = true
                     }
+                        .buttonStyle(FolderTrailPrimaryButtonStyle())
                         .keyboardShortcut(.defaultAction)
                         .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
-        .padding(24)
+        .padding(FolderTrailDesign.Spacing.xl)
         .frame(minWidth: 520, minHeight: 360)
         .sheet(isPresented: $showConsentModal) {
             ConsentModalView(sourceFolderURL: selectedFolderURL) { _ in
@@ -160,18 +161,18 @@ private struct PromptStatusStrip: View {
         HStack(alignment: .center, spacing: 10) {
             VStack(alignment: .leading, spacing: 2) {
                 Text("FolderTrail")
-                    .font(.title2.weight(.semibold))
+                    .font(FolderTrailDesign.Typography.title)
                 Text(folderName)
-                    .font(.caption)
+                    .font(FolderTrailDesign.Typography.meta)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
 
             Spacer()
 
-            StatusPill(title: providerStatusTitle, systemImage: providerStatusImage)
-            StatusPill(title: runReadinessTitle, systemImage: runReadinessImage)
-            StatusPill(title: "Codex fallback 선택", systemImage: "terminal")
+            FolderTrailStatusPill(title: providerStatusTitle, systemImage: providerStatusImage)
+            FolderTrailStatusPill(title: runReadinessTitle, systemImage: runReadinessImage)
+            FolderTrailStatusPill(title: "Codex fallback 선택", systemImage: "terminal")
 
             Button("설정…") {
                 settingsButton()
@@ -197,26 +198,13 @@ private struct PromptStatusStrip: View {
     }
 }
 
-private struct StatusPill: View {
-    let title: String
-    let systemImage: String
-
-    var body: some View {
-        Label(title, systemImage: systemImage)
-            .font(.caption)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(.thinMaterial, in: Capsule())
-    }
-}
-
 private struct PromptChipButton: View {
     let title: String
     let action: () -> Void
 
     var body: some View {
         Button(title, action: action)
-            .buttonStyle(.bordered)
+            .buttonStyle(FolderTrailChipButtonStyle())
             .controlSize(.small)
     }
 }

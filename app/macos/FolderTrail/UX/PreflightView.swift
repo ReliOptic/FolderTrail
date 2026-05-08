@@ -31,14 +31,16 @@ struct PreflightView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.md) {
             Text("시작 전 확인")
-                .font(.headline)
+                .font(FolderTrailDesign.Typography.section)
 
-            ScrollView {
-                preflightRows
+            FolderTrailPanel {
+                ScrollView {
+                    preflightRows
+                }
+                .frame(maxHeight: 220)
             }
-            .frame(maxHeight: 220)
 
             fallbackNote
             recoveryActions
@@ -50,22 +52,22 @@ struct PreflightView: View {
     }
 
     private var preflightRows: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.sm) {
             ForEach(runner.checks) { check in
                 HStack(alignment: .top, spacing: 8) {
                     Text(symbol(for: check.result))
                         .monospacedDigit()
                     VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 6) {
+                        HStack(spacing: FolderTrailDesign.Spacing.xs) {
                             Text(check.title)
                             Text(statusLabel(for: check.result))
-                                .font(.caption2.weight(.semibold))
+                                .font(FolderTrailDesign.Typography.badge)
                                 .foregroundStyle(statusColor(for: check.result))
                         }
                         if case .failed(let reason) = check.result {
                             Text(reason)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .font(FolderTrailDesign.Typography.meta)
+                                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
                         }
                     }
                 }
@@ -78,8 +80,8 @@ struct PreflightView: View {
     private var fallbackNote: some View {
         if hasFailed(.codexAvailable) || hasFailed(.codexAuthenticated) {
             Text("Codex fallback은 선택 사항입니다. OpenRouter 연결로 먼저 진행할 수 있습니다.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(FolderTrailDesign.Typography.meta)
+                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
         }
     }
 
@@ -89,16 +91,17 @@ struct PreflightView: View {
             Button("안전 작업공간 만들기") {
                 onProceed()
             }
+            .buttonStyle(FolderTrailPrimaryButtonStyle())
             .keyboardShortcut(.defaultAction)
         } else {
             Text("조치가 필요한 항목을 해결하기 전에는 계속할 수 없습니다.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(FolderTrailDesign.Typography.meta)
+                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
         }
     }
 
     private var recoveryActions: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.sm) {
             if hasFailed(.folderReadable) {
                 Button("시스템 설정 열기") {
                     openPrivacySettings()
@@ -116,12 +119,12 @@ struct PreflightView: View {
     }
 
     private var codexLoginRecovery: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
             Text("터미널에서 `codex login`을 실행하고 OAuth 로그인을 완료해 주세요. 토큰을 FolderTrail에 붙여넣지 마세요.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(FolderTrailDesign.Typography.meta)
+                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
 
-            HStack(spacing: 8) {
+            HStack(spacing: FolderTrailDesign.Spacing.sm) {
                 Button("codex login 명령 복사") {
                     copyCodexLoginCommand()
                 }
@@ -159,11 +162,11 @@ struct PreflightView: View {
     private func statusColor(for result: PreflightCheckResult) -> Color {
         switch result {
         case .passed:
-            return .green
+            return FolderTrailDesign.Palette.success
         case .pending:
-            return .secondary
+            return FolderTrailDesign.Palette.secondaryText
         case .failed:
-            return .orange
+            return FolderTrailDesign.Palette.warning
         }
     }
 
