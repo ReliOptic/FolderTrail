@@ -78,6 +78,7 @@ FolderTrail은 원본을 절대 바꾸지 않습니다.
 
 ## 문서
 
+- [Contributing](CONTRIBUTING.md) — 기여 흐름과 TDD/PR 규칙
 - [PRD](docs/PRD.md) — 제품 요구사항 전문
 - [Architecture](docs/ARCHITECTURE.md) — 시스템 구조
 - [Manifest Schema](docs/MANIFEST_SCHEMA.md) — 폴더 분석 계약
