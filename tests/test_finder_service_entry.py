@@ -17,6 +17,8 @@ OPENROUTER_PKCE = APP / "Intelligence" / "OpenRouterPKCE.swift"
 OPENROUTER_KEYCHAIN = APP / "Safety" / "OpenRouterKeychain.swift"
 PREFLIGHT_CHECK = APP / "Safety" / "PreflightCheck.swift"
 PREFLIGHT_VIEW = APP / "UX" / "PreflightView.swift"
+CONSENT_MODAL_VIEW = APP / "UX" / "ConsentModalView.swift"
+WORKSPACE_COPY_SERVICE = APP / "Execution" / "WorkspaceCopyService.swift"
 
 
 class FinderServiceEntryContractTests(unittest.TestCase):
@@ -99,6 +101,8 @@ class FinderServiceEntryContractTests(unittest.TestCase):
                     str(OPENROUTER_KEYCHAIN),
                     str(PREFLIGHT_CHECK),
                     str(PREFLIGHT_VIEW),
+                    str(CONSENT_MODAL_VIEW),
+                    str(WORKSPACE_COPY_SERVICE),
                     str(main),
                     "-o",
                     str(exe),

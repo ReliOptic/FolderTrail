@@ -19,6 +19,8 @@
 		AA0000000000000000000114 /* OpenRouterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000214 /* OpenRouterSettingsView.swift */; };
 		AA0000000000000000000115 /* PreflightCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000215 /* PreflightCheck.swift */; };
 		AA0000000000000000000116 /* PreflightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000216 /* PreflightView.swift */; };
+		AA0000000000000000000117 /* WorkspaceCopyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000217 /* WorkspaceCopyService.swift */; };
+		AA0000000000000000000118 /* ConsentModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000218 /* ConsentModalView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		AA0000000000000000000214 /* OpenRouterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/OpenRouterSettingsView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000215 /* PreflightCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Safety/PreflightCheck.swift; sourceTree = "<group>"; };
 		AA0000000000000000000216 /* PreflightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/PreflightView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000217 /* WorkspaceCopyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution/WorkspaceCopyService.swift; sourceTree = "<group>"; };
+		AA0000000000000000000218 /* ConsentModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/ConsentModalView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +77,8 @@
 				AA0000000000000000000214 /* OpenRouterSettingsView.swift */,
 				AA0000000000000000000215 /* PreflightCheck.swift */,
 				AA0000000000000000000216 /* PreflightView.swift */,
+				AA0000000000000000000217 /* WorkspaceCopyService.swift */,
+				AA0000000000000000000218 /* ConsentModalView.swift */,
 				AA0000000000000000000206 /* Info.plist */,
 				AA0000000000000000000207 /* FolderTrail.entitlements */,
 			);
@@ -156,6 +162,8 @@
 				AA0000000000000000000114 /* OpenRouterSettingsView.swift in Sources */,
 				AA0000000000000000000115 /* PreflightCheck.swift in Sources */,
 				AA0000000000000000000116 /* PreflightView.swift in Sources */,
+				AA0000000000000000000117 /* WorkspaceCopyService.swift in Sources */,
+				AA0000000000000000000118 /* ConsentModalView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,21 +7,25 @@ struct PreflightView: View {
 
     @ObservedObject private var runner: PreflightRunner
     @ObservedObject private var providerSettings: OpenRouterProviderSettings
+    private let onProceed: () -> Void
 
     init(folderURL: URL) {
         self.init(
             folderURL: folderURL,
             runner: PreflightRunner(),
-            providerSettings: OpenRouterProviderSettings.shared
+            providerSettings: OpenRouterProviderSettings.shared,
+            onProceed: {}
         )
     }
 
     init(
         folderURL: URL,
         runner: PreflightRunner,
-        providerSettings: OpenRouterProviderSettings
+        providerSettings: OpenRouterProviderSettings,
+        onProceed: @escaping () -> Void
     ) {
         self.folderURL = folderURL
+        self.onProceed = onProceed
         _runner = ObservedObject(wrappedValue: runner)
         _providerSettings = ObservedObject(wrappedValue: providerSettings)
     }
@@ -47,6 +51,13 @@ struct PreflightView: View {
             }
 
             recoveryActions
+
+            if runner.canProceedToConsent {
+                Button("동의 단계로 계속") {
+                    onProceed()
+                }
+                .keyboardShortcut(.defaultAction)
+            }
         }
         .task {
             await runner.run(for: folderURL)
