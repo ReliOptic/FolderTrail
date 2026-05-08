@@ -30,8 +30,7 @@ struct PlaceholderPromptView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("FolderTrail")
-                .font(.title2.weight(.semibold))
+            statusStrip
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("정리할 폴더")
@@ -104,6 +103,18 @@ struct PlaceholderPromptView: View {
         }
     }
 
+    private var statusStrip: some View {
+        PromptStatusStrip(
+            folderName: selectedFolderURL.lastPathComponent.isEmpty
+                ? selectedFolderURL.path
+                : selectedFolderURL.lastPathComponent,
+            providerConnected: providerSettings.isConnected,
+            settingsButton: {
+                openSettingsWindow()
+            }
+        )
+    }
+
     private var keyboardShortcutButtons: some View {
         HStack {
             Button("요청 입력") {
@@ -132,6 +143,70 @@ struct PlaceholderPromptView: View {
             selectedFolderURL = url
             showPreflight = false
         }
+    }
+
+    private func openSettingsWindow() {
+        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+}
+
+private struct PromptStatusStrip: View {
+    let folderName: String
+    let providerConnected: Bool
+    let settingsButton: () -> Void
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("FolderTrail")
+                    .font(.title2.weight(.semibold))
+                Text(folderName)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            StatusPill(title: providerStatusTitle, systemImage: providerStatusImage)
+            StatusPill(title: runReadinessTitle, systemImage: runReadinessImage)
+            StatusPill(title: "Codex fallback 선택", systemImage: "terminal")
+
+            Button("설정…") {
+                settingsButton()
+            }
+            .controlSize(.small)
+        }
+    }
+
+    private var providerStatusTitle: String {
+        providerConnected ? "OpenRouter 연결됨" : "OpenRouter 연결 필요"
+    }
+
+    private var providerStatusImage: String {
+        providerConnected ? "checkmark.circle" : "circle"
+    }
+
+    private var runReadinessTitle: String {
+        providerConnected ? "실행 준비" : "연결 필요"
+    }
+
+    private var runReadinessImage: String {
+        providerConnected ? "play.circle" : "exclamationmark.circle"
+    }
+}
+
+private struct StatusPill: View {
+    let title: String
+    let systemImage: String
+
+    var body: some View {
+        Label(title, systemImage: systemImage)
+            .font(.caption)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(.thinMaterial, in: Capsule())
     }
 }
 
