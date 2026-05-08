@@ -44,6 +44,8 @@ issue-<number>-<short-slug>
 
 Open a draft PR once the first test or skeleton exists. The PR is the development reference: record decisions, RED/GREEN evidence, screenshots when useful, and remaining gaps there.
 
+After the PR is merged, delete the issue branch. Deleting the branch only removes the temporary pointer; the PR, commits, discussion, issue timeline, and release-note references remain on GitHub.
+
 ### 4. Use small TDD loops
 
 Prefer one vertical slice at a time:
