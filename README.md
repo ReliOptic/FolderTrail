@@ -88,3 +88,30 @@ FolderTrail은 원본을 절대 바꾸지 않습니다.
 ---
 
 Apache-2.0 · macOS · Swift/SwiftUI · [ReliOptic/FolderTrail](https://github.com/ReliOptic/FolderTrail)
+
+---
+
+## 설치 및 배포 상태
+
+v0.1 배포 빌드는 Developer ID 서명과 Apple notarization을 전제로 합니다.
+
+사용자 설치:
+
+1. 릴리스 페이지에서 `FolderTrail-0.1.dmg`를 다운로드합니다.
+2. DMG를 열고 `FolderTrail.app`을 Applications 폴더로 이동합니다.
+3. 첫 실행 후 Finder를 다시 열거나 로그아웃/로그인하면 Finder Services 메뉴에 `New FolderTrail`이 표시됩니다.
+4. Gatekeeper 경고 없이 열려야 합니다. 문제가 있으면 `spctl --assess --verbose` 결과를 이슈에 첨부해 주세요.
+
+릴리스 빌드 담당자:
+
+```bash
+export TEAM_ID="YOUR_TEAM_ID"
+export NOTARYTOOL_PROFILE="foldertrail-notary"
+scripts/build.sh
+```
+
+Human checkpoints:
+
+- Keychain에 `Developer ID Application` 인증서가 있는지 확인합니다.
+- `app/macos/ExportOptions.plist`의 signing 설정과 Team ID를 검토합니다.
+- notarization 후 stapled DMG를 빌드 머신이 아닌 깨끗한 Mac에서 Gatekeeper 검증합니다.
