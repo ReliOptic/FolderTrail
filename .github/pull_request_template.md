@@ -2,34 +2,28 @@
 
 Closes #<issue-number>
 
-## TDD Ledger
+## What changed
 
-- RED 1:
-- GREEN 1:
-- REFACTOR 1:
+-
 
-## Acceptance Criteria Evidence
+## TDD / Development notes
 
-- [ ] Criteria mapped from issue body
-- [ ] Behavior covered through public interface
-- [ ] Verification commands pasted below
+- RED:
+- GREEN:
+- REFACTOR / cleanup:
+
+_For docs-only changes, explain the review path instead of forcing a test loop._
 
 ## Verification
 
 ```bash
-# paste commands and result summary
+# commands and short result summary
 ```
 
-## Known Gaps / Follow-ups
+## Screenshots / trail evidence
+
+- Optional
+
+## Known gaps / follow-ups
 
 - None
-
-## Lore
-
-Constraint:
-Rejected:
-Confidence:
-Scope-risk:
-Directive:
-Tested:
-Not-tested:
