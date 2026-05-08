@@ -34,6 +34,15 @@ enum PreflightCheckID: String, CaseIterable {
             return "Codex fallback 로그인됨"
         }
     }
+
+    var blocksProceed: Bool {
+        switch self {
+        case .folderReadable, .workspaceWritable, .providerConnected:
+            return true
+        case .codexAvailable, .codexAuthenticated:
+            return false
+        }
+    }
 }
 
 struct PreflightCheckState: Identifiable, Equatable {
@@ -65,7 +74,7 @@ enum PreflightCheck {
     }
 
     static func canProceedToConsent(_ checks: [PreflightCheckState]) -> Bool {
-        allPassed(checks)
+        checks.filter { $0.id.blocksProceed }.allSatisfy { $0.result.isPassed }
     }
 
     private static func run(

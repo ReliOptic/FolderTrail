@@ -31,16 +31,37 @@ struct PreflightView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             Text("시작 전 확인")
                 .font(.headline)
 
+            ScrollView {
+                preflightRows
+            }
+            .frame(maxHeight: 220)
+
+            fallbackNote
+            recoveryActions
+            footerAction
+        }
+        .task {
+            await runner.run(for: folderURL)
+        }
+    }
+
+    private var preflightRows: some View {
+        VStack(alignment: .leading, spacing: 10) {
             ForEach(runner.checks) { check in
                 HStack(alignment: .top, spacing: 8) {
                     Text(symbol(for: check.result))
                         .monospacedDigit()
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(check.title)
+                        HStack(spacing: 6) {
+                            Text(check.title)
+                            Text(statusLabel(for: check.result))
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(statusColor(for: check.result))
+                        }
                         if case .failed(let reason) = check.result {
                             Text(reason)
                                 .font(.caption)
@@ -49,18 +70,30 @@ struct PreflightView: View {
                     }
                 }
             }
-
-            recoveryActions
-
-            if runner.canProceedToConsent {
-                Button("안전 작업공간 만들기") {
-                    onProceed()
-                }
-                .keyboardShortcut(.defaultAction)
-            }
         }
-        .task {
-            await runner.run(for: folderURL)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private var fallbackNote: some View {
+        if hasFailed(.codexAvailable) || hasFailed(.codexAuthenticated) {
+            Text("Codex fallback은 선택 사항입니다. OpenRouter 연결로 먼저 진행할 수 있습니다.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private var footerAction: some View {
+        if runner.canProceedToConsent {
+            Button("안전 작업공간 만들기") {
+                onProceed()
+            }
+            .keyboardShortcut(.defaultAction)
+        } else {
+            Text("조치가 필요한 항목을 해결하기 전에는 계속할 수 없습니다.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -86,6 +119,28 @@ struct PreflightView: View {
             return "◐"
         case .failed:
             return "✗"
+        }
+    }
+
+    private func statusLabel(for result: PreflightCheckResult) -> String {
+        switch result {
+        case .passed:
+            return "통과"
+        case .pending:
+            return "확인 중"
+        case .failed:
+            return "조치 필요"
+        }
+    }
+
+    private func statusColor(for result: PreflightCheckResult) -> Color {
+        switch result {
+        case .passed:
+            return .green
+        case .pending:
+            return .secondary
+        case .failed:
+            return .orange
         }
     }
 
