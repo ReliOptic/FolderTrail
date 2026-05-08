@@ -26,6 +26,8 @@
 		AA0000000000000000000121 /* OpenRouterPlannerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000221 /* OpenRouterPlannerAdapter.swift */; };
 		AA0000000000000000000122 /* PlannerModelSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000222 /* PlannerModelSettingsView.swift */; };
 		AA0000000000000000000123 /* SafeExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000223 /* SafeExecutor.swift */; };
+		AA0000000000000000000124 /* CompactStatusStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000224 /* CompactStatusStateMachine.swift */; };
+		AA0000000000000000000125 /* CompactStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000225 /* CompactStatusView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 		AA0000000000000000000221 /* OpenRouterPlannerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intelligence/OpenRouterPlannerAdapter.swift; sourceTree = "<group>"; };
 		AA0000000000000000000222 /* PlannerModelSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/PlannerModelSettingsView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000223 /* SafeExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution/SafeExecutor.swift; sourceTree = "<group>"; };
+		AA0000000000000000000224 /* CompactStatusStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution/CompactStatusStateMachine.swift; sourceTree = "<group>"; };
+		AA0000000000000000000225 /* CompactStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/CompactStatusView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +98,8 @@
 				AA0000000000000000000221 /* OpenRouterPlannerAdapter.swift */,
 				AA0000000000000000000222 /* PlannerModelSettingsView.swift */,
 				AA0000000000000000000223 /* SafeExecutor.swift */,
+				AA0000000000000000000224 /* CompactStatusStateMachine.swift */,
+				AA0000000000000000000225 /* CompactStatusView.swift */,
 				AA0000000000000000000206 /* Info.plist */,
 				AA0000000000000000000207 /* FolderTrail.entitlements */,
 			);
@@ -184,6 +190,8 @@
 				AA0000000000000000000121 /* OpenRouterPlannerAdapter.swift in Sources */,
 				AA0000000000000000000122 /* PlannerModelSettingsView.swift in Sources */,
 				AA0000000000000000000123 /* SafeExecutor.swift in Sources */,
+				AA0000000000000000000124 /* CompactStatusStateMachine.swift in Sources */,
+				AA0000000000000000000125 /* CompactStatusView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
