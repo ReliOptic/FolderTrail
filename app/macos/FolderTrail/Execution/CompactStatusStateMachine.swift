@@ -97,6 +97,11 @@ final class CompactStatusStateMachine: ObservableObject {
         transition(to: .error, message: reason)
     }
 
+    func resetToIdle() {
+        counters = nil
+        transition(to: .idle, message: "대기 중")
+    }
+
     private func transition(to newState: CompactStatusState, message: String) {
         state = newState
         self.message = message
