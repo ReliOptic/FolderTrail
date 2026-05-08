@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+build/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Keychain / secrets
+*.p12
+*.mobileprovision
+*.cer
+*.pem
+ExportOptions.plist
+
+# Distribution artifacts
+*.dmg
+*.pkg
+*.zip
+notarization_*.json
+
+# Logs
+*.log
