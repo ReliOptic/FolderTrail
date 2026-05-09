@@ -70,14 +70,28 @@ final class CodexLoginRunner: ObservableObject {
                 }
             }
 
-            isRunning = false
             if succeeded {
-                statusText = "로그인 완료. 확인 중…"
+                statusText = "로그인 완료. 상태를 확인하고 있어요…"
+                let authenticated = await Self.recheckLoginStatusAfterSuccess()
+                isRunning = false
+
+                if authenticated {
+                    statusText = "Codex / ChatGPT 로그인 완료"
+                } else {
+                    statusText = "브라우저 로그인은 끝났지만 앱에서 아직 확인하지 못했습니다. 다시 확인을 눌러 주세요."
+                }
                 onSuccess?()
             } else {
+                isRunning = false
                 statusText = "로그인을 확인하지 못했습니다. 다시 시도해 주세요."
             }
         }
+    }
+
+    nonisolated private static func recheckLoginStatusAfterSuccess() async -> Bool {
+        await Task.detached(priority: .userInitiated) {
+            PreflightCheck.isCodexAuthenticated()
+        }.value
     }
 
     nonisolated private static func runLoginProcess(openURL: @escaping @Sendable (URL) -> Void) async -> Bool {

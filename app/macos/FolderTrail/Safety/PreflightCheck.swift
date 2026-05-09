@@ -168,23 +168,27 @@ enum PreflightCheck {
         )
     }
 
-    private static func checkCodexAuthenticated() -> PreflightCheckResult {
+    static func isCodexAuthenticated() -> Bool {
         // Keep OAuth/auth failure separate from install failure by running codex login status.
         if let candidateURL = firstWorkingCodexExecutableURL(), runCodexLoginStatus(
             executableURL: candidateURL,
             arguments: ["login", "status"]
         ) {
-            return .passed
+            return true
         }
 
         let loginShellCommand = """
         command -v \(codexExecutableName) >/dev/null && \(codexExecutableName) login status >/dev/null
         """
 
-        if runCodexLoginStatus(
+        return runCodexLoginStatus(
             executableURL: URL(fileURLWithPath: "/bin/zsh"),
             arguments: ["-lc", loginShellCommand]
-        ) {
+        )
+    }
+
+    private static func checkCodexAuthenticated() -> PreflightCheckResult {
+        if isCodexAuthenticated() {
             return .passed
         }
 
