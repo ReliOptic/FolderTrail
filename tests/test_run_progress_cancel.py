@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 PROMPT = APP / "UX" / "PlaceholderPromptView.swift"
 RUN_MODEL = APP / "Execution" / "FolderTrailPromptRunModel.swift"
 PIPELINE = APP / "Execution" / "FolderTrailRunPipeline.swift"
@@ -154,6 +155,7 @@ class RunProgressCancelTests(unittest.TestCase):
                     str(WORKSPACE),
                     str(EXECUTOR),
                     str(WRITER),
+                    str(WORKSPACE_MODE),
                     str(PIPELINE),
                     str(RUN_MODEL),
                     str(main),

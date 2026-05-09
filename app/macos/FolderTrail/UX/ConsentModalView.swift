@@ -36,11 +36,11 @@ struct ConsentModalView: View {
                 }
             }
 
-            Text(workspaceMode == .copiedWorkspace ? "원본 폴더는 변경하지 않습니다" : "원본 폴더에서 바로 진행합니다")
+            Text(workspaceMode.consentHeadline)
                 .font(.headline)
-                .foregroundStyle(workspaceMode == .copiedWorkspace ? .green : .orange)
+                .foregroundStyle(workspaceMode.consentAccentIsWarning ? .orange : .green)
 
-            Text(workspaceMode == .copiedWorkspace ? "FolderTrail은 별도 작업 폴더를 만든 뒤 그 안에서 정리 계획을 실행합니다." : "복사 시간을 건너뛰는 대신 정리 작업이 선택한 폴더에 바로 적용됩니다.")
+            Text(workspaceMode.consentDescription)
                 .foregroundStyle(.secondary)
 
             HStack {

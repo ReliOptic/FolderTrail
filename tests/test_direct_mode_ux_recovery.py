@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 PROMPT = APP / "UX" / "PlaceholderPromptView.swift"
 RUN_MODEL = APP / "Execution" / "FolderTrailPromptRunModel.swift"
 PIPELINE = APP / "Execution" / "FolderTrailRunPipeline.swift"
@@ -22,18 +23,20 @@ CREDENTIAL_STORE = APP / "Safety" / "OpenRouterCredentialStore.swift"
 class DirectModeUXRecoveryTests(unittest.TestCase):
     def test_issue_103_prompt_has_mode_selector_and_single_direct_action(self):
         prompt = PROMPT.read_text(encoding="utf-8")
+        mode_policy = WORKSPACE_MODE.read_text(encoding="utf-8")
 
         self.assertIn("modeSelector", prompt)
         self.assertIn("Picker(\"실행 방식\", selection: $workspaceMode)", prompt)
-        self.assertIn("안전 모드", prompt)
-        self.assertIn("빠른 모드", prompt)
-        self.assertIn("원본에서 바로 시작", prompt)
-        self.assertIn("복사본으로 시작", prompt)
-        self.assertIn("primaryActionTitle", prompt)
+        self.assertIn("mode.modePickerTitle", prompt)
+        self.assertIn("workspaceMode.primaryActionTitle", prompt)
+        self.assertIn("안전 모드", mode_policy)
+        self.assertIn("빠른 모드", mode_policy)
+        self.assertIn("원본에서 바로 시작", mode_policy)
+        self.assertIn("복사본으로 시작", mode_policy)
+        self.assertIn("workspaceMode.primaryActionTitle", prompt)
         self.assertIn("private func primaryAction()", prompt)
-        self.assertIn("case .directSource", prompt)
+        self.assertIn("workspaceMode.requiresPreflightBeforeConsent", prompt)
         self.assertIn("startRun()", prompt)
-        self.assertIn("case .copiedWorkspace", prompt)
         self.assertIn("showPreflight = true", prompt)
         self.assertIn("runModel.status == .idle", prompt)
         self.assertNotIn("빠른 모드: 복사 없이 원본에서 진행", prompt)
@@ -112,6 +115,7 @@ class DirectModeUXRecoveryTests(unittest.TestCase):
                     str(WORKSPACE),
                     str(EXECUTOR),
                     str(WRITER),
+                    str(WORKSPACE_MODE),
                     str(PIPELINE),
                     str(RUN_MODEL),
                     str(main),

@@ -24,7 +24,7 @@ class CodexLoginAutoRecheckTests(unittest.TestCase):
 
         self.assertIn("CodexChatGPTOAuthView(onRecheck: rerunPreflight)", preflight)
         self.assertIn("private func rerunPreflight", preflight)
-        self.assertIn("await runner.run(for: folderURL, workspaceMode: preflightWorkspaceMode)", preflight)
+        self.assertIn("await runner.run(for: folderURL, workspaceMode: workspaceMode)", preflight)
 
 
 if __name__ == "__main__":

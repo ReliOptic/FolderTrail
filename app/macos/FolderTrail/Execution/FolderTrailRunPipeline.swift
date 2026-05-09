@@ -1,10 +1,5 @@
 import Foundation
 
-enum WorkspacePreparationMode: String, Equatable {
-    case copiedWorkspace
-    case directSource
-}
-
 enum FolderTrailRunState: Equatable {
     case promptReceived
     case workspaceReady

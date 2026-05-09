@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 INFO = APP / "Info.plist"
 SERVICE_PROVIDER = APP / "Entry" / "FolderTrailServiceProvider.swift"
 APP_CONTROLLER = APP / "App" / "FolderTrailAppController.swift"
@@ -115,6 +116,7 @@ class FinderServiceEntryContractTests(unittest.TestCase):
                     str(OPENROUTER_KEYCHAIN),
                     str(OPENROUTER_CREDENTIAL_STORE),
                     str(PROVIDER_READINESS),
+                    str(WORKSPACE_MODE),
                     str(PREFLIGHT_CHECK),
                     str(PREFLIGHT_VIEW),
                     str(CONSENT_MODAL_VIEW),

@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 PIPELINE = APP / "Execution" / "FolderTrailRunPipeline.swift"
 RUN_MODEL = APP / "Execution" / "FolderTrailPromptRunModel.swift"
 PROMPT = APP / "UX" / "PlaceholderPromptView.swift"
@@ -26,21 +27,25 @@ class DirectRunModeTests(unittest.TestCase):
         consent = CONSENT.read_text(encoding="utf-8")
         preflight = PREFLIGHT.read_text(encoding="utf-8")
         run_model = RUN_MODEL.read_text(encoding="utf-8")
+        mode_policy = WORKSPACE_MODE.read_text(encoding="utf-8")
 
         self.assertIn("WorkspacePreparationMode", prompt)
         self.assertIn("workspaceMode", prompt)
-        self.assertIn("빠른 모드", prompt)
-        self.assertIn("원본에서 바로 시작", prompt)
-        self.assertIn("원본 폴더가 직접 변경될 수 있습니다", prompt)
+        self.assertIn("빠른 모드", mode_policy)
+        self.assertIn("원본에서 바로 시작", mode_policy)
+        self.assertIn("원본 폴더가 직접 변경될 수 있습니다", mode_policy)
         self.assertIn("workspaceMode: workspaceMode", prompt)
         self.assertIn("runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL, workspaceMode: workspaceMode)", prompt)
 
         self.assertIn("workspaceMode", consent)
-        self.assertIn("원본 폴더에서 바로 진행합니다", consent)
-        self.assertIn("원본 폴더는 변경하지 않습니다", consent)
+        self.assertIn("workspaceMode.consentHeadline", consent)
+        self.assertIn("workspaceMode.consentDescription", consent)
+        self.assertIn("원본 폴더에서 바로 진행합니다", mode_policy)
+        self.assertIn("원본 폴더는 변경하지 않습니다", mode_policy)
 
         self.assertIn("workspaceMode", preflight)
-        self.assertIn("원본 폴더에 쓸 수 있음", preflight)
+        self.assertIn("workspaceMode.preflightWorkspaceTitle", preflight)
+        self.assertIn("원본 폴더에 쓸 수 있음", mode_policy)
         self.assertIn("checkSelectedFolderWritable", preflight)
 
         self.assertIn("workspaceMode: WorkspacePreparationMode = .copiedWorkspace", run_model)
@@ -174,6 +179,7 @@ class DirectRunModeTests(unittest.TestCase):
                     str(WORKSPACE),
                     str(EXECUTOR),
                     str(WRITER),
+                    str(WORKSPACE_MODE),
                     str(PIPELINE),
                     str(main),
                     "-o",

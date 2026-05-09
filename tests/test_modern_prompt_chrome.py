@@ -6,16 +6,19 @@ APP = ROOT / "app" / "macos" / "FolderTrail"
 PROMPT = APP / "UX" / "PlaceholderPromptView.swift"
 PREFLIGHT_VIEW = APP / "UX" / "PreflightView.swift"
 PREFLIGHT_CHECK = APP / "Safety" / "PreflightCheck.swift"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 
 
 class ModernPromptChromeTests(unittest.TestCase):
     def test_issue_50_prompt_chrome_is_compact_and_uses_current_product_language(self):
         prompt = PROMPT.read_text(encoding="utf-8")
+        mode_policy = WORKSPACE_MODE.read_text(encoding="utf-8")
 
         self.assertIn("PromptStatusStrip", prompt)
         self.assertIn("settingsButton", prompt)
         self.assertNotIn('Text("OpenRouter', prompt)
-        self.assertIn("복사본으로 시작", prompt)
+        self.assertIn("workspaceMode.primaryActionTitle", prompt)
+        self.assertIn("복사본으로 시작", mode_policy)
         self.assertIn("폴더 바꾸기…", prompt)
         self.assertIn("중복 정리", prompt)
         self.assertIn("프로젝트별 정돈", prompt)
@@ -34,10 +37,12 @@ class ModernPromptChromeTests(unittest.TestCase):
     def test_issue_50_preflight_copy_says_copy_not_workspace(self):
         preflight_view = PREFLIGHT_VIEW.read_text(encoding="utf-8")
         preflight_check = PREFLIGHT_CHECK.read_text(encoding="utf-8")
+        mode_policy = WORKSPACE_MODE.read_text(encoding="utf-8")
 
         self.assertIn("정리 전 확인", preflight_view)
         self.assertIn("복사본 만들고 계속", preflight_view)
-        self.assertIn("작업 복사본을 만들 수 있음", preflight_check)
+        self.assertIn("workspaceMode.preflightWorkspaceTitle", preflight_check)
+        self.assertIn("작업 복사본을 만들 수 있음", mode_policy)
         self.assertNotIn("안전 작업공간", preflight_view + preflight_check)
 
 

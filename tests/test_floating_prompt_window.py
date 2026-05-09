@@ -5,12 +5,14 @@ ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
 PROMPT_VIEW = APP / "UX" / "PlaceholderPromptView.swift"
 APP_CONTROLLER = APP / "App" / "FolderTrailAppController.swift"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 
 
 class FloatingPromptWindowContractTests(unittest.TestCase):
     def test_issue_5_prompt_window_contract(self):
         prompt_view = PROMPT_VIEW.read_text(encoding="utf-8")
         app_controller = APP_CONTROLLER.read_text(encoding="utf-8")
+        mode_policy = WORKSPACE_MODE.read_text(encoding="utf-8")
 
         self.assertIn("selectedFolderURL.lastPathComponent", prompt_view)
         self.assertIn("TextEditor(text: $prompt)", prompt_view)
@@ -20,7 +22,8 @@ class FloatingPromptWindowContractTests(unittest.TestCase):
         self.assertIn("PromptSettingsSheet", prompt_view)
         self.assertIn("ProviderConnectView", settings_sheet)
         self.assertIn("OpenRouter 연결", (APP / "UX" / "ProviderConnectView.swift").read_text(encoding="utf-8"))
-        self.assertIn("복사본으로 시작", prompt_view)
+        self.assertIn("workspaceMode.primaryActionTitle", prompt_view)
+        self.assertIn("복사본으로 시작", mode_policy)
         self.assertIn(".disabled(prompt.trimmingCharacters", prompt_view)
         self.assertIn("@FocusState", prompt_view)
         self.assertIn('.keyboardShortcut("k", modifiers: .command)', prompt_view)

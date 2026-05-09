@@ -46,7 +46,7 @@ struct PreflightView: View {
             footerAction
         }
         .task {
-            await runner.run(for: folderURL, workspaceMode: preflightWorkspaceMode)
+            await runner.run(for: folderURL, workspaceMode: workspaceMode)
         }
     }
 
@@ -159,11 +159,8 @@ struct PreflightView: View {
 
     private func rerunPreflight() {
         Task {
-            await runner.run(for: folderURL, workspaceMode: preflightWorkspaceMode)
+            await runner.run(for: folderURL, workspaceMode: workspaceMode)
         }
     }
 
-    private var preflightWorkspaceMode: PreflightWorkspaceMode {
-        workspaceMode == .copiedWorkspace ? .copiedWorkspace : .directSource
-    }
 }
