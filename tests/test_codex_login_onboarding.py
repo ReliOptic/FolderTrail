@@ -15,9 +15,9 @@ class CodexLoginOnboardingTests(unittest.TestCase):
         self.assertIn("OpenRouter와 별개 로그인입니다", source)
         self.assertIn("Codex / ChatGPT OAuth", source)
         self.assertIn("토큰을 FolderTrail에 붙여넣지 마세요", source)
-        self.assertIn("Codex / ChatGPT 로그인 열기", source)
-        self.assertIn("CodexLoginHandoff.openInTerminal", source)
-        self.assertIn("NSWorkspace.shared.open(commandURL)", source)
+        self.assertIn("Codex / ChatGPT 로그인", source)
+        self.assertIn("CodexLoginRunner", source)
+        self.assertIn("NSWorkspace.shared.open(url)", source)
         self.assertIn("codex login", source)
 
     def test_issue_39_user_can_rerun_preflight_after_external_login(self):
