@@ -33,66 +33,22 @@ struct PlaceholderPromptView: View {
         VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
             statusStrip
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text("정리할 폴더")
-                    .font(FolderTrailDesign.Typography.meta)
-                    .foregroundStyle(.secondary)
-                Text(selectedFolderURL.lastPathComponent.isEmpty ? selectedFolderURL.path : selectedFolderURL.lastPathComponent)
-                    .font(FolderTrailDesign.Typography.section)
-                    .lineLimit(1)
-            }
-
-            PromptConnectionPanel(providerSettings: providerSettings)
-
-            HStack(spacing: 8) {
-                ForEach(recommendedPrompts, id: \.self) { recommendedPrompt in
-                    PromptChipButton(title: recommendedPrompt) {
-                        prompt = recommendedPrompt
-                        promptFocused = true
-                    }
+            ScrollView {
+                VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
+                    folderSummary
+                    promptComposer
+                    CompactConnectionPanel(providerSettings: providerSettings)
+                    preflightSection
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-
-            TextEditor(text: $prompt)
-                .font(FolderTrailDesign.Typography.body)
-                .frame(minHeight: 120)
-                .focused($promptFocused)
-                .overlay(
-                    RoundedRectangle(cornerRadius: FolderTrailDesign.Radius.sm)
-                        .stroke(Color.secondary.opacity(0.25))
-                )
 
             keyboardShortcutButtons
 
-            if showPreflight {
-                PreflightView(
-                    folderURL: selectedFolderURL,
-                    runner: PreflightRunner(),
-                    providerSettings: providerSettings
-                ) {
-                    showConsentModal = true
-                }
-            }
-
-            HStack {
-                Button("폴더 바꾸기…") {
-                    chooseFolder()
-                }
-
-                Spacer()
-
-                if providerSettings.isConnected {
-                    Button("복사본으로 정리 시작") {
-                        showPreflight = true
-                    }
-                        .buttonStyle(FolderTrailPrimaryButtonStyle())
-                        .keyboardShortcut(.defaultAction)
-                        .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                }
-            }
+            footerActions
         }
         .padding(FolderTrailDesign.Spacing.xl)
-        .frame(minWidth: 500, minHeight: 320)
+        .frame(minWidth: 520, idealWidth: 640, minHeight: 420, idealHeight: 560)
         .sheet(isPresented: $showConsentModal) {
             ConsentModalView(sourceFolderURL: selectedFolderURL) { _ in
                 showConsentModal = false
@@ -105,6 +61,71 @@ struct PlaceholderPromptView: View {
             PromptSettingsSheet(providerSettings: providerSettings)
             .padding(FolderTrailDesign.Spacing.xl)
             .frame(width: 420)
+        }
+    }
+
+    private var folderSummary: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("정리할 폴더")
+                .font(FolderTrailDesign.Typography.meta)
+                .foregroundStyle(.secondary)
+            Text(selectedFolderURL.lastPathComponent.isEmpty ? selectedFolderURL.path : selectedFolderURL.lastPathComponent)
+                .font(FolderTrailDesign.Typography.section)
+                .lineLimit(1)
+        }
+    }
+
+    private var promptComposer: some View {
+        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.md) {
+            HStack(spacing: 8) {
+                ForEach(recommendedPrompts, id: \.self) { recommendedPrompt in
+                    PromptChipButton(title: recommendedPrompt) {
+                        prompt = recommendedPrompt
+                        promptFocused = true
+                    }
+                }
+            }
+
+            TextEditor(text: $prompt)
+                .font(FolderTrailDesign.Typography.body)
+                .frame(minHeight: 96)
+                .focused($promptFocused)
+                .overlay(
+                    RoundedRectangle(cornerRadius: FolderTrailDesign.Radius.sm)
+                        .stroke(Color.secondary.opacity(0.25))
+                )
+        }
+    }
+
+    @ViewBuilder
+    private var preflightSection: some View {
+        if showPreflight {
+            PreflightView(
+                folderURL: selectedFolderURL,
+                runner: PreflightRunner(),
+                providerSettings: providerSettings
+            ) {
+                showConsentModal = true
+            }
+        }
+    }
+
+    private var footerActions: some View {
+        HStack {
+            Button("폴더 바꾸기…") {
+                chooseFolder()
+            }
+
+            Spacer()
+
+            if providerSettings.isConnected {
+                Button("복사본으로 정리 시작") {
+                    showPreflight = true
+                }
+                    .buttonStyle(FolderTrailPrimaryButtonStyle())
+                    .keyboardShortcut(.defaultAction)
+                    .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
         }
     }
 
@@ -216,24 +237,75 @@ private struct PromptChipButton: View {
     }
 }
 
-private struct PromptConnectionPanel: View {
+private struct CompactConnectionPanel: View {
     @ObservedObject var providerSettings: OpenRouterProviderSettings
 
     var body: some View {
         FolderTrailPanel {
-            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.md) {
-                Text("연결")
-                    .font(FolderTrailDesign.Typography.section)
-                Text("OpenRouter와 Codex / ChatGPT OAuth는 서로 다른 로그인입니다.")
+            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.sm) {
+                RequiredProviderRow(providerSettings: providerSettings)
+                Divider()
+                OptionalLocalHelperRow()
+            }
+        }
+    }
+}
+
+private struct RequiredProviderRow: View {
+    @ObservedObject var providerSettings: OpenRouterProviderSettings
+
+    var body: some View {
+        HStack(alignment: .top, spacing: FolderTrailDesign.Spacing.md) {
+            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
+                Text("OpenRouter 필요")
+                    .font(FolderTrailDesign.Typography.body.weight(.semibold))
+                Text("정리를 실행하는 AI 제공자 연결")
                     .font(FolderTrailDesign.Typography.meta)
                     .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-
-                ProviderConnectionSection(providerSettings: providerSettings)
-
-                Divider()
-
-                CodexChatGPTOAuthView()
             }
+
+            Spacer()
+
+            switch providerSettings.status {
+            case .connected:
+                Label("연결됨", systemImage: "checkmark.circle.fill")
+                    .font(FolderTrailDesign.Typography.meta)
+                    .foregroundStyle(FolderTrailDesign.Palette.success)
+            default:
+                Button("연결") {
+                    connectOpenRouter()
+                }
+                .controlSize(.small)
+            }
+        }
+    }
+
+    private func connectOpenRouter() {
+        Task {
+            await providerSettings.connectWithBrowser { url in
+                NSWorkspace.shared.open(url)
+            }
+            NSApp.activate(ignoringOtherApps: true)
+            FolderTrailAppController.shared.bringPromptToFront()
+        }
+    }
+}
+
+private struct OptionalLocalHelperRow: View {
+    var body: some View {
+        HStack(alignment: .top, spacing: FolderTrailDesign.Spacing.md) {
+            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
+                Text("선택: Codex / ChatGPT")
+                    .font(FolderTrailDesign.Typography.body.weight(.semibold))
+                Text("로컬 도우미 OAuth. 없어도 OpenRouter로 먼저 진행할 수 있습니다.")
+                    .font(FolderTrailDesign.Typography.meta)
+                    .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+                    .lineLimit(2)
+            }
+
+            Spacer()
+
+            CodexChatGPTOAuthView(style: .compact)
         }
     }
 }
@@ -262,7 +334,7 @@ private struct PromptSettingsSheet: View {
         VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
             Text("v0.1 설정")
                 .font(FolderTrailDesign.Typography.section)
-            Text("OpenRouter 제공자 연결과 Codex / ChatGPT OAuth는 서로 다른 로그인입니다.")
+            Text("OpenRouter 제공자 연결과 Codex / ChatGPT OAuth는 별도 로그인입니다.")
                 .font(FolderTrailDesign.Typography.meta)
                 .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
 
