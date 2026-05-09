@@ -25,7 +25,7 @@ class PreflightCheckContractTests(unittest.TestCase):
         self.assertIn("deletingLastPathComponent", preflight)
         self.assertIn("createDirectory", preflight)
         self.assertIn("removeItem", preflight)
-        self.assertIn("OpenRouterKeychain.load", preflight)
+        self.assertIn("OpenRouterCredentialStore.keychain.loadAPIKey", preflight)
         self.assertIn("Process()", preflight)
         self.assertIn('"codex"', preflight)
         self.assertIn('"--version"', preflight)

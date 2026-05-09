@@ -86,6 +86,7 @@ class ProviderReadinessContractTests(unittest.TestCase):
                     "arm64-apple-macosx14.0",
                     str(READINESS),
                     str(APP / "Safety" / "OpenRouterKeychain.swift"),
+                    str(APP / "Safety" / "OpenRouterCredentialStore.swift"),
                     str(PREFLIGHT),
                     str(main),
                     "-o",

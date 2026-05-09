@@ -9,6 +9,7 @@ APP = ROOT / "app" / "macos" / "FolderTrail"
 ADAPTER = APP / "Intelligence" / "OpenRouterPlannerAdapter.swift"
 MANIFEST = APP / "Intelligence" / "ManifestBuilder.swift"
 KEYCHAIN = APP / "Safety" / "OpenRouterKeychain.swift"
+CREDENTIAL_STORE = APP / "Safety" / "OpenRouterCredentialStore.swift"
 SETTINGS_VIEW = APP / "UX" / "PlannerModelSettingsView.swift"
 PROJECT = ROOT / "app" / "macos" / "FolderTrail.xcodeproj" / "project.pbxproj"
 
@@ -24,7 +25,8 @@ class OpenRouterPlannerAdapterTests(unittest.TestCase):
 
         self.assertIn("https://openrouter.ai/api/v1/chat/completions", source)
         self.assertIn("FolderTrail Planner", source)
-        self.assertIn("OpenRouterKeychain.load", source)
+        self.assertIn("OpenRouterCredentialStore", source)
+        self.assertIn("credentialStore.loadAPIKey", source)
         self.assertIn("URLSession.shared.data", source)
         self.assertIn("struct ActionPlan", source)
         self.assertIn("Codable", source)
@@ -105,6 +107,7 @@ class OpenRouterPlannerAdapterTests(unittest.TestCase):
                     "arm64-apple-macosx14.0",
                     str(MANIFEST),
                     str(KEYCHAIN),
+                    str(CREDENTIAL_STORE),
                     str(ADAPTER),
                     str(main),
                     "-o",

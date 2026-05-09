@@ -63,21 +63,22 @@ final class OpenRouterPlannerAdapter: PlannerAdapter {
 
     private let model: String
     private let transport: Transport
+    private let credentialStore: OpenRouterCredentialStore
 
     init(
         model: String = OpenRouterPlannerAdapter.defaultModel,
+        credentialStore: OpenRouterCredentialStore = .keychain,
         transport: @escaping Transport = { request in
             try await URLSession.shared.data(for: request)
         }
     ) {
         self.model = model
+        self.credentialStore = credentialStore
         self.transport = transport
     }
 
     func plan(prompt: String, manifest: FolderManifest) async throws -> ActionPlan {
-        guard let rawKey = try OpenRouterKeychain.load(),
-              !rawKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        else {
+        guard let rawKey = try credentialStore.loadAPIKey() else {
             throw PlannerAdapterError.authFailure
         }
 
