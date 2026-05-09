@@ -56,6 +56,7 @@ struct PreflightCheckState: Identifiable, Equatable {
 
 enum PreflightCheck {
     private static let codexExecutableName = "codex"
+    private static let codexCommandTimeout: TimeInterval = 4
 
     static func runAll(
         for folderURL: URL,
@@ -66,6 +67,12 @@ enum PreflightCheck {
                 id: checkID,
                 result: run(checkID, folderURL: folderURL, fileManager: fileManager)
             )
+        }
+    }
+
+    static func pendingChecks() -> [PreflightCheckState] {
+        PreflightCheckID.allCases.map {
+            PreflightCheckState(id: $0, result: .pending)
         }
     }
 
@@ -211,7 +218,11 @@ enum PreflightCheck {
         runCodexCommand(executableURL: executableURL, arguments: arguments)
     }
 
-    private static func runCodexCommand(executableURL: URL, arguments: [String]) -> Bool {
+    private static func runCodexCommand(
+        executableURL: URL,
+        arguments: [String],
+        timeout: TimeInterval = codexCommandTimeout
+    ) -> Bool {
         let process = Process()
         process.executableURL = executableURL
         process.arguments = arguments
@@ -220,7 +231,16 @@ enum PreflightCheck {
 
         do {
             try process.run()
-            process.waitUntilExit()
+            let deadline = Date().addingTimeInterval(timeout)
+            while process.isRunning, Date() < deadline {
+                Thread.sleep(forTimeInterval: 0.05)
+            }
+
+            if process.isRunning {
+                process.terminate()
+                return false
+            }
+
             return process.terminationStatus == 0
         } catch {
             return false
@@ -230,9 +250,7 @@ enum PreflightCheck {
 
 @MainActor
 final class PreflightRunner: ObservableObject {
-    @Published private(set) var checks: [PreflightCheckState] = PreflightCheckID.allCases.map {
-        PreflightCheckState(id: $0, result: .pending)
-    }
+    @Published private(set) var checks: [PreflightCheckState] = PreflightCheck.pendingChecks()
 
     var allPassed: Bool {
         PreflightCheck.allPassed(checks)
@@ -243,6 +261,10 @@ final class PreflightRunner: ObservableObject {
     }
 
     func run(for folderURL: URL) async {
-        checks = PreflightCheck.runAll(for: folderURL)
+        checks = PreflightCheck.pendingChecks()
+        let resolvedChecks = await Task.detached(priority: .userInitiated) {
+            PreflightCheck.runAll(for: folderURL)
+        }.value
+        checks = resolvedChecks
     }
 }
