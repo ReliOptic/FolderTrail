@@ -15,7 +15,7 @@ class ModernPromptChromeTests(unittest.TestCase):
         self.assertIn("PromptStatusStrip", prompt)
         self.assertIn("settingsButton", prompt)
         self.assertNotIn('Text("OpenRouter', prompt)
-        self.assertIn('Button("시작")', prompt)
+        self.assertIn("복사본으로 시작", prompt)
         self.assertIn("폴더 바꾸기…", prompt)
         self.assertIn("중복 정리", prompt)
         self.assertIn("프로젝트별 정돈", prompt)

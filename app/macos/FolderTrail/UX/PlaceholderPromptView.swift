@@ -51,6 +51,7 @@ struct PlaceholderPromptView: View {
                 VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
                     folderSummary
                     promptComposer
+                    modeSelector
                     preflightSection
                     runStatusSection
                 }
@@ -108,16 +109,22 @@ struct PlaceholderPromptView: View {
                         .stroke(Color.secondary.opacity(0.25))
                 )
 
-            Toggle(isOn: directModeBinding) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("빠른 모드: 복사 없이 원본에서 진행")
-                        .font(FolderTrailDesign.Typography.meta.weight(.semibold))
-                    Text("원본 폴더가 직접 변경될 수 있습니다.")
-                        .font(FolderTrailDesign.Typography.badge)
-                        .foregroundStyle(FolderTrailDesign.Palette.warning)
-                }
+        }
+    }
+
+    private var modeSelector: some View {
+        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
+            Picker("실행 방식", selection: $workspaceMode) {
+                Text("안전 모드").tag(WorkspacePreparationMode.copiedWorkspace)
+                Text("빠른 모드").tag(WorkspacePreparationMode.directSource)
             }
-            .toggleStyle(.checkbox)
+            .pickerStyle(.segmented)
+
+            Text(modeDescription)
+                .font(FolderTrailDesign.Typography.badge)
+                .foregroundStyle(workspaceMode == .directSource
+                    ? FolderTrailDesign.Palette.warning
+                    : FolderTrailDesign.Palette.secondaryText)
         }
     }
 
@@ -148,9 +155,9 @@ struct PlaceholderPromptView: View {
                 }
                 .buttonStyle(FolderTrailPrimaryButtonStyle())
                 .keyboardShortcut(.defaultAction)
-            } else {
-                Button("시작") {
-                    showPreflight = true
+            } else if runModel.status == .idle {
+                Button(primaryActionTitle) {
+                    primaryAction()
                 }
                 .buttonStyle(FolderTrailPrimaryButtonStyle())
                 .keyboardShortcut(.defaultAction)
@@ -274,11 +281,31 @@ struct PlaceholderPromptView: View {
         runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL, workspaceMode: workspaceMode)
     }
 
-    private var directModeBinding: Binding<Bool> {
-        Binding(
-            get: { workspaceMode == .directSource },
-            set: { workspaceMode = $0 ? .directSource : .copiedWorkspace }
-        )
+    private func primaryAction() {
+        switch workspaceMode {
+        case .copiedWorkspace:
+            showPreflight = true
+        case .directSource:
+            startRun()
+        }
+    }
+
+    private var primaryActionTitle: String {
+        switch workspaceMode {
+        case .copiedWorkspace:
+            return "복사본으로 시작"
+        case .directSource:
+            return "원본에서 바로 시작"
+        }
+    }
+
+    private var modeDescription: String {
+        switch workspaceMode {
+        case .copiedWorkspace:
+            return "복사본에서 안전하게 정리합니다."
+        case .directSource:
+            return "복사 시간을 건너뛰며 원본 폴더가 직접 변경될 수 있습니다."
+        }
     }
 
     private var elapsedTimeText: String {
