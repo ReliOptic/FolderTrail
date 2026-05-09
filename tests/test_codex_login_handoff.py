@@ -14,10 +14,9 @@ class CodexLoginHandoffTests(unittest.TestCase):
         source = view + handoff
 
         self.assertIn("CodexChatGPTOAuthView", view)
-        self.assertIn("Codex / ChatGPT 로그인 열기", source)
-        self.assertIn("CodexLoginHandoff.openInTerminal", source)
-        self.assertIn("foldertrail-codex-login-", source)
-        self.assertIn("NSWorkspace.shared.open(commandURL)", source)
+        self.assertIn("Codex / ChatGPT 로그인", source)
+        self.assertIn("CodexLoginRunner", source)
+        self.assertIn("NSWorkspace.shared.open(url)", source)
         self.assertIn("codex login", source)
         self.assertIn("토큰을 FolderTrail에 붙여넣지 마세요", source)
         self.assertIn("다시 확인", source)

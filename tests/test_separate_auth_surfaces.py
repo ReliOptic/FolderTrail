@@ -24,16 +24,15 @@ class SeparateAuthSurfacesTests(unittest.TestCase):
         self.assertIn("Codex / ChatGPT OAuth", prompt)
         self.assertIn("별도 로그인", prompt)
 
-    def test_issue_59_codex_chatgpt_oauth_view_launches_visible_terminal_handoff(self):
+    def test_issue_59_codex_chatgpt_oauth_view_launches_visible_browser_handoff(self):
         source = CODEX_AUTH.read_text(encoding="utf-8")
 
         self.assertIn("struct CodexChatGPTOAuthView", source)
         self.assertIn("Codex / ChatGPT OAuth", source)
         self.assertIn("OpenRouter와 별개", source)
-        self.assertIn("Codex / ChatGPT 로그인 열기", source)
-        self.assertIn("CodexLoginHandoff.openInTerminal", source)
-        self.assertIn("foldertrail-codex-login-", source)
-        self.assertIn("NSWorkspace.shared.open(commandURL)", source)
+        self.assertIn("Codex / ChatGPT 로그인", source)
+        self.assertIn("CodexLoginRunner", source)
+        self.assertIn("NSWorkspace.shared.open(url)", source)
         self.assertIn("codex login", source)
 
     def test_issue_59_settings_and_preflight_reuse_same_codex_auth_surface(self):
