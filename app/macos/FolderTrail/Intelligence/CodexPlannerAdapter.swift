@@ -51,6 +51,8 @@ struct CodexPlannerAdapter: PlannerAdapter {
             throw PlannerAdapterError.networkFailure
         } catch PlannerAdapterError.authFailure {
             throw PlannerAdapterError.authFailure
+        } catch is CancellationError {
+            throw CancellationError()
         } catch {
             throw PlannerAdapterError.networkFailure
         }
@@ -127,6 +129,10 @@ struct CodexPlannerAdapter: PlannerAdapter {
 
                 let deadline = Date().addingTimeInterval(commandTimeout)
                 while process.isRunning, Date() < deadline {
+                    if Task.isCancelled {
+                        process.terminate()
+                        throw CancellationError()
+                    }
                     try await Task.sleep(nanoseconds: 100_000_000)
                 }
 
@@ -154,6 +160,8 @@ struct CodexPlannerAdapter: PlannerAdapter {
                 return String(data: stdout, encoding: .utf8) ?? ""
             } catch let error as PlannerAdapterError {
                 throw error
+            } catch is CancellationError {
+                throw CancellationError()
             } catch {
                 throw PlannerAdapterError.networkFailure
             }
