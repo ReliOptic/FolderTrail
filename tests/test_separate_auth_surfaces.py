@@ -32,8 +32,9 @@ class SeparateAuthSurfacesTests(unittest.TestCase):
         self.assertIn("OpenRouter와 별개", source)
         self.assertIn("Codex / ChatGPT 로그인", source)
         self.assertIn("CodexLoginRunner", source)
-        self.assertIn("NSWorkspace.shared.open(url)", source)
         self.assertIn("codex login", source)
+        self.assertIn("브라우저 로그인은 Codex가 열어 줍니다", source)
+        self.assertNotIn("NSWorkspace.shared.open(url)", source)
 
     def test_issue_59_settings_and_preflight_reuse_same_codex_auth_surface(self):
         settings = SETTINGS.read_text(encoding="utf-8")

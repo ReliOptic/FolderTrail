@@ -15,9 +15,7 @@ class TerminalLessCodexOAuthTests(unittest.TestCase):
         self.assertIn("loginRunner.start", source)
         self.assertIn("Process()", source)
         self.assertIn("readabilityHandler", source)
-        self.assertIn("extractAuthURL", source)
-        self.assertIn("NSWorkspace.shared.open(url)", source)
-        self.assertIn("브라우저를 열고 있어요", source)
+        self.assertIn("브라우저 로그인은 Codex가 열어 줍니다", source)
         self.assertIn("브라우저 로그인이 끝나면 자동으로 다시 확인합니다", source)
         self.assertIn("로그인 완료", source)
 
@@ -27,6 +25,8 @@ class TerminalLessCodexOAuthTests(unittest.TestCase):
             "NSWorkspace.shared.open(commandURL)",
             "Press return to close",
             "터미널",
+            "extractAuthURL",
+            "NSWorkspace.shared.open(url)",
         ]
         for token in forbidden:
             self.assertNotIn(token, source)
