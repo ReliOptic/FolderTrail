@@ -17,7 +17,8 @@ class KeychainTrustGuardTests(unittest.TestCase):
         self.assertNotRegex(source, r"init\(\) \{\s*refreshStatus\(\)\s*\}")
         self.assertIn("func refreshStatus(force: Bool = false)", source)
         self.assertIn("guard force || !hasCheckedStoredCredentials else", source)
-        self.assertLess(source.index("func refreshStatus"), source.index("OpenRouterKeychain.load"))
+        self.assertLess(source.index("func refreshStatus"), source.index("credentialStore.loadAPIKey"))
+        self.assertNotIn("OpenRouterKeychain.load", source)
 
     def test_issue_37_provider_view_explains_keychain_before_user_action(self):
         source = PROVIDER_VIEW.read_text(encoding="utf-8")

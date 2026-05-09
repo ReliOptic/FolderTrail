@@ -17,6 +17,7 @@
 		AA0000000000000000000110 /* OpenRouterPKCE.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000210 /* OpenRouterPKCE.swift */; };
 		AA0000000000000000000111 /* OpenRouterProviderSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000211 /* OpenRouterProviderSettings.swift */; };
 		AA0000000000000000000112 /* OpenRouterKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000212 /* OpenRouterKeychain.swift */; };
+		AA0000000000000000000132 /* OpenRouterCredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000232 /* OpenRouterCredentialStore.swift */; };
 		AA0000000000000000000113 /* ProviderConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000213 /* ProviderConnectView.swift */; };
 		AA0000000000000000000114 /* OpenRouterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000214 /* OpenRouterSettingsView.swift */; };
 		AA0000000000000000000115 /* PreflightCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000215 /* PreflightCheck.swift */; };
@@ -50,6 +51,7 @@
 		AA0000000000000000000210 /* OpenRouterPKCE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intelligence/OpenRouterPKCE.swift; sourceTree = "<group>"; };
 		AA0000000000000000000211 /* OpenRouterProviderSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intelligence/OpenRouterProviderSettings.swift; sourceTree = "<group>"; };
 		AA0000000000000000000212 /* OpenRouterKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Safety/OpenRouterKeychain.swift; sourceTree = "<group>"; };
+		AA0000000000000000000232 /* OpenRouterCredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Safety/OpenRouterCredentialStore.swift; sourceTree = "<group>"; };
 		AA0000000000000000000213 /* ProviderConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/ProviderConnectView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000214 /* OpenRouterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/OpenRouterSettingsView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000215 /* PreflightCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Safety/PreflightCheck.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				AA0000000000000000000210 /* OpenRouterPKCE.swift */,
 				AA0000000000000000000211 /* OpenRouterProviderSettings.swift */,
 				AA0000000000000000000212 /* OpenRouterKeychain.swift */,
+				AA0000000000000000000232 /* OpenRouterCredentialStore.swift */,
 				AA0000000000000000000213 /* ProviderConnectView.swift */,
 				AA0000000000000000000214 /* OpenRouterSettingsView.swift */,
 				AA0000000000000000000215 /* PreflightCheck.swift */,
@@ -199,6 +202,7 @@
 				AA0000000000000000000110 /* OpenRouterPKCE.swift in Sources */,
 				AA0000000000000000000111 /* OpenRouterProviderSettings.swift in Sources */,
 				AA0000000000000000000112 /* OpenRouterKeychain.swift in Sources */,
+				AA0000000000000000000132 /* OpenRouterCredentialStore.swift in Sources */,
 				AA0000000000000000000113 /* ProviderConnectView.swift in Sources */,
 				AA0000000000000000000114 /* OpenRouterSettingsView.swift in Sources */,
 				AA0000000000000000000115 /* PreflightCheck.swift in Sources */,

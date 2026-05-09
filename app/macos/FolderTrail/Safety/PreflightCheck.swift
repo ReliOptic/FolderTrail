@@ -146,7 +146,7 @@ enum PreflightCheck {
     private static func loadProviderReadiness() -> Result<ProviderReadiness, Error> {
         Result {
             try ProviderReadiness.evaluate(
-                openRouterAPIKey: { try OpenRouterKeychain.load() },
+                openRouterAPIKey: { try OpenRouterCredentialStore.keychain.loadAPIKey() },
                 codexAuthenticated: isCodexAuthenticated
             )
         }

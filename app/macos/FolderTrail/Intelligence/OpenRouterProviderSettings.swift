@@ -20,8 +20,11 @@ final class OpenRouterProviderSettings: ObservableObject {
 
     @Published private(set) var status: ProviderConnectionStatus = .notConnected
     private var hasCheckedStoredCredentials = false
+    private let credentialStore: OpenRouterCredentialStore
 
-    init() {}
+    init(credentialStore: OpenRouterCredentialStore = .keychain) {
+        self.credentialStore = credentialStore
+    }
 
     var isConnected: Bool {
         status.isConnected
@@ -48,7 +51,7 @@ final class OpenRouterProviderSettings: ObservableObject {
         hasCheckedStoredCredentials = true
 
         do {
-            if let storedSecret = try OpenRouterKeychain.load(), !storedSecret.isEmpty {
+            if let storedSecret = try credentialStore.loadAPIKey() {
                 status = .connected(maskedAPIKey: mask(storedSecret))
             } else {
                 status = .notConnected
@@ -66,7 +69,7 @@ final class OpenRouterProviderSettings: ObservableObject {
         }
 
         do {
-            try OpenRouterKeychain.save(trimmed)
+            try credentialStore.saveAPIKey(trimmed)
             hasCheckedStoredCredentials = true
             status = .connected(maskedAPIKey: mask(trimmed))
         } catch {
@@ -83,7 +86,7 @@ final class OpenRouterProviderSettings: ObservableObject {
             openURL(OpenRouterPKCE.authorizationURL(verifier: verifier))
             let code = try await callbackServer.waitForCode()
             let response = try await exchangeAuthorizationCode(code, verifier: verifier)
-            try OpenRouterKeychain.save(response.key)
+            try credentialStore.saveAPIKey(response.key)
             hasCheckedStoredCredentials = true
             status = .connected(maskedAPIKey: mask(response.key))
         } catch {
