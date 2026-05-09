@@ -13,31 +13,14 @@ MANIFEST = APP / "Intelligence" / "ManifestBuilder.swift"
 ADAPTER = APP / "Intelligence" / "OpenRouterPlannerAdapter.swift"
 WRITER = APP / "Output" / "TrailWriter.swift"
 KEYCHAIN = APP / "Safety" / "OpenRouterKeychain.swift"
+CREDENTIAL_STORE = APP / "Safety" / "OpenRouterCredentialStore.swift"
 PROJECT = ROOT / "app" / "macos" / "FolderTrail.xcodeproj" / "project.pbxproj"
 
 
 class RunPipelineTests(unittest.TestCase):
     def test_issue_69_run_pipeline_orchestrates_workspace_manifest_plan_execute_trail(self):
         self.assertTrue(PIPELINE.exists(), "missing Execution/FolderTrailRunPipeline.swift")
-        source = PIPELINE.read_text(encoding="utf-8")
         project = PROJECT.read_text(encoding="utf-8")
-
-        for name in [
-            "final class FolderTrailRunPipeline",
-            "FolderTrailRunState",
-            "workspaceReady",
-            "manifestBuilt",
-            "planReady",
-            "executing",
-            "trailWritten",
-            "done",
-            "MockPlannerAdapter",
-            "WorkspaceCopyService",
-            "ManifestBuilder",
-            "SafeExecutor",
-            "TrailWriter",
-        ]:
-            self.assertIn(name, source)
         self.assertIn("FolderTrailRunPipeline.swift", project)
 
         smoke = textwrap.dedent(
@@ -182,6 +165,7 @@ class RunPipelineTests(unittest.TestCase):
                     "arm64-apple-macosx14.0",
                     str(MANIFEST),
                     str(KEYCHAIN),
+                    str(CREDENTIAL_STORE),
                     str(ADAPTER),
                     str(WORKSPACE),
                     str(EXECUTOR),

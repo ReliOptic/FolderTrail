@@ -10,6 +10,7 @@ EXECUTOR = APP / "Execution" / "SafeExecutor.swift"
 ADAPTER = APP / "Intelligence" / "OpenRouterPlannerAdapter.swift"
 MANIFEST = APP / "Intelligence" / "ManifestBuilder.swift"
 KEYCHAIN = APP / "Safety" / "OpenRouterKeychain.swift"
+CREDENTIAL_STORE = APP / "Safety" / "OpenRouterCredentialStore.swift"
 PROJECT = ROOT / "app" / "macos" / "FolderTrail.xcodeproj" / "project.pbxproj"
 
 
@@ -109,6 +110,7 @@ class SafeExecutorBehaviorTests(unittest.TestCase):
                     "arm64-apple-macosx14.0",
                     str(MANIFEST),
                     str(KEYCHAIN),
+                    str(CREDENTIAL_STORE),
                     str(ADAPTER),
                     str(EXECUTOR),
                     str(main),
