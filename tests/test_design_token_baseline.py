@@ -24,7 +24,8 @@ class DesignTokenBaselineTests(unittest.TestCase):
         project = PROJECT.read_text(encoding="utf-8")
 
         self.assertIn("FolderTrailDesign.swift", project)
-        self.assertIn("FolderTrailStatusPill", prompt)
+        self.assertIn("PromptReadinessBar", prompt)
+        self.assertIn("FolderTrailDesign.Palette.success", prompt)
         self.assertIn("FolderTrailChipButtonStyle", prompt)
         self.assertIn("FolderTrailPrimaryButtonStyle", prompt)
         self.assertIn("FolderTrailPanel", preflight)

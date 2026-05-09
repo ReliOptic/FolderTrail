@@ -6,9 +6,9 @@ struct PlaceholderPromptView: View {
     let folderURL: URL
 
     private let recommendedPrompts = [
-        "중복 파일을 찾아서 정리해줘",
-        "프로젝트별로 폴더를 나눠줘",
-        "오래된 다운로드 파일을 분류해줘",
+        "중복 정리",
+        "프로젝트별 정돈",
+        "오래된 다운로드 분류",
     ]
 
     @State private var prompt = ""
@@ -77,14 +77,14 @@ struct PlaceholderPromptView: View {
             }
 
             HStack {
-                Button("정리할 폴더 바꾸기…") {
+                Button("폴더 바꾸기…") {
                     chooseFolder()
                 }
 
                 Spacer()
 
                 if providerSettings.isConnected {
-                    Button("안전 작업공간에서 시작") {
+                    Button("복사본으로 정리 시작") {
                         showPreflight = true
                     }
                         .buttonStyle(FolderTrailPrimaryButtonStyle())
@@ -94,7 +94,7 @@ struct PlaceholderPromptView: View {
             }
         }
         .padding(FolderTrailDesign.Spacing.xl)
-        .frame(minWidth: 520, minHeight: 360)
+        .frame(minWidth: 500, minHeight: 320)
         .sheet(isPresented: $showConsentModal) {
             ConsentModalView(sourceFolderURL: selectedFolderURL) { _ in
                 showConsentModal = false
@@ -175,9 +175,10 @@ private struct PromptStatusStrip: View {
 
             Spacer()
 
-            FolderTrailStatusPill(title: providerStatusTitle, systemImage: providerStatusImage)
-            FolderTrailStatusPill(title: runReadinessTitle, systemImage: runReadinessImage)
-            FolderTrailStatusPill(title: "Codex fallback 선택", systemImage: "terminal")
+            PromptReadinessBar(
+                providerConnected: providerConnected,
+                helperTitle: "로컬 도우미 선택 사항"
+            )
 
             Button("설정…") {
                 settingsButton()
@@ -186,20 +187,23 @@ private struct PromptStatusStrip: View {
         }
     }
 
-    private var providerStatusTitle: String {
-        providerConnected ? "OpenRouter 연결됨" : "OpenRouter 연결 필요"
-    }
+}
 
-    private var providerStatusImage: String {
-        providerConnected ? "checkmark.circle" : "circle"
-    }
+private struct PromptReadinessBar: View {
+    let providerConnected: Bool
+    let helperTitle: String
 
-    private var runReadinessTitle: String {
-        providerConnected ? "실행 준비" : "연결 필요"
-    }
-
-    private var runReadinessImage: String {
-        providerConnected ? "play.circle" : "exclamationmark.circle"
+    var body: some View {
+        HStack(spacing: FolderTrailDesign.Spacing.sm) {
+            Label(providerConnected ? "AI 준비됨" : "AI 연결 필요", systemImage: providerConnected ? "checkmark.circle" : "exclamationmark.circle")
+                .foregroundStyle(providerConnected ? FolderTrailDesign.Palette.success : FolderTrailDesign.Palette.warning)
+            Text("·")
+                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+            Label(helperTitle, systemImage: "terminal")
+                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+        }
+        .font(FolderTrailDesign.Typography.meta)
+        .lineLimit(1)
     }
 }
 
@@ -221,7 +225,7 @@ private struct PromptSettingsSheet: View {
         VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
             Text("v0.1 설정")
                 .font(FolderTrailDesign.Typography.section)
-            Text("OpenRouter 연결, Codex 로그인 확인, 실행 준비 상태만 빠르게 점검합니다.")
+            Text("OpenRouter 연결, Codex 로그인 확인, 정리 준비 상태만 빠르게 점검합니다.")
                 .font(FolderTrailDesign.Typography.meta)
                 .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
 
