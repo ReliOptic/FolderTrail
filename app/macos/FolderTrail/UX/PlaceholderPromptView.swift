@@ -16,6 +16,7 @@ struct PlaceholderPromptView: View {
     @State private var showPreflight = false
     @State private var showConsentModal = false
     @State private var showSettingsSheet = false
+    @StateObject private var runModel: FolderTrailPromptRunModel
     @FocusState private var promptFocused: Bool
     @ObservedObject private var providerSettings: OpenRouterProviderSettings
 
@@ -23,10 +24,15 @@ struct PlaceholderPromptView: View {
         self.init(folderURL: folderURL, providerSettings: OpenRouterProviderSettings.shared)
     }
 
-    init(folderURL: URL, providerSettings: OpenRouterProviderSettings) {
+    init(
+        folderURL: URL,
+        providerSettings: OpenRouterProviderSettings,
+        runModel: FolderTrailPromptRunModel? = nil
+    ) {
         self.folderURL = folderURL
         _selectedFolderURL = State(initialValue: folderURL)
         _providerSettings = ObservedObject(wrappedValue: providerSettings)
+        _runModel = StateObject(wrappedValue: runModel ?? FolderTrailPromptRunModel())
     }
 
     var body: some View {
@@ -39,6 +45,7 @@ struct PlaceholderPromptView: View {
                     promptComposer
                     CompactConnectionPanel(providerSettings: providerSettings)
                     preflightSection
+                    runStatusSection
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -50,8 +57,8 @@ struct PlaceholderPromptView: View {
         .padding(FolderTrailDesign.Spacing.xl)
         .frame(minWidth: 520, idealWidth: 640, minHeight: 420, idealHeight: 560)
         .sheet(isPresented: $showConsentModal) {
-            ConsentModalView(sourceFolderURL: selectedFolderURL) { _ in
-                showConsentModal = false
+            ConsentModalView(sourceFolderURL: selectedFolderURL) {
+                startRun()
             } onCancel: {
                 showConsentModal = false
             }
@@ -123,7 +130,48 @@ struct PlaceholderPromptView: View {
             }
                 .buttonStyle(FolderTrailPrimaryButtonStyle())
                 .keyboardShortcut(.defaultAction)
-                .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || runModel.status == .running)
+        }
+    }
+
+    @ViewBuilder
+    private var runStatusSection: some View {
+        switch runModel.status {
+        case .idle:
+            EmptyView()
+        case .running:
+            HStack(spacing: FolderTrailDesign.Spacing.sm) {
+                ProgressView()
+                    .controlSize(.small)
+                Text("정리 중")
+                    .font(FolderTrailDesign.Typography.meta)
+                    .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+            }
+        case .done:
+            if let result = runModel.result {
+                FolderTrailPanel {
+                    VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.sm) {
+                        Text("완료")
+                            .font(FolderTrailDesign.Typography.body.weight(.semibold))
+                        Button("결과 폴더 열기") {
+                            NSWorkspace.shared.open(result.workspaceURL)
+                        }
+                        .controlSize(.small)
+                    }
+                }
+            }
+        case .failed:
+            FolderTrailPanel {
+                VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.sm) {
+                    Text(runModel.errorMessage ?? "정리를 완료하지 못했습니다. 다시 시도해 주세요.")
+                        .font(FolderTrailDesign.Typography.meta)
+                        .foregroundStyle(FolderTrailDesign.Palette.warning)
+                    Button("다시 시도") {
+                        startRun()
+                    }
+                    .controlSize(.small)
+                }
+            }
         }
     }
 
@@ -171,6 +219,14 @@ struct PlaceholderPromptView: View {
 
     private func openSettingsSheet() {
         showSettingsSheet = true
+    }
+
+    private func startRun() {
+        showConsentModal = false
+        showPreflight = false
+        Task {
+            await runModel.run(prompt: prompt, sourceFolderURL: selectedFolderURL)
+        }
     }
 }
 

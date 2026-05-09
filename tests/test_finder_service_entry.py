@@ -23,6 +23,13 @@ PREFLIGHT_VIEW = APP / "UX" / "PreflightView.swift"
 CONSENT_MODAL_VIEW = APP / "UX" / "ConsentModalView.swift"
 CODEX_CHATGPT_AUTH_VIEW = APP / "UX" / "CodexChatGPTAuthView.swift"
 WORKSPACE_COPY_SERVICE = APP / "Execution" / "WorkspaceCopyService.swift"
+PROMPT_RUN_MODEL = APP / "Execution" / "FolderTrailPromptRunModel.swift"
+RUN_PIPELINE = APP / "Execution" / "FolderTrailRunPipeline.swift"
+SAFE_EXECUTOR = APP / "Execution" / "SafeExecutor.swift"
+TRAIL_WRITER = APP / "Output" / "TrailWriter.swift"
+MANIFEST_BUILDER = APP / "Intelligence" / "ManifestBuilder.swift"
+OPENROUTER_PLANNER_ADAPTER = APP / "Intelligence" / "OpenRouterPlannerAdapter.swift"
+CODEX_PLANNER_ADAPTER = APP / "Intelligence" / "CodexPlannerAdapter.swift"
 
 
 class FinderServiceEntryContractTests(unittest.TestCase):
@@ -111,6 +118,13 @@ class FinderServiceEntryContractTests(unittest.TestCase):
                     str(CONSENT_MODAL_VIEW),
                     str(CODEX_CHATGPT_AUTH_VIEW),
                     str(WORKSPACE_COPY_SERVICE),
+                    str(PROMPT_RUN_MODEL),
+                    str(RUN_PIPELINE),
+                    str(SAFE_EXECUTOR),
+                    str(TRAIL_WRITER),
+                    str(MANIFEST_BUILDER),
+                    str(OPENROUTER_PLANNER_ADAPTER),
+                    str(CODEX_PLANNER_ADAPTER),
                     str(main),
                     "-o",
                     str(exe),

@@ -4,19 +4,16 @@ import SwiftUI
 struct ConsentModalView: View {
     let sourceFolderURL: URL
     let workspaceFolderName: String
-    let workspaceCopyService: WorkspaceCopyService
-    let onAllow: (URL) -> Void
+    let onAllow: () -> Void
     let onCancel: () -> Void
 
     init(
         sourceFolderURL: URL,
-        workspaceCopyService: WorkspaceCopyService = WorkspaceCopyService(),
-        onAllow: @escaping (URL) -> Void = { _ in },
+        onAllow: @escaping () -> Void = {},
         onCancel: @escaping () -> Void
     ) {
         self.sourceFolderURL = sourceFolderURL
         self.workspaceFolderName = WorkspaceCopyService.workspaceFolderName(for: sourceFolderURL)
-        self.workspaceCopyService = workspaceCopyService
         self.onAllow = onAllow
         self.onCancel = onCancel
     }
@@ -47,9 +44,7 @@ struct ConsentModalView: View {
                 Spacer()
 
                 Button("허용하고 시작") {
-                    let workspaceURL = workspaceCopyService.workspaceURL(for: sourceFolderURL)
-                    _ = workspaceCopyService.startCopy(sourceFolderURL: sourceFolderURL)
-                    onAllow(workspaceURL)
+                    onAllow()
                 }
                 .keyboardShortcut(.defaultAction)
             }
