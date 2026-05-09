@@ -41,8 +41,8 @@ final class FolderTrailAppController: NSObject, NSWindowDelegate {
 
     private func makePromptPanel() -> NSPanel {
         let panel = NSPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 520, height: 360),
-            styleMask: [.titled, .closable, .fullSizeContentView],
+            contentRect: NSRect(x: 0, y: 0, width: 640, height: 560),
+            styleMask: [.titled, .closable, .resizable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
@@ -53,6 +53,8 @@ final class FolderTrailAppController: NSObject, NSWindowDelegate {
         panel.isReleasedWhenClosed = false
         panel.collectionBehavior = [.transient, .ignoresCycle]
         panel.delegate = self
+        panel.minSize = NSSize(width: 520, height: 420)
+        panel.setContentSize(NSSize(width: 640, height: 560))
         panel.center()
         return panel
     }

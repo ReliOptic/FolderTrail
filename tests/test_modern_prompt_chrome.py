@@ -20,7 +20,7 @@ class ModernPromptChromeTests(unittest.TestCase):
         self.assertIn("폴더 바꾸기…", prompt)
         self.assertIn("중복 정리", prompt)
         self.assertIn("프로젝트별 정돈", prompt)
-        self.assertIn(".frame(minWidth: 500, minHeight: 320)", prompt)
+        self.assertIn(".frame(minWidth: 520, idealWidth: 640, minHeight: 420, idealHeight: 560)", prompt)
 
         awkward_copy = [
             "FolderTrailStatusPill(title:",
