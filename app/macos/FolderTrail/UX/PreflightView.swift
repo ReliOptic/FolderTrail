@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 struct PreflightView: View {
     let folderURL: URL
+    let workspaceMode: WorkspacePreparationMode
 
     @ObservedObject private var runner: PreflightRunner
     private let onProceed: () -> Void
@@ -11,6 +12,7 @@ struct PreflightView: View {
     init(folderURL: URL) {
         self.init(
             folderURL: folderURL,
+            workspaceMode: .copiedWorkspace,
             runner: PreflightRunner(),
             onProceed: {}
         )
@@ -18,10 +20,12 @@ struct PreflightView: View {
 
     init(
         folderURL: URL,
+        workspaceMode: WorkspacePreparationMode = .copiedWorkspace,
         runner: PreflightRunner,
         onProceed: @escaping () -> Void
     ) {
         self.folderURL = folderURL
+        self.workspaceMode = workspaceMode
         self.onProceed = onProceed
         _runner = ObservedObject(wrappedValue: runner)
     }
@@ -42,7 +46,7 @@ struct PreflightView: View {
             footerAction
         }
         .task {
-            await runner.run(for: folderURL)
+            await runner.run(for: folderURL, workspaceMode: preflightWorkspaceMode)
         }
     }
 
@@ -155,7 +159,11 @@ struct PreflightView: View {
 
     private func rerunPreflight() {
         Task {
-            await runner.run(for: folderURL)
+            await runner.run(for: folderURL, workspaceMode: preflightWorkspaceMode)
         }
+    }
+
+    private var preflightWorkspaceMode: PreflightWorkspaceMode {
+        workspaceMode == .copiedWorkspace ? .copiedWorkspace : .directSource
     }
 }

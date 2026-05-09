@@ -1,5 +1,10 @@
 import Foundation
 
+enum WorkspacePreparationMode: String, Equatable {
+    case copiedWorkspace
+    case directSource
+}
+
 enum FolderTrailRunState: Equatable {
     case promptReceived
     case workspaceReady
@@ -93,7 +98,11 @@ final class FolderTrailRunPipeline {
         self.onState = onState
     }
 
-    func run(prompt: String, sourceFolderURL: URL) async throws -> FolderTrailRunResult {
+    func run(
+        prompt: String,
+        sourceFolderURL: URL,
+        workspaceMode: WorkspacePreparationMode = .copiedWorkspace
+    ) async throws -> FolderTrailRunResult {
         var states: [FolderTrailRunState] = []
 
         func emit(_ state: FolderTrailRunState) {
@@ -103,7 +112,16 @@ final class FolderTrailRunPipeline {
 
         emit(.promptReceived)
 
-        let workspaceResult = try copyWorkspace(sourceFolderURL)
+        let workspaceResult: WorkspaceCopyResult
+        switch workspaceMode {
+        case .copiedWorkspace:
+            workspaceResult = try copyWorkspace(sourceFolderURL)
+        case .directSource:
+            workspaceResult = WorkspaceCopyResult(
+                sourceFolderURL: sourceFolderURL,
+                workspaceURL: sourceFolderURL
+            )
+        }
         emit(.workspaceReady)
 
         let manifest = try buildManifest(

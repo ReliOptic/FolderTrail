@@ -20,6 +20,7 @@ struct PlaceholderPromptView: View {
 
     @State private var prompt = ""
     @State private var selectedFolderURL: URL
+    @State private var workspaceMode: WorkspacePreparationMode = .copiedWorkspace
     @State private var showPreflight = false
     @State private var showConsentModal = false
     @State private var showSettingsSheet = false
@@ -64,7 +65,7 @@ struct PlaceholderPromptView: View {
         .padding(FolderTrailDesign.Spacing.xl)
         .frame(minWidth: 520, idealWidth: 640, minHeight: 420, idealHeight: 560)
         .sheet(isPresented: $showConsentModal) {
-            ConsentModalView(sourceFolderURL: selectedFolderURL) {
+            ConsentModalView(sourceFolderURL: selectedFolderURL, workspaceMode: workspaceMode) {
                 startRun()
             } onCancel: {
                 showConsentModal = false
@@ -106,6 +107,17 @@ struct PlaceholderPromptView: View {
                     RoundedRectangle(cornerRadius: FolderTrailDesign.Radius.sm)
                         .stroke(Color.secondary.opacity(0.25))
                 )
+
+            Toggle(isOn: directModeBinding) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("빠른 모드: 복사 없이 원본에서 진행")
+                        .font(FolderTrailDesign.Typography.meta.weight(.semibold))
+                    Text("원본 폴더가 직접 변경될 수 있습니다.")
+                        .font(FolderTrailDesign.Typography.badge)
+                        .foregroundStyle(FolderTrailDesign.Palette.warning)
+                }
+            }
+            .toggleStyle(.checkbox)
         }
     }
 
@@ -114,6 +126,7 @@ struct PlaceholderPromptView: View {
         if showPreflight {
             PreflightView(
                 folderURL: selectedFolderURL,
+                workspaceMode: workspaceMode,
                 runner: PreflightRunner()
             ) {
                 showConsentModal = true
@@ -258,7 +271,14 @@ struct PlaceholderPromptView: View {
     private func startRun() {
         showConsentModal = false
         showPreflight = false
-        runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL)
+        runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL, workspaceMode: workspaceMode)
+    }
+
+    private var directModeBinding: Binding<Bool> {
+        Binding(
+            get: { workspaceMode == .directSource },
+            set: { workspaceMode = $0 ? .directSource : .copiedWorkspace }
+        )
     }
 
     private var elapsedTimeText: String {
