@@ -11,12 +11,12 @@ class CodexLoginOnboardingTests(unittest.TestCase):
 
         self.assertIn("codexLoginRecovery", source)
         self.assertIn("hasFailed(.codexAuthenticated)", source)
-        self.assertIn("터미널에서 `codex login`", source)
-        self.assertIn("OAuth 로그인을 완료", source)
+        self.assertIn("Codex 로그인은 별도 터미널에서 진행됩니다", source)
+        self.assertIn("브라우저가 열릴 수 있습니다", source)
         self.assertIn("토큰을 FolderTrail에 붙여넣지 마세요", source)
-        self.assertIn("codex login 명령 복사", source)
-        self.assertIn("copyCodexLoginCommand", source)
-        self.assertIn("NSPasteboard.general", source)
+        self.assertIn("Codex 로그인 열기", source)
+        self.assertIn("openCodexLoginInTerminal", source)
+        self.assertIn("NSWorkspace.shared.open(commandURL)", source)
         self.assertIn("codex login", source)
 
     def test_issue_39_user_can_rerun_preflight_after_external_login(self):

@@ -120,13 +120,13 @@ struct PreflightView: View {
 
     private var codexLoginRecovery: some View {
         VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
-            Text("터미널에서 `codex login`을 실행하고 OAuth 로그인을 완료해 주세요. 토큰을 FolderTrail에 붙여넣지 마세요.")
+            Text("Codex 로그인은 별도 터미널에서 진행됩니다. 브라우저가 열릴 수 있습니다. 토큰을 FolderTrail에 붙여넣지 마세요.")
                 .font(FolderTrailDesign.Typography.meta)
                 .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
 
             HStack(spacing: FolderTrailDesign.Spacing.sm) {
-                Button("codex login 명령 복사") {
-                    copyCodexLoginCommand()
+                Button("Codex 로그인 열기") {
+                    openCodexLoginInTerminal()
                 }
 
                 Button("다시 확인") {
@@ -186,10 +186,27 @@ struct PreflightView: View {
         NSWorkspace.shared.open(url)
     }
 
-    private func copyCodexLoginCommand() {
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString("codex login", forType: .string)
+    private func openCodexLoginInTerminal() {
+        let commandURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("foldertrail-codex-login-\(UUID().uuidString).command")
+        let script = """
+        #!/bin/zsh
+        echo "FolderTrail Codex login"
+        echo "A browser may open to finish OAuth."
+        echo
+        codex login
+        echo
+        echo "로그인이 끝나면 이 창을 닫고 FolderTrail에서 다시 확인을 누르세요."
+        read -r "?Press return to close..."
+        """
+
+        do {
+            try script.write(to: commandURL, atomically: true, encoding: .utf8)
+            try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: commandURL.path)
+            NSWorkspace.shared.open(commandURL)
+        } catch {
+            NSSound.beep()
+        }
     }
 
     private func rerunPreflight() {
