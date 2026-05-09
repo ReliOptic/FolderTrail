@@ -35,7 +35,7 @@ class TerminalLessCodexOAuthTests(unittest.TestCase):
         source = CODEX_AUTH.read_text(encoding="utf-8")
 
         self.assertIn("loginRunner.isRunning", source)
-        self.assertIn(".disabled(loginRunner.isRunning)", source)
+        self.assertIn(".disabled(loginRunner.isRunning || loginRunner.isAuthenticated)", source)
         self.assertIn("ProgressView", source)
         self.assertIn("Codex / ChatGPT 로그인", source)
 
