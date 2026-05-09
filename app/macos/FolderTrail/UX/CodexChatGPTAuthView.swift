@@ -26,7 +26,7 @@ struct CodexChatGPTOAuthView: View {
 
             HStack(spacing: FolderTrailDesign.Spacing.sm) {
                 Button(style == .compact ? "로그인" : "Codex / ChatGPT 로그인") {
-                    loginRunner.start()
+                    loginRunner.start(onSuccess: onRecheck)
                 }
                 .disabled(loginRunner.isRunning)
 
@@ -54,9 +54,9 @@ struct CodexChatGPTOAuthView: View {
 @MainActor
 final class CodexLoginRunner: ObservableObject {
     @Published private(set) var isRunning = false
-    @Published private(set) var statusText = "브라우저에서 로그인을 마치면 FolderTrail이 확인합니다."
+    @Published private(set) var statusText = "브라우저 로그인이 끝나면 자동으로 다시 확인합니다."
 
-    func start() {
+    func start(onSuccess: (() -> Void)? = nil) {
         guard !isRunning else { return }
 
         isRunning = true
@@ -66,14 +66,17 @@ final class CodexLoginRunner: ObservableObject {
             let succeeded = await Self.runLoginProcess { url in
                 Task { @MainActor in
                     NSWorkspace.shared.open(url)
-                    self.statusText = "브라우저에서 로그인을 마치면 FolderTrail이 확인합니다."
+                    self.statusText = "브라우저 로그인이 끝나면 자동으로 다시 확인합니다."
                 }
             }
 
             isRunning = false
-            statusText = succeeded
-                ? "로그인 완료"
-                : "로그인을 확인하지 못했습니다. 다시 시도해 주세요."
+            if succeeded {
+                statusText = "로그인 완료. 확인 중…"
+                onSuccess?()
+            } else {
+                statusText = "로그인을 확인하지 못했습니다. 다시 시도해 주세요."
+            }
         }
     }
 

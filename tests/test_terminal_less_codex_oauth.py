@@ -18,7 +18,7 @@ class TerminalLessCodexOAuthTests(unittest.TestCase):
         self.assertIn("extractAuthURL", source)
         self.assertIn("NSWorkspace.shared.open(url)", source)
         self.assertIn("브라우저를 열고 있어요", source)
-        self.assertIn("브라우저에서 로그인을 마치면 FolderTrail이 확인합니다", source)
+        self.assertIn("브라우저 로그인이 끝나면 자동으로 다시 확인합니다", source)
         self.assertIn("로그인 완료", source)
 
         forbidden = [
