@@ -28,7 +28,9 @@ class ConsentModalContractTests(unittest.TestCase):
         self.assertIn("허용하고 시작", consent)
         self.assertIn("취소", consent)
         self.assertIn("WorkspaceCopyService", consent)
-        self.assertIn("startCopy", consent)
+        self.assertIn("onAllow", consent)
+        self.assertIn("onAllow()", consent)
+        self.assertNotIn("startCopy(sourceFolderURL", consent)
         self.assertIn("onCancel", consent)
 
         self.assertIn("final class WorkspaceCopyService", copy_service)
