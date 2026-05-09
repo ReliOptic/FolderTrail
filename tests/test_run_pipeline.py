@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 PIPELINE = APP / "Execution" / "FolderTrailRunPipeline.swift"
 WORKSPACE = APP / "Execution" / "WorkspaceCopyService.swift"
 EXECUTOR = APP / "Execution" / "SafeExecutor.swift"
@@ -170,6 +171,7 @@ class RunPipelineTests(unittest.TestCase):
                     str(WORKSPACE),
                     str(EXECUTOR),
                     str(WRITER),
+                    str(WORKSPACE_MODE),
                     str(PIPELINE),
                     str(main),
                     "-o",

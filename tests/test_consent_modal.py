@@ -4,6 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
 PROJECT = ROOT / "app" / "macos" / "FolderTrail.xcodeproj" / "project.pbxproj"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 
 
 class ConsentModalContractTests(unittest.TestCase):
@@ -16,6 +17,7 @@ class ConsentModalContractTests(unittest.TestCase):
         self.assertTrue(copy_service_path.exists(), "missing Execution/WorkspaceCopyService.swift")
 
         consent = consent_path.read_text(encoding="utf-8")
+        mode_policy = WORKSPACE_MODE.read_text(encoding="utf-8")
         copy_service = copy_service_path.read_text(encoding="utf-8")
         prompt = prompt_path.read_text(encoding="utf-8")
         preflight_view = (APP / "UX" / "PreflightView.swift").read_text(encoding="utf-8")
@@ -24,7 +26,8 @@ class ConsentModalContractTests(unittest.TestCase):
         self.assertIn("struct ConsentModalView", consent)
         self.assertIn("sourceFolderURL", consent)
         self.assertIn("workspaceFolderName", consent)
-        self.assertIn("원본 폴더는 변경하지 않습니다", consent)
+        self.assertIn("workspaceMode.consentHeadline", consent)
+        self.assertIn("원본 폴더는 변경하지 않습니다", mode_policy)
         self.assertIn("허용하고 시작", consent)
         self.assertIn("취소", consent)
         self.assertIn("WorkspaceCopyService", consent)

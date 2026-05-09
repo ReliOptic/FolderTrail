@@ -24,6 +24,7 @@
 		AA0000000000000000000130 /* ProviderReadiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000230 /* ProviderReadiness.swift */; };
 		AA0000000000000000000116 /* PreflightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000216 /* PreflightView.swift */; };
 		AA0000000000000000000117 /* WorkspaceCopyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000217 /* WorkspaceCopyService.swift */; };
+		AA0000000000000000000136 /* WorkspaceModePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000236 /* WorkspaceModePolicy.swift */; };
 		AA0000000000000000000118 /* ConsentModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000218 /* ConsentModalView.swift */; };
 		AA0000000000000000000119 /* ManifestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000219 /* ManifestBuilder.swift */; };
 		AA0000000000000000000120 /* ManifestConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000220 /* ManifestConfirmationView.swift */; };
@@ -61,6 +62,7 @@
 		AA0000000000000000000230 /* ProviderReadiness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Safety/ProviderReadiness.swift; sourceTree = "<group>"; };
 		AA0000000000000000000216 /* PreflightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/PreflightView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000217 /* WorkspaceCopyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution/WorkspaceCopyService.swift; sourceTree = "<group>"; };
+		AA0000000000000000000236 /* WorkspaceModePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution/WorkspaceModePolicy.swift; sourceTree = "<group>"; };
 		AA0000000000000000000218 /* ConsentModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/ConsentModalView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000219 /* ManifestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intelligence/ManifestBuilder.swift; sourceTree = "<group>"; };
 		AA0000000000000000000220 /* ManifestConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/ManifestConfirmationView.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				AA0000000000000000000230 /* ProviderReadiness.swift */,
 				AA0000000000000000000216 /* PreflightView.swift */,
 				AA0000000000000000000217 /* WorkspaceCopyService.swift */,
+				AA0000000000000000000236 /* WorkspaceModePolicy.swift */,
 				AA0000000000000000000218 /* ConsentModalView.swift */,
 				AA0000000000000000000219 /* ManifestBuilder.swift */,
 				AA0000000000000000000220 /* ManifestConfirmationView.swift */,
@@ -218,6 +221,7 @@
 				AA0000000000000000000130 /* ProviderReadiness.swift in Sources */,
 				AA0000000000000000000116 /* PreflightView.swift in Sources */,
 				AA0000000000000000000117 /* WorkspaceCopyService.swift in Sources */,
+				AA0000000000000000000136 /* WorkspaceModePolicy.swift in Sources */,
 				AA0000000000000000000118 /* ConsentModalView.swift in Sources */,
 				AA0000000000000000000119 /* ManifestBuilder.swift in Sources */,
 				AA0000000000000000000120 /* ManifestConfirmationView.swift in Sources */,

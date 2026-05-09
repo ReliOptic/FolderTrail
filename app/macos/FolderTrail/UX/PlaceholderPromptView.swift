@@ -115,12 +115,13 @@ struct PlaceholderPromptView: View {
     private var modeSelector: some View {
         VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
             Picker("실행 방식", selection: $workspaceMode) {
-                Text("안전 모드").tag(WorkspacePreparationMode.copiedWorkspace)
-                Text("빠른 모드").tag(WorkspacePreparationMode.directSource)
+                ForEach(WorkspacePreparationMode.allCases, id: \.self) { mode in
+                    Text(mode.modePickerTitle).tag(mode)
+                }
             }
             .pickerStyle(.segmented)
 
-            Text(modeDescription)
+            Text(workspaceMode.modeDescription)
                 .font(FolderTrailDesign.Typography.badge)
                 .foregroundStyle(workspaceMode == .directSource
                     ? FolderTrailDesign.Palette.warning
@@ -156,7 +157,7 @@ struct PlaceholderPromptView: View {
                 .buttonStyle(FolderTrailPrimaryButtonStyle())
                 .keyboardShortcut(.defaultAction)
             } else if runModel.status == .idle {
-                Button(primaryActionTitle) {
+                Button(workspaceMode.primaryActionTitle) {
                     primaryAction()
                 }
                 .buttonStyle(FolderTrailPrimaryButtonStyle())
@@ -282,29 +283,10 @@ struct PlaceholderPromptView: View {
     }
 
     private func primaryAction() {
-        switch workspaceMode {
-        case .copiedWorkspace:
+        if workspaceMode.requiresPreflightBeforeConsent {
             showPreflight = true
-        case .directSource:
+        } else {
             startRun()
-        }
-    }
-
-    private var primaryActionTitle: String {
-        switch workspaceMode {
-        case .copiedWorkspace:
-            return "복사본으로 시작"
-        case .directSource:
-            return "원본에서 바로 시작"
-        }
-    }
-
-    private var modeDescription: String {
-        switch workspaceMode {
-        case .copiedWorkspace:
-            return "복사본에서 안전하게 정리합니다."
-        case .directSource:
-            return "복사 시간을 건너뛰며 원본 폴더가 직접 변경될 수 있습니다."
         }
     }
 

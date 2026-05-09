@@ -13,6 +13,7 @@ PROMPT = APP / "UX" / "PlaceholderPromptView.swift"
 PREFLIGHT = APP / "UX" / "PreflightView.swift"
 PREFLIGHT_CHECK = APP / "Safety" / "PreflightCheck.swift"
 RUN_MODEL = APP / "Execution" / "FolderTrailPromptRunModel.swift"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 
 
 class ActionFirstCopyTests(unittest.TestCase):
@@ -37,8 +38,10 @@ class ActionFirstCopyTests(unittest.TestCase):
         auth = (APP / "UX" / "CodexChatGPTAuthView.swift").read_text(encoding="utf-8")
         provider = (APP / "UX" / "ProviderConnectView.swift").read_text(encoding="utf-8")
         prompt = PROMPT.read_text(encoding="utf-8")
+        mode_policy = WORKSPACE_MODE.read_text(encoding="utf-8")
 
-        self.assertIn("복사본으로 시작", prompt)
+        self.assertIn("workspaceMode.primaryActionTitle", prompt)
+        self.assertIn("복사본으로 시작", mode_policy)
         self.assertIn('Button("로그인")', auth)
         self.assertIn('Button("다시 확인")', auth)
         self.assertIn('Button("연결")', provider)

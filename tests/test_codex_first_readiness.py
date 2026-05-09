@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
+WORKSPACE_MODE = APP / "Execution" / "WorkspaceModePolicy.swift"
 READINESS = APP / "Safety" / "ProviderReadiness.swift"
 PREFLIGHT = APP / "Safety" / "PreflightCheck.swift"
 PROMPT = APP / "UX" / "PlaceholderPromptView.swift"
@@ -56,6 +57,7 @@ class CodexFirstReadinessTests(unittest.TestCase):
                     str(READINESS),
                     str(APP / "Safety" / "OpenRouterKeychain.swift"),
                     str(APP / "Safety" / "OpenRouterCredentialStore.swift"),
+                    str(WORKSPACE_MODE),
                     str(PREFLIGHT),
                     str(main),
                     "-o",
@@ -75,8 +77,10 @@ class CodexFirstReadinessTests(unittest.TestCase):
 
     def test_issue_83_prompt_start_button_is_not_hidden_by_openrouter_connection(self):
         source = PROMPT.read_text(encoding="utf-8")
+        mode_policy = WORKSPACE_MODE.read_text(encoding="utf-8")
 
-        self.assertIn("복사본으로 시작", source)
+        self.assertIn("workspaceMode.primaryActionTitle", source)
+        self.assertIn("복사본으로 시작", mode_policy)
         self.assertNotIn("if providerSettings.isConnected", source)
 
 

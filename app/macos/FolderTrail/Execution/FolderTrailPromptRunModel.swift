@@ -142,7 +142,7 @@ final class FolderTrailPromptRunModel: ObservableObject {
         case .promptReceived:
             return "요청 확인 중"
         case .workspaceReady:
-            return workspaceMode == .copiedWorkspace ? "복사본 준비 중" : "원본 준비 중"
+            return workspaceMode.workspaceReadyStepText
         case .manifestBuilt:
             return "목록 확인 중"
         case .planReady:
