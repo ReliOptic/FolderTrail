@@ -21,14 +21,13 @@ class StatusSettingsEntryTests(unittest.TestCase):
         self.assertIn("로컬 도우미 선택 사항", prompt)
         self.assertNotIn("Codex fallback 선택", prompt)
 
-    def test_issue_41_settings_surface_mentions_v0_1_provider_and_fallback(self):
+    def test_issue_41_settings_surface_mentions_v0_1_provider_and_local_helper(self):
         app = (APP / "App" / "FolderTrailApp.swift").read_text(encoding="utf-8")
 
-        self.assertIn("CodexFallbackSettingsView", app)
+        self.assertIn("CodexChatGPTOAuthView", app)
         self.assertIn("v0.1 설정", app)
-        self.assertIn("OpenRouter 연결", app)
-        self.assertIn("Codex fallback", app)
-        self.assertIn("codex login status", app)
+        self.assertIn("OpenRouter 제공자 연결", app)
+        self.assertIn("Codex / ChatGPT OAuth", app)
         self.assertNotIn("Advanced", app)
 
 

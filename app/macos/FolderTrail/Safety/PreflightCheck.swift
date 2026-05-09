@@ -29,9 +29,9 @@ enum PreflightCheckID: String, CaseIterable {
         case .providerConnected:
             return "OpenRouter 연결됨"
         case .codexAvailable:
-            return "Codex fallback 설치됨"
+            return "Codex CLI 설치됨"
         case .codexAuthenticated:
-            return "Codex fallback 로그인됨"
+            return "Codex / ChatGPT 로그인됨"
         }
     }
 

@@ -14,7 +14,7 @@ class SettingsSheetEntryTests(unittest.TestCase):
         self.assertIn("showSettingsSheet", prompt)
         self.assertIn(".sheet(isPresented: $showSettingsSheet)", prompt)
         self.assertIn("PromptSettingsSheet", prompt)
-        self.assertIn("Codex 로그인", prompt)
+        self.assertIn("Codex / ChatGPT OAuth", prompt)
         self.assertIn("private func openSettingsSheet", prompt)
         self.assertIn("showSettingsSheet = true", prompt)
         self.assertNotIn("showSettingsWindow:", prompt)
@@ -25,7 +25,7 @@ class SettingsSheetEntryTests(unittest.TestCase):
         self.assertIn("struct FolderTrailSettingsView", app)
         self.assertIn("ProviderConnectView", app)
         self.assertIn("OpenRouterSettingsView", app)
-        self.assertIn("CodexFallbackSettingsView", app)
+        self.assertIn("CodexChatGPTOAuthView", app)
         self.assertIn("PlannerModelSettingsView", app)
 
 

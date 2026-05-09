@@ -6,7 +6,7 @@ struct ProviderConnectView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("AI 연결")
+            Text("OpenRouter 연결")
                 .font(.headline)
 
             switch settings.status {

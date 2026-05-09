@@ -11,7 +11,7 @@ class CodexOAuthStatusPreflightTests(unittest.TestCase):
 
         self.assertIn("case codexAvailable", source)
         self.assertIn("case codexAuthenticated", source)
-        self.assertIn("Codex fallback 로그인됨", source)
+        self.assertIn("Codex / ChatGPT 로그인됨", source)
         self.assertIn("checkCodexAuthenticated", source)
         self.assertIn('"login"', source)
         self.assertIn('"status"', source)

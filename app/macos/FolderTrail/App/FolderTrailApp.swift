@@ -25,7 +25,7 @@ struct FolderTrailSettingsView: View {
         VStack(alignment: .leading, spacing: 20) {
             Text("v0.1 설정")
                 .font(.title3.weight(.semibold))
-            Text("OpenRouter 연결, Codex fallback, 실행 진단만 다룹니다.")
+            Text("OpenRouter 제공자 연결과 Codex / ChatGPT OAuth를 별도로 다룹니다.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Divider()
@@ -33,21 +33,9 @@ struct FolderTrailSettingsView: View {
             Divider()
             OpenRouterSettingsView(settings: providerSettings)
             Divider()
-            CodexFallbackSettingsView()
+            CodexChatGPTOAuthView()
             Divider()
             PlannerModelSettingsView(settings: plannerModelSettings)
-        }
-    }
-}
-
-struct CodexFallbackSettingsView: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Codex fallback")
-                .font(.headline)
-            Text("Codex fallback은 선택 사항입니다. 터미널에서 `codex --version`과 `codex login status`로 설치와 로그인을 확인합니다.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
     }
 }

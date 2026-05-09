@@ -79,7 +79,7 @@ struct PreflightView: View {
     @ViewBuilder
     private var fallbackNote: some View {
         if hasFailed(.codexAvailable) || hasFailed(.codexAuthenticated) {
-            Text("Codex fallback은 선택 사항입니다. OpenRouter 연결로 먼저 진행할 수 있습니다.")
+            Text("Codex / ChatGPT OAuth는 선택 사항입니다. OpenRouter 연결로 먼저 진행할 수 있습니다.")
                 .font(FolderTrailDesign.Typography.meta)
                 .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
         }
@@ -119,22 +119,7 @@ struct PreflightView: View {
     }
 
     private var codexLoginRecovery: some View {
-        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
-            Text("Codex 로그인은 별도 터미널에서 진행됩니다. 브라우저가 열릴 수 있습니다. 토큰을 FolderTrail에 붙여넣지 마세요.")
-                .font(FolderTrailDesign.Typography.meta)
-                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-
-            HStack(spacing: FolderTrailDesign.Spacing.sm) {
-                Button("Codex 로그인 열기") {
-                    openCodexLoginInTerminal()
-                }
-
-                Button("다시 확인") {
-                    rerunPreflight()
-                }
-            }
-            .controlSize(.small)
-        }
+        CodexChatGPTOAuthView(onRecheck: rerunPreflight)
     }
 
     private func symbol(for result: PreflightCheckResult) -> String {
@@ -184,29 +169,6 @@ struct PreflightView: View {
     private func openPrivacySettings() {
         let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy")!
         NSWorkspace.shared.open(url)
-    }
-
-    private func openCodexLoginInTerminal() {
-        let commandURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("foldertrail-codex-login-\(UUID().uuidString).command")
-        let script = """
-        #!/bin/zsh
-        echo "FolderTrail Codex login"
-        echo "A browser may open to finish OAuth."
-        echo
-        codex login
-        echo
-        echo "로그인이 끝나면 이 창을 닫고 FolderTrail에서 다시 확인을 누르세요."
-        read -r "?Press return to close..."
-        """
-
-        do {
-            try script.write(to: commandURL, atomically: true, encoding: .utf8)
-            try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: commandURL.path)
-            NSWorkspace.shared.open(commandURL)
-        } catch {
-            NSSound.beep()
-        }
     }
 
     private func rerunPreflight() {
