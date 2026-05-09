@@ -28,7 +28,7 @@ enum PreflightCheckID: String, CaseIterable {
         case .codexAvailable:
             return "Codex CLI 설치됨"
         case .codexAuthenticated:
-            return "Codex / ChatGPT 로그인됨"
+            return "Codex 로그인됨"
         }
     }
 
@@ -178,7 +178,7 @@ enum PreflightCheck {
         }
 
         return .failed(
-            reason: "Codex CLI는 설치되어 있지만 로그인되어 있지 않습니다. 터미널에서 `codex login`으로 OAuth 로그인을 완료한 뒤 다시 시도해 주세요."
+            reason: "Codex 로그인 후 다시 확인해 주세요."
         )
     }
 

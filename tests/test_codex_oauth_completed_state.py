@@ -20,9 +20,8 @@ class CodexOAuthCompletedStateTests(unittest.TestCase):
         source = CODEX_AUTH.read_text(encoding="utf-8")
 
         self.assertIn("@Published private(set) var isAuthenticated = false", source)
-        self.assertIn("loginButtonTitle", source)
         self.assertIn("로그인 완료", source)
-        self.assertIn("정리는 OpenRouter 연결 후 시작할 수 있습니다", source)
+        self.assertIn("로그인 완료", source)
         self.assertIn(".disabled(loginRunner.isRunning || loginRunner.isAuthenticated)", source)
 
 

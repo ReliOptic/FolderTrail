@@ -24,8 +24,8 @@ class KeychainTrustGuardTests(unittest.TestCase):
         source = PROVIDER_VIEW.read_text(encoding="utf-8")
 
         self.assertIn("저장된 연결 확인", source)
-        self.assertIn("Keychain 접근", source)
-        self.assertIn("macOS가 허용을 요청할 수 있습니다", source)
+        self.assertIn("저장된 키를 확인하거나 새로 연결하세요", source)
+        self.assertIn("macOS 허용 후 다시 확인하세요", source)
         self.assertIn("Keychain 허용 필요", source)
         self.assertIn("settings.refreshStatus()", source)
         self.assertIn("settings.refreshStatus(force: true)", source)

@@ -46,11 +46,11 @@ final class FolderTrailPromptRunModel: ObservableObject {
     private static func message(for error: Error) -> String {
         switch error {
         case PlannerAdapterError.authFailure:
-            return "Codex 로그인이 필요합니다."
+            return "Codex 로그인 후 다시 시도해 주세요."
         case PlannerAdapterError.invalidJSON, PlannerAdapterError.schemaMismatch:
-            return "정리 계획을 이해하지 못했습니다. 다시 시도해 주세요."
+            return "다시 시도해 주세요."
         default:
-            return "정리를 완료하지 못했습니다. 다시 시도해 주세요."
+            return "다시 시도해 주세요."
         }
     }
 }

@@ -14,11 +14,11 @@ class CodexLoginHandoffTests(unittest.TestCase):
         source = view + handoff
 
         self.assertIn("CodexChatGPTOAuthView", view)
-        self.assertIn("Codex / ChatGPT 로그인", source)
+        self.assertIn("Codex 로그인", source)
         self.assertIn("CodexLoginRunner", source)
         self.assertIn("codex login", source)
-        self.assertIn("브라우저 로그인은 Codex가 열어 줍니다", source)
-        self.assertIn("토큰을 FolderTrail에 붙여넣지 마세요", source)
+        self.assertIn("브라우저에서 로그인하세요", source)
+        self.assertIn("브라우저에서 로그인하세요", source)
         self.assertIn("다시 확인", source)
 
         self.assertNotIn("codex login 명령 복사", source)

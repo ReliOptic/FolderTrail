@@ -15,9 +15,9 @@ class CodexLoginAutoRecheckTests(unittest.TestCase):
         self.assertIn("func start(onSuccess: (() -> Void)? = nil)", source)
         self.assertIn("if succeeded", source)
         self.assertIn("onSuccess?()", source)
-        self.assertIn("Codex / ChatGPT 로그인 완료", source)
-        self.assertIn("로그인 완료. 상태를 확인하고 있어요…", source)
-        self.assertIn("브라우저 로그인이 끝나면 자동으로 다시 확인합니다", source)
+        self.assertIn("로그인 완료", source)
+        self.assertIn("확인 중…", source)
+        self.assertIn("로그인 후 자동 확인합니다", source)
 
     def test_issue_63_preflight_passes_rerun_as_success_callback(self):
         preflight = PREFLIGHT.read_text(encoding="utf-8")

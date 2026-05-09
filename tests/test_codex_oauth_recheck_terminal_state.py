@@ -11,8 +11,8 @@ class CodexOAuthRecheckTerminalStateTests(unittest.TestCase):
         source = CODEX_AUTH.read_text(encoding="utf-8")
 
         self.assertIn("recheckLoginStatusAfterSuccess", source)
-        self.assertIn("Codex / ChatGPT 로그인 완료", source)
-        self.assertIn("브라우저 로그인은 끝났지만 앱에서 아직 확인하지 못했습니다", source)
+        self.assertIn("로그인 완료", source)
+        self.assertIn("다시 확인해 주세요", source)
         self.assertIn("onSuccess?()", source)
         self.assertNotIn("로그인 완료. 확인 중…", source)
 

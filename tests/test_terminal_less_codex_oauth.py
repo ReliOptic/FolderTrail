@@ -15,8 +15,8 @@ class TerminalLessCodexOAuthTests(unittest.TestCase):
         self.assertIn("loginRunner.start", source)
         self.assertIn("Process()", source)
         self.assertIn("readabilityHandler", source)
-        self.assertIn("브라우저 로그인은 Codex가 열어 줍니다", source)
-        self.assertIn("브라우저 로그인이 끝나면 자동으로 다시 확인합니다", source)
+        self.assertIn("브라우저에서 로그인하세요", source)
+        self.assertIn("로그인 후 자동 확인합니다", source)
         self.assertIn("로그인 완료", source)
 
         forbidden = [
@@ -37,7 +37,7 @@ class TerminalLessCodexOAuthTests(unittest.TestCase):
         self.assertIn("loginRunner.isRunning", source)
         self.assertIn(".disabled(loginRunner.isRunning || loginRunner.isAuthenticated)", source)
         self.assertIn("ProgressView", source)
-        self.assertIn("Codex / ChatGPT 로그인", source)
+        self.assertIn("Codex 로그인", source)
 
 
 if __name__ == "__main__":

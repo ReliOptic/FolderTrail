@@ -15,17 +15,17 @@ struct CodexChatGPTOAuthView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
             if style == .full {
-                Text("로컬 도우미")
+                Text("Codex")
                     .font(FolderTrailDesign.Typography.body.weight(.semibold))
-                Label("Codex / ChatGPT OAuth", systemImage: "terminal")
+                Label("Codex 로그인", systemImage: "terminal")
                     .font(FolderTrailDesign.Typography.meta.weight(.semibold))
-                Text("OpenRouter와 별개 로그인입니다. OpenRouter는 AI 제공자 연결이고, Codex / ChatGPT OAuth는 로컬 도우미를 브라우저에서 연결합니다. 토큰을 FolderTrail에 붙여넣지 마세요.")
+                Text("브라우저에서 로그인하세요.")
                     .font(FolderTrailDesign.Typography.meta)
                     .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
             }
 
             HStack(spacing: FolderTrailDesign.Spacing.sm) {
-                Button(loginButtonTitle) {
+                Button("로그인") {
                     loginRunner.start(onSuccess: onRecheck)
                 }
                 .disabled(loginRunner.isRunning || loginRunner.isAuthenticated)
@@ -51,19 +51,13 @@ struct CodexChatGPTOAuthView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var loginButtonTitle: String {
-        if loginRunner.isAuthenticated {
-            return "로그인 완료"
-        }
-        return style == .compact ? "로그인" : "Codex / ChatGPT 로그인"
-    }
 }
 
 @MainActor
 final class CodexLoginRunner: ObservableObject {
     @Published private(set) var isRunning = false
     @Published private(set) var isAuthenticated = false
-    @Published private(set) var statusText = "브라우저 로그인이 끝나면 자동으로 다시 확인합니다."
+    @Published private(set) var statusText = "로그인 후 자동 확인합니다."
 
     func refreshExistingLoginStatus() async {
         guard !isRunning else { return }
@@ -76,7 +70,7 @@ final class CodexLoginRunner: ObservableObject {
         guard !isRunning else { return }
 
         isRunning = true
-        statusText = "로그인 상태를 확인하고 있어요…"
+        statusText = "확인 중…"
 
         Task {
             guard !(await Self.isAlreadyAuthenticated()) else {
@@ -86,11 +80,11 @@ final class CodexLoginRunner: ObservableObject {
                 return
             }
 
-            statusText = "브라우저 로그인은 Codex가 열어 줍니다. 완료 후 자동으로 다시 확인합니다."
+            statusText = "브라우저에서 로그인하세요."
             let succeeded = await Self.runLoginProcess()
 
             if succeeded {
-                statusText = "로그인 완료. 상태를 확인하고 있어요…"
+                statusText = "확인 중…"
                 let authenticated = await Self.recheckLoginStatusAfterSuccess()
                 isRunning = false
 
@@ -98,20 +92,20 @@ final class CodexLoginRunner: ObservableObject {
                     markAuthenticated()
                 } else {
                     isAuthenticated = false
-                    statusText = "브라우저 로그인은 끝났지만 앱에서 아직 확인하지 못했습니다. 다시 확인을 눌러 주세요."
+                    statusText = "다시 확인해 주세요."
                 }
                 onSuccess?()
             } else {
                 isRunning = false
                 isAuthenticated = false
-                statusText = "로그인을 확인하지 못했습니다. 다시 시도해 주세요."
+                statusText = "다시 시도해 주세요."
             }
         }
     }
 
     private func markAuthenticated() {
         isAuthenticated = true
-        statusText = "Codex / ChatGPT 로그인 완료. 정리는 OpenRouter 연결 후 시작할 수 있습니다."
+        statusText = "로그인 완료"
     }
 
     nonisolated private static func isAlreadyAuthenticated() async -> Bool {

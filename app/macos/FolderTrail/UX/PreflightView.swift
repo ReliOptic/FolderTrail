@@ -80,7 +80,7 @@ struct PreflightView: View {
             .buttonStyle(FolderTrailPrimaryButtonStyle())
             .keyboardShortcut(.defaultAction)
         } else {
-            Text("조치가 필요한 항목을 해결하기 전에는 계속할 수 없습니다.")
+            Text("필수 항목을 먼저 처리해 주세요.")
                 .font(FolderTrailDesign.Typography.meta)
                 .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
         }
