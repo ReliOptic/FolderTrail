@@ -17,6 +17,7 @@ OPENROUTER_SETTINGS = APP / "Intelligence" / "OpenRouterProviderSettings.swift"
 OPENROUTER_PKCE = APP / "Intelligence" / "OpenRouterPKCE.swift"
 OPENROUTER_KEYCHAIN = APP / "Safety" / "OpenRouterKeychain.swift"
 PREFLIGHT_CHECK = APP / "Safety" / "PreflightCheck.swift"
+PROVIDER_READINESS = APP / "Safety" / "ProviderReadiness.swift"
 PREFLIGHT_VIEW = APP / "UX" / "PreflightView.swift"
 CONSENT_MODAL_VIEW = APP / "UX" / "ConsentModalView.swift"
 CODEX_CHATGPT_AUTH_VIEW = APP / "UX" / "CodexChatGPTAuthView.swift"
@@ -102,6 +103,7 @@ class FinderServiceEntryContractTests(unittest.TestCase):
                     str(OPENROUTER_SETTINGS),
                     str(OPENROUTER_PKCE),
                     str(OPENROUTER_KEYCHAIN),
+                    str(PROVIDER_READINESS),
                     str(PREFLIGHT_CHECK),
                     str(PREFLIGHT_VIEW),
                     str(CONSENT_MODAL_VIEW),

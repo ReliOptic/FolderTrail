@@ -195,8 +195,7 @@ private struct PromptStatusStrip: View {
             Spacer()
 
             PromptReadinessBar(
-                providerConnected: providerConnected,
-                helperTitle: "로컬 도우미 선택 사항"
+                readiness: ProviderReadiness.promptStatus(openRouterConnected: providerConnected)
             )
 
             Button("설정…") {
@@ -209,20 +208,27 @@ private struct PromptStatusStrip: View {
 }
 
 private struct PromptReadinessBar: View {
-    let providerConnected: Bool
-    let helperTitle: String
+    let readiness: ProviderReadiness
 
     var body: some View {
         HStack(spacing: FolderTrailDesign.Spacing.sm) {
-            Label(providerConnected ? "AI 준비됨" : "AI 연결 필요", systemImage: providerConnected ? "checkmark.circle" : "exclamationmark.circle")
-                .foregroundStyle(providerConnected ? FolderTrailDesign.Palette.success : FolderTrailDesign.Palette.warning)
+            Label(openRouterTitle, systemImage: readiness.openRouter.isReady ? "checkmark.circle" : "exclamationmark.circle")
+                .foregroundStyle(readiness.openRouter.isReady ? FolderTrailDesign.Palette.success : FolderTrailDesign.Palette.warning)
             Text("·")
                 .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-            Label(helperTitle, systemImage: "terminal")
+            Label(localHelperTitle, systemImage: "terminal")
                 .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
         }
         .font(FolderTrailDesign.Typography.meta)
         .lineLimit(1)
+    }
+
+    private var openRouterTitle: String {
+        readiness.openRouter.isReady ? "OpenRouter 준비됨" : "OpenRouter 연결 필요"
+    }
+
+    private var localHelperTitle: String {
+        readiness.codexLocalHelper.isReady ? "로컬 도우미 준비됨" : "로컬 도우미 선택 사항"
     }
 }
 

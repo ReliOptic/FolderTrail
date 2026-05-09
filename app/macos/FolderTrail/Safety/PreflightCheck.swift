@@ -62,10 +62,17 @@ enum PreflightCheck {
         for folderURL: URL,
         fileManager: FileManager = .default
     ) -> [PreflightCheckState] {
-        PreflightCheckID.allCases.map { checkID in
+        let providerReadiness = loadProviderReadiness()
+
+        return PreflightCheckID.allCases.map { checkID in
             PreflightCheckState(
                 id: checkID,
-                result: run(checkID, folderURL: folderURL, fileManager: fileManager)
+                result: run(
+                    checkID,
+                    folderURL: folderURL,
+                    fileManager: fileManager,
+                    providerReadiness: providerReadiness
+                )
             )
         }
     }
@@ -87,7 +94,8 @@ enum PreflightCheck {
     private static func run(
         _ checkID: PreflightCheckID,
         folderURL: URL,
-        fileManager: FileManager
+        fileManager: FileManager,
+        providerReadiness: Result<ProviderReadiness, Error>
     ) -> PreflightCheckResult {
         switch checkID {
         case .folderReadable:
@@ -95,11 +103,11 @@ enum PreflightCheck {
         case .workspaceWritable:
             return checkSiblingWorkspaceWritable(folderURL, fileManager: fileManager)
         case .providerConnected:
-            return checkProviderConnected()
+            return providerReadinessResult(\.openRouter, from: providerReadiness)
         case .codexAvailable:
             return checkCodexAvailable()
         case .codexAuthenticated:
-            return checkCodexAuthenticated()
+            return providerReadinessResult(\.codexLocalHelper, from: providerReadiness)
         }
     }
 
@@ -135,14 +143,23 @@ enum PreflightCheck {
         }
     }
 
-    private static func checkProviderConnected() -> PreflightCheckResult {
-        do {
-            let savedKey = try OpenRouterKeychain.load()?
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-            return savedKey?.isEmpty == false
-                ? .passed
-                : .failed(reason: "OpenRouter를 연결해야 AI 정리를 시작할 수 있습니다.")
-        } catch {
+    private static func loadProviderReadiness() -> Result<ProviderReadiness, Error> {
+        Result {
+            try ProviderReadiness.evaluate(
+                openRouterAPIKey: { try OpenRouterKeychain.load() },
+                codexAuthenticated: isCodexAuthenticated
+            )
+        }
+    }
+
+    private static func providerReadinessResult(
+        _ keyPath: KeyPath<ProviderReadiness, ProviderReadinessItem>,
+        from providerReadiness: Result<ProviderReadiness, Error>
+    ) -> PreflightCheckResult {
+        switch providerReadiness {
+        case .success(let readiness):
+            return readiness[keyPath: keyPath].result
+        case .failure(let error):
             return .failed(reason: error.localizedDescription)
         }
     }
