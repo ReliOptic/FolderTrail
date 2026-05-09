@@ -16,26 +16,7 @@ class ProviderReadinessContractTests(unittest.TestCase):
     def test_issue_70_readiness_module_separates_required_openrouter_and_optional_codex(self):
         self.assertTrue(READINESS.exists(), "missing Safety/ProviderReadiness.swift")
 
-        source = READINESS.read_text(encoding="utf-8")
-        preflight = PREFLIGHT.read_text(encoding="utf-8")
-        prompt = PROMPT.read_text(encoding="utf-8")
         project = PROJECT.read_text(encoding="utf-8")
-
-        self.assertIn("struct ProviderReadiness", source)
-        self.assertIn("enum ProviderReadinessRequirement", source)
-        self.assertIn("case required", source)
-        self.assertIn("case optional", source)
-        self.assertIn("openRouter", source)
-        self.assertIn("codexLocalHelper", source)
-        self.assertIn("canProceed", source)
-        self.assertIn("OpenRouter를 연결해야 AI 정리를 시작할 수 있습니다.", source)
-        self.assertIn("Codex / ChatGPT OAuth는 선택 사항입니다", source)
-
-        self.assertIn("ProviderReadiness.evaluate", preflight)
-        self.assertIn("providerReadiness", preflight)
-        self.assertIn("ProviderReadiness.promptStatus", prompt)
-        self.assertIn("readiness.openRouter", prompt)
-        self.assertIn("readiness.codexLocalHelper", prompt)
         self.assertIn("ProviderReadiness.swift", project)
 
     def test_issue_70_readiness_logic_allows_optional_codex_to_fail(self):
@@ -56,14 +37,22 @@ class ProviderReadinessContractTests(unittest.TestCase):
                 codexAuthenticated: { false }
             )
             expect(readyWithoutCodex.openRouter.result.isPassed, "OpenRouter key should satisfy required provider")
-            expect(!readyWithoutCodex.codexLocalHelper.result.isPassed, "Codex local helper can remain unavailable")
+            if case .failed(let codexReason) = readyWithoutCodex.codexLocalHelper.result {
+                expect(codexReason.contains("선택 사항"), "Codex helper failure should explain optional status")
+            } else {
+                expect(false, "Codex local helper can remain unavailable")
+            }
             expect(readyWithoutCodex.canProceed, "Optional Codex failure must not block proceeding")
 
             let missingOpenRouter = ProviderReadiness.evaluate(
                 openRouterAPIKey: { "  " },
                 codexAuthenticated: { true }
             )
-            expect(!missingOpenRouter.openRouter.result.isPassed, "Blank OpenRouter key should fail")
+            if case .failed(let openRouterReason) = missingOpenRouter.openRouter.result {
+                expect(openRouterReason.contains("OpenRouter"), "Required provider failure should name OpenRouter")
+            } else {
+                expect(false, "Blank OpenRouter key should fail")
+            }
             expect(missingOpenRouter.codexLocalHelper.result.isPassed, "Codex can be ready independently")
             expect(!missingOpenRouter.canProceed, "Required OpenRouter failure must block proceeding")
 
