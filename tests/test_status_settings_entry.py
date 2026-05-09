@@ -16,8 +16,8 @@ class StatusSettingsEntryTests(unittest.TestCase):
         self.assertIn("openSettingsSheet", prompt)
         self.assertIn("showSettingsSheet", prompt)
         self.assertNotIn("showSettingsWindow:", prompt)
-        self.assertIn("AI 준비됨", prompt)
-        self.assertIn("AI 연결 필요", prompt)
+        self.assertIn("OpenRouter 준비됨", prompt)
+        self.assertIn("OpenRouter 연결 필요", prompt)
         self.assertIn("로컬 도우미 선택 사항", prompt)
         self.assertNotIn("Codex fallback 선택", prompt)
 

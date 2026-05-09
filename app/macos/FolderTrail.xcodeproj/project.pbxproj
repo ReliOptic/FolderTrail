@@ -20,6 +20,7 @@
 		AA0000000000000000000113 /* ProviderConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000213 /* ProviderConnectView.swift */; };
 		AA0000000000000000000114 /* OpenRouterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000214 /* OpenRouterSettingsView.swift */; };
 		AA0000000000000000000115 /* PreflightCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000215 /* PreflightCheck.swift */; };
+		AA0000000000000000000130 /* ProviderReadiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000230 /* ProviderReadiness.swift */; };
 		AA0000000000000000000116 /* PreflightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000216 /* PreflightView.swift */; };
 		AA0000000000000000000117 /* WorkspaceCopyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000217 /* WorkspaceCopyService.swift */; };
 		AA0000000000000000000118 /* ConsentModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000218 /* ConsentModalView.swift */; };
@@ -52,6 +53,7 @@
 		AA0000000000000000000213 /* ProviderConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/ProviderConnectView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000214 /* OpenRouterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/OpenRouterSettingsView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000215 /* PreflightCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Safety/PreflightCheck.swift; sourceTree = "<group>"; };
+		AA0000000000000000000230 /* ProviderReadiness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Safety/ProviderReadiness.swift; sourceTree = "<group>"; };
 		AA0000000000000000000216 /* PreflightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/PreflightView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000217 /* WorkspaceCopyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution/WorkspaceCopyService.swift; sourceTree = "<group>"; };
 		AA0000000000000000000218 /* ConsentModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UX/ConsentModalView.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				AA0000000000000000000213 /* ProviderConnectView.swift */,
 				AA0000000000000000000214 /* OpenRouterSettingsView.swift */,
 				AA0000000000000000000215 /* PreflightCheck.swift */,
+				AA0000000000000000000230 /* ProviderReadiness.swift */,
 				AA0000000000000000000216 /* PreflightView.swift */,
 				AA0000000000000000000217 /* WorkspaceCopyService.swift */,
 				AA0000000000000000000218 /* ConsentModalView.swift */,
@@ -199,6 +202,7 @@
 				AA0000000000000000000113 /* ProviderConnectView.swift in Sources */,
 				AA0000000000000000000114 /* OpenRouterSettingsView.swift in Sources */,
 				AA0000000000000000000115 /* PreflightCheck.swift in Sources */,
+				AA0000000000000000000130 /* ProviderReadiness.swift in Sources */,
 				AA0000000000000000000116 /* PreflightView.swift in Sources */,
 				AA0000000000000000000117 /* WorkspaceCopyService.swift in Sources */,
 				AA0000000000000000000118 /* ConsentModalView.swift in Sources */,
