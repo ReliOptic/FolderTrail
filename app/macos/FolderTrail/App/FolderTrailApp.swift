@@ -7,23 +7,35 @@ struct FolderTrailApp: App {
 
     var body: some Scene {
         Settings {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("v0.1 설정")
-                    .font(.title3.weight(.semibold))
-                Text("OpenRouter 연결, Codex fallback, 실행 진단만 다룹니다.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Divider()
-                ProviderConnectView(settings: OpenRouterProviderSettings.shared)
-                Divider()
-                OpenRouterSettingsView(settings: OpenRouterProviderSettings.shared)
-                Divider()
-                CodexFallbackSettingsView()
-                Divider()
-                PlannerModelSettingsView(settings: plannerModelSettings)
-            }
-                .padding(20)
-                .frame(width: 420)
+            FolderTrailSettingsView(
+                providerSettings: OpenRouterProviderSettings.shared,
+                plannerModelSettings: plannerModelSettings
+            )
+            .padding(20)
+            .frame(width: 420)
+        }
+    }
+}
+
+struct FolderTrailSettingsView: View {
+    @ObservedObject var providerSettings: OpenRouterProviderSettings
+    @ObservedObject var plannerModelSettings: PlannerModelSettings
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("v0.1 설정")
+                .font(.title3.weight(.semibold))
+            Text("OpenRouter 연결, Codex fallback, 실행 진단만 다룹니다.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Divider()
+            ProviderConnectView(settings: providerSettings)
+            Divider()
+            OpenRouterSettingsView(settings: providerSettings)
+            Divider()
+            CodexFallbackSettingsView()
+            Divider()
+            PlannerModelSettingsView(settings: plannerModelSettings)
         }
     }
 }
