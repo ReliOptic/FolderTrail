@@ -5,6 +5,13 @@ import SwiftUI
 struct PlaceholderPromptView: View {
     let folderURL: URL
 
+    private enum PromptLayout {
+        static let promptMinHeight: CGFloat = 84
+        static let promptIdealHeight: CGFloat = 104
+        static let promptMaxHeight: CGFloat = 132
+        static let bodyMaxHeight: CGFloat = 340
+    }
+
     private let recommendedPrompts = [
         "중복 정리",
         "프로젝트별 정돈",
@@ -48,6 +55,7 @@ struct PlaceholderPromptView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .frame(maxHeight: PromptLayout.bodyMaxHeight)
 
             keyboardShortcutButtons
 
@@ -65,8 +73,6 @@ struct PlaceholderPromptView: View {
         }
         .sheet(isPresented: $showSettingsSheet) {
             PromptSettingsSheet(providerSettings: providerSettings)
-            .padding(FolderTrailDesign.Spacing.xl)
-            .frame(width: 420)
         }
     }
 
@@ -94,7 +100,7 @@ struct PlaceholderPromptView: View {
 
             TextEditor(text: $prompt)
                 .font(FolderTrailDesign.Typography.body)
-                .frame(minHeight: 96)
+                .frame(minHeight: PromptLayout.promptMinHeight, idealHeight: PromptLayout.promptIdealHeight, maxHeight: PromptLayout.promptMaxHeight)
                 .focused($promptFocused)
                 .overlay(
                     RoundedRectangle(cornerRadius: FolderTrailDesign.Radius.sm)
