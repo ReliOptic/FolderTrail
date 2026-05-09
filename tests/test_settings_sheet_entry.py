@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
 PROMPT = APP / "UX" / "PlaceholderPromptView.swift"
 APP_FILE = APP / "App" / "FolderTrailApp.swift"
+PROMPT_SETTINGS = APP / "UX" / "PromptSettingsSheet.swift"
 
 
 class SettingsSheetEntryTests(unittest.TestCase):
@@ -14,7 +15,7 @@ class SettingsSheetEntryTests(unittest.TestCase):
         self.assertIn("showSettingsSheet", prompt)
         self.assertIn(".sheet(isPresented: $showSettingsSheet)", prompt)
         self.assertIn("PromptSettingsSheet", prompt)
-        self.assertIn("Codex / ChatGPT OAuth", prompt)
+        self.assertIn("CodexChatGPTOAuthView", PROMPT_SETTINGS.read_text(encoding="utf-8"))
         self.assertIn("private func openSettingsSheet", prompt)
         self.assertIn("showSettingsSheet = true", prompt)
         self.assertNotIn("showSettingsWindow:", prompt)

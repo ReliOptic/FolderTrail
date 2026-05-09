@@ -23,7 +23,7 @@ class FolderTrailVocabularyTests(unittest.TestCase):
         self.assertIn("복사본 만들고 계속", preflight_view)
         self.assertIn("폴더를 읽을 수 있음", preflight_check)
         self.assertIn("작업 복사본을 만들 수 있음", preflight_check)
-        self.assertIn("OpenRouter 연결됨", preflight_check)
+        self.assertNotIn("OpenRouter", preflight_view + preflight_check)
         self.assertIn("OpenRouter 연결", provider)
 
         for awkward_copy in [

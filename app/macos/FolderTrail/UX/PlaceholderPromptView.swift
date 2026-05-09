@@ -43,7 +43,6 @@ struct PlaceholderPromptView: View {
                 VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
                     folderSummary
                     promptComposer
-                    CompactConnectionPanel(providerSettings: providerSettings)
                     preflightSection
                     runStatusSection
                 }
@@ -109,8 +108,7 @@ struct PlaceholderPromptView: View {
         if showPreflight {
             PreflightView(
                 folderURL: selectedFolderURL,
-                runner: PreflightRunner(),
-                providerSettings: providerSettings
+                runner: PreflightRunner()
             ) {
                 showConsentModal = true
             }
@@ -180,7 +178,6 @@ struct PlaceholderPromptView: View {
             folderName: selectedFolderURL.lastPathComponent.isEmpty
                 ? selectedFolderURL.path
                 : selectedFolderURL.lastPathComponent,
-            providerConnected: providerSettings.isConnected,
             settingsButton: {
                 openSettingsSheet()
             }
@@ -232,7 +229,6 @@ struct PlaceholderPromptView: View {
 
 private struct PromptStatusStrip: View {
     let folderName: String
-    let providerConnected: Bool
     let settingsButton: () -> Void
 
     var body: some View {
@@ -248,10 +244,6 @@ private struct PromptStatusStrip: View {
 
             Spacer()
 
-            PromptReadinessBar(
-                readiness: ProviderReadiness.promptStatus(openRouterConnected: providerConnected)
-            )
-
             Button("설정…") {
                 settingsButton()
             }
@@ -259,31 +251,6 @@ private struct PromptStatusStrip: View {
         }
     }
 
-}
-
-private struct PromptReadinessBar: View {
-    let readiness: ProviderReadiness
-
-    var body: some View {
-        HStack(spacing: FolderTrailDesign.Spacing.sm) {
-            Label(openRouterTitle, systemImage: readiness.openRouter.isReady ? "checkmark.circle" : "exclamationmark.circle")
-                .foregroundStyle(readiness.openRouter.isReady ? FolderTrailDesign.Palette.success : FolderTrailDesign.Palette.warning)
-            Text("·")
-                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-            Label(localHelperTitle, systemImage: "terminal")
-                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-        }
-        .font(FolderTrailDesign.Typography.meta)
-        .lineLimit(1)
-    }
-
-    private var openRouterTitle: String {
-        readiness.openRouter.isReady ? "OpenRouter 연결됨" : "OpenRouter는 설정에서 연결"
-    }
-
-    private var localHelperTitle: String {
-        readiness.codexLocalHelper.isReady ? "Codex 준비됨" : "Codex 로그인 필요"
-    }
 }
 
 private struct PromptChipButton: View {
@@ -294,115 +261,5 @@ private struct PromptChipButton: View {
         Button(title, action: action)
             .buttonStyle(FolderTrailChipButtonStyle())
             .controlSize(.small)
-    }
-}
-
-private struct CompactConnectionPanel: View {
-    @ObservedObject var providerSettings: OpenRouterProviderSettings
-
-    var body: some View {
-        FolderTrailPanel {
-            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.sm) {
-                RequiredProviderRow(providerSettings: providerSettings)
-                Divider()
-                OptionalLocalHelperRow()
-            }
-        }
-    }
-}
-
-private struct RequiredProviderRow: View {
-    @ObservedObject var providerSettings: OpenRouterProviderSettings
-
-    var body: some View {
-        HStack(alignment: .top, spacing: FolderTrailDesign.Spacing.md) {
-            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
-                Text("OpenRouter 필요")
-                    .font(FolderTrailDesign.Typography.body.weight(.semibold))
-                Text("정리를 실행하는 AI 제공자 연결")
-                    .font(FolderTrailDesign.Typography.meta)
-                    .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-            }
-
-            Spacer()
-
-            switch providerSettings.status {
-            case .connected:
-                Label("연결됨", systemImage: "checkmark.circle.fill")
-                    .font(FolderTrailDesign.Typography.meta)
-                    .foregroundStyle(FolderTrailDesign.Palette.success)
-            default:
-                Button("연결") {
-                    connectOpenRouter()
-                }
-                .controlSize(.small)
-            }
-        }
-    }
-
-    private func connectOpenRouter() {
-        Task {
-            await providerSettings.connectWithBrowser { url in
-                NSWorkspace.shared.open(url)
-            }
-            NSApp.activate(ignoringOtherApps: true)
-            FolderTrailAppController.shared.bringPromptToFront()
-        }
-    }
-}
-
-private struct OptionalLocalHelperRow: View {
-    var body: some View {
-        HStack(alignment: .top, spacing: FolderTrailDesign.Spacing.md) {
-            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
-                Text("선택: Codex / ChatGPT")
-                    .font(FolderTrailDesign.Typography.body.weight(.semibold))
-                Text("로컬 도우미 OAuth. 없어도 OpenRouter로 먼저 진행할 수 있습니다.")
-                    .font(FolderTrailDesign.Typography.meta)
-                    .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-                    .lineLimit(2)
-            }
-
-            Spacer()
-
-            CodexChatGPTOAuthView(style: .compact)
-        }
-    }
-}
-
-private struct ProviderConnectionSection: View {
-    @ObservedObject var providerSettings: OpenRouterProviderSettings
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
-            Text("AI 제공자")
-                .font(FolderTrailDesign.Typography.body.weight(.semibold))
-            Text("OpenRouter")
-                .font(FolderTrailDesign.Typography.meta.weight(.semibold))
-            Text("AI 모델 호출에 쓰는 제공자 연결입니다. Codex / ChatGPT OAuth와 별개입니다.")
-                .font(FolderTrailDesign.Typography.meta)
-                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-            ProviderConnectView(settings: providerSettings)
-        }
-    }
-}
-
-private struct PromptSettingsSheet: View {
-    @ObservedObject var providerSettings: OpenRouterProviderSettings
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
-            Text("v0.1 설정")
-                .font(FolderTrailDesign.Typography.section)
-            Text("OpenRouter 제공자 연결과 Codex / ChatGPT OAuth는 별도 로그인입니다.")
-                .font(FolderTrailDesign.Typography.meta)
-                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-
-            Divider()
-            ProviderConnectionSection(providerSettings: providerSettings)
-
-            Divider()
-            CodexChatGPTOAuthView()
-        }
     }
 }
