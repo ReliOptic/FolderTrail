@@ -1,4 +1,4 @@
-import AppKit
+import Foundation
 import SwiftUI
 
 struct CodexChatGPTOAuthView: View {
@@ -86,13 +86,8 @@ final class CodexLoginRunner: ObservableObject {
                 return
             }
 
-            statusText = "브라우저를 열고 있어요…"
-            let succeeded = await Self.runLoginProcess { url in
-                Task { @MainActor in
-                    NSWorkspace.shared.open(url)
-                    self.statusText = "브라우저 로그인이 끝나면 자동으로 다시 확인합니다."
-                }
-            }
+            statusText = "브라우저 로그인은 Codex가 열어 줍니다. 완료 후 자동으로 다시 확인합니다."
+            let succeeded = await Self.runLoginProcess()
 
             if succeeded {
                 statusText = "로그인 완료. 상태를 확인하고 있어요…"
@@ -131,7 +126,7 @@ final class CodexLoginRunner: ObservableObject {
         }.value
     }
 
-    nonisolated private static func runLoginProcess(openURL: @escaping @Sendable (URL) -> Void) async -> Bool {
+    nonisolated private static func runLoginProcess() async -> Bool {
         await withCheckedContinuation { continuation in
             let state = CodexLoginProcessState(continuation: continuation)
             let process = Process()
@@ -143,13 +138,7 @@ final class CodexLoginRunner: ObservableObject {
             process.standardError = outputPipe
 
             outputPipe.fileHandleForReading.readabilityHandler = { handle in
-                let data = handle.availableData
-                guard !data.isEmpty,
-                      let text = String(data: data, encoding: .utf8),
-                      let url = extractAuthURL(from: text)
-                else { return }
-
-                state.openOnce(url, openURL: openURL)
+                _ = handle.availableData
             }
 
             process.terminationHandler = { finishedProcess in
@@ -173,37 +162,15 @@ final class CodexLoginRunner: ObservableObject {
             }
         }
     }
-
-    nonisolated static func extractAuthURL(from text: String) -> URL? {
-        text
-            .split(whereSeparator: { $0.isWhitespace })
-            .compactMap { URL(string: String($0)) }
-            .first { url in
-                url.scheme?.hasPrefix("http") == true
-                    && url.host?.contains("auth.openai.com") == true
-            }
-    }
 }
 
 private final class CodexLoginProcessState: @unchecked Sendable {
     private let lock = NSLock()
     private var didFinish = false
-    private var didOpenURL = false
     private let continuation: CheckedContinuation<Bool, Never>
 
     init(continuation: CheckedContinuation<Bool, Never>) {
         self.continuation = continuation
-    }
-
-    func openOnce(_ url: URL, openURL: @Sendable (URL) -> Void) {
-        lock.lock()
-        let shouldOpen = !didOpenURL
-        didOpenURL = true
-        lock.unlock()
-
-        if shouldOpen {
-            openURL(url)
-        }
     }
 
     func finish(_ result: Bool) {
