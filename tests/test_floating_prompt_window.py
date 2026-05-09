@@ -19,7 +19,7 @@ class FloatingPromptWindowContractTests(unittest.TestCase):
         self.assertIn("ProviderConnectView", prompt_view)
         self.assertIn("providerSettings.isConnected", prompt_view)
         self.assertIn("OpenRouter 연결", (APP / "UX" / "ProviderConnectView.swift").read_text(encoding="utf-8"))
-        self.assertIn("복사본으로 정리 시작", prompt_view)
+        self.assertIn('Button("시작")', prompt_view)
         self.assertIn(".disabled(prompt.trimmingCharacters", prompt_view)
         self.assertIn("@FocusState", prompt_view)
         self.assertIn('.keyboardShortcut("k", modifiers: .command)', prompt_view)

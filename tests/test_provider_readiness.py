@@ -13,13 +13,13 @@ PROJECT = ROOT / "app" / "macos" / "FolderTrail.xcodeproj" / "project.pbxproj"
 
 
 class ProviderReadinessContractTests(unittest.TestCase):
-    def test_issue_70_readiness_module_separates_required_openrouter_and_optional_codex(self):
+    def test_issue_70_readiness_module_separates_codex_and_openrouter(self):
         self.assertTrue(READINESS.exists(), "missing Safety/ProviderReadiness.swift")
 
         project = PROJECT.read_text(encoding="utf-8")
         self.assertIn("ProviderReadiness.swift", project)
 
-    def test_issue_70_readiness_logic_allows_optional_codex_to_fail(self):
+    def test_issue_83_readiness_logic_requires_codex_and_allows_optional_openrouter_to_fail(self):
         smoke = textwrap.dedent(
             r'''
             import Foundation
@@ -32,34 +32,33 @@ class ProviderReadinessContractTests(unittest.TestCase):
                 }
             }
 
-            let readyWithoutCodex = ProviderReadiness.evaluate(
+            let readyWithoutOpenRouter = ProviderReadiness.evaluate(
+                openRouterAPIKey: { nil },
+                codexAuthenticated: { true }
+            )
+            expect(readyWithoutOpenRouter.codexLocalHelper.result.isPassed, "Codex login should satisfy required readiness")
+            expect(readyWithoutOpenRouter.canProceed, "Missing OpenRouter must not block proceeding")
+            if case .failed(let openRouterReason) = readyWithoutOpenRouter.openRouter.result {
+                expect(openRouterReason.contains("설정"), "OpenRouter failure should point to settings")
+            } else {
+                expect(false, "Missing OpenRouter should be reported independently")
+            }
+
+            let readyOpenRouterWithoutCodex = ProviderReadiness.evaluate(
                 openRouterAPIKey: { "sk-or-ready" },
                 codexAuthenticated: { false }
             )
-            expect(readyWithoutCodex.openRouter.result.isPassed, "OpenRouter key should satisfy required provider")
-            if case .failed(let codexReason) = readyWithoutCodex.codexLocalHelper.result {
-                expect(codexReason.contains("선택 사항"), "Codex helper failure should explain optional status")
+            expect(readyOpenRouterWithoutCodex.openRouter.result.isPassed, "OpenRouter can be connected independently")
+            if case .failed(let codexReason) = readyOpenRouterWithoutCodex.codexLocalHelper.result {
+                expect(codexReason.contains("Codex"), "Codex failure should name the primary readiness gate")
             } else {
-                expect(false, "Codex local helper can remain unavailable")
+                expect(false, "Missing Codex should fail")
             }
-            expect(readyWithoutCodex.canProceed, "Optional Codex failure must not block proceeding")
-
-            let missingOpenRouter = ProviderReadiness.evaluate(
-                openRouterAPIKey: { "  " },
-                codexAuthenticated: { true }
-            )
-            if case .failed(let openRouterReason) = missingOpenRouter.openRouter.result {
-                expect(openRouterReason.contains("OpenRouter"), "Required provider failure should name OpenRouter")
-            } else {
-                expect(false, "Blank OpenRouter key should fail")
-            }
-            expect(missingOpenRouter.codexLocalHelper.result.isPassed, "Codex can be ready independently")
-            expect(!missingOpenRouter.canProceed, "Required OpenRouter failure must block proceeding")
+            expect(!readyOpenRouterWithoutCodex.canProceed, "Missing Codex must block proceeding")
 
             let promptStatus = ProviderReadiness.promptStatus(openRouterConnected: true)
-            expect(promptStatus.openRouter.requirement == .required, "OpenRouter prompt item remains required")
-            expect(promptStatus.codexLocalHelper.requirement == .optional, "Codex prompt item remains optional")
-            expect(promptStatus.canProceed, "Prompt status proceeds from OpenRouter readiness only")
+            expect(promptStatus.openRouter.requirement == .optional, "OpenRouter prompt item is optional")
+            expect(promptStatus.codexLocalHelper.requirement == .required, "Codex prompt item is required")
             '''
         )
 

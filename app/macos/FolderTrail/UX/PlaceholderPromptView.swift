@@ -118,14 +118,12 @@ struct PlaceholderPromptView: View {
 
             Spacer()
 
-            if providerSettings.isConnected {
-                Button("복사본으로 정리 시작") {
-                    showPreflight = true
-                }
-                    .buttonStyle(FolderTrailPrimaryButtonStyle())
-                    .keyboardShortcut(.defaultAction)
-                    .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            Button("시작") {
+                showPreflight = true
             }
+                .buttonStyle(FolderTrailPrimaryButtonStyle())
+                .keyboardShortcut(.defaultAction)
+                .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
     }
 
@@ -224,11 +222,11 @@ private struct PromptReadinessBar: View {
     }
 
     private var openRouterTitle: String {
-        readiness.openRouter.isReady ? "OpenRouter 준비됨" : "OpenRouter 연결 필요"
+        readiness.openRouter.isReady ? "OpenRouter 연결됨" : "OpenRouter는 설정에서 연결"
     }
 
     private var localHelperTitle: String {
-        readiness.codexLocalHelper.isReady ? "로컬 도우미 준비됨" : "로컬 도우미 선택 사항"
+        readiness.codexLocalHelper.isReady ? "Codex 준비됨" : "Codex 로그인 필요"
     }
 }
 
