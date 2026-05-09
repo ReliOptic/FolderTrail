@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 
 struct WorkspaceCopyResult: Equatable {
@@ -37,10 +38,15 @@ final class WorkspaceCopyService: @unchecked Sendable {
     ]
 
     private let fileManager: FileManager
+    private let shouldCancel: () -> Bool
     private(set) var readOnlySourceFolderURL: URL?
 
-    init(fileManager: FileManager = .default) {
+    init(
+        fileManager: FileManager = .default,
+        shouldCancel: @escaping () -> Bool = { Task.isCancelled }
+    ) {
         self.fileManager = fileManager
+        self.shouldCancel = shouldCancel
     }
 
     static func workspaceFolderName(for sourceFolderURL: URL) -> String {
@@ -62,6 +68,8 @@ final class WorkspaceCopyService: @unchecked Sendable {
                         continuation.yield(progress)
                     }
                     continuation.yield(.completed(result))
+                } catch is CancellationError {
+                    continuation.yield(.failed(reason: "cancelled"))
                 } catch {
                     continuation.yield(.failed(reason: error.localizedDescription))
                 }
@@ -78,6 +86,8 @@ final class WorkspaceCopyService: @unchecked Sendable {
         sourceFolderURL: URL,
         onProgress: ((WorkspaceCopyProgress) -> Void)?
     ) throws -> WorkspaceCopyResult {
+        try checkCancellation()
+
         var isDirectory: ObjCBool = false
         guard fileManager.fileExists(atPath: sourceFolderURL.path, isDirectory: &isDirectory),
               isDirectory.boolValue,
@@ -91,6 +101,7 @@ final class WorkspaceCopyService: @unchecked Sendable {
         onProgress?(.started(sourceFolderURL: sourceFolderURL, workspaceURL: destinationURL))
 
         do {
+            try checkCancellation()
             try fileManager.createDirectory(
                 at: destinationURL,
                 withIntermediateDirectories: false
@@ -105,6 +116,9 @@ final class WorkspaceCopyService: @unchecked Sendable {
                 sourceFolderURL: sourceFolderURL,
                 workspaceURL: destinationURL
             )
+        } catch is CancellationError {
+            try? fileManager.removeItem(at: destinationURL)
+            throw CancellationError()
         } catch {
             try? fileManager.removeItem(at: destinationURL)
             throw WorkspaceCopyError.copyFailed(error.localizedDescription)
@@ -117,6 +131,8 @@ final class WorkspaceCopyService: @unchecked Sendable {
         relativePath: String,
         onProgress: ((WorkspaceCopyProgress) -> Void)?
     ) throws {
+        try checkCancellation()
+
         let items = try fileManager.contentsOfDirectory(
             at: sourceURL,
             includingPropertiesForKeys: [.isDirectoryKey],
@@ -124,6 +140,8 @@ final class WorkspaceCopyService: @unchecked Sendable {
         )
 
         for itemURL in items {
+            try checkCancellation()
+
             let itemName = itemURL.lastPathComponent
             let itemRelativePath = relativePath.isEmpty
                 ? itemName
@@ -152,9 +170,25 @@ final class WorkspaceCopyService: @unchecked Sendable {
                     onProgress: onProgress
                 )
             } else {
-                try fileManager.copyItem(at: itemURL, to: destinationItemURL)
+                try copyFile(from: itemURL, to: destinationItemURL)
                 onProgress?(.copied(relativePath: itemRelativePath))
             }
+        }
+    }
+
+    private func copyFile(from sourceURL: URL, to destinationURL: URL) throws {
+        try checkCancellation()
+
+        if clonefile(sourceURL.path, destinationURL.path, 0) == 0 {
+            return
+        }
+
+        try fileManager.copyItem(at: sourceURL, to: destinationURL)
+    }
+
+    private func checkCancellation() throws {
+        if shouldCancel() {
+            throw CancellationError()
         }
     }
 
