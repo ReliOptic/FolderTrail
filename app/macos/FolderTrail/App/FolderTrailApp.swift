@@ -25,7 +25,7 @@ struct FolderTrailSettingsView: View {
         VStack(alignment: .leading, spacing: 20) {
             Text("v0.1 설정")
                 .font(.title3.weight(.semibold))
-            Text("OpenRouter 제공자 연결과 Codex / ChatGPT OAuth를 별도로 다룹니다.")
+            Text("연결을 관리하세요.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Divider()

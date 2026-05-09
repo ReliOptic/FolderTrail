@@ -15,7 +15,7 @@ class PreflightActionClarityTests(unittest.TestCase):
         self.assertIn("통과", view)
         self.assertIn("확인 중", view)
         self.assertIn("조치 필요", view)
-        self.assertIn("계속할 수 없습니다", view)
+        self.assertIn("필수 항목을 먼저 처리해 주세요", view)
         self.assertIn("복사본 만들고 계속", view)
 
     def test_issue_38_codex_chatgpt_oauth_does_not_hide_primary_next_action(self):

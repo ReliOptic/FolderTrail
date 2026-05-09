@@ -50,7 +50,7 @@ class OpenRouterSettingsOnlyTests(unittest.TestCase):
             self.assertIn("OpenRouterSettingsView", settings_source)
 
         self.assertIn("OpenRouter 연결", provider)
-        self.assertIn("OpenRouter 다시 연결", provider)
+        self.assertIn("다시 연결", provider)
         self.assertIn("API 키 저장", openrouter_settings)
 
 

@@ -30,7 +30,7 @@ struct ProviderReadiness: Equatable {
         let rawKey = try openRouterAPIKey()?.trimmingCharacters(in: .whitespacesAndNewlines)
         let openRouterResult: PreflightCheckResult = rawKey?.isEmpty == false
             ? .passed
-            : .failed(reason: "OpenRouter는 설정에서 연결할 수 있습니다.")
+            : .failed(reason: "설정에서 연결하세요.")
 
         let codexResult: PreflightCheckResult = codexAuthenticated()
             ? .passed
@@ -43,7 +43,7 @@ struct ProviderReadiness: Equatable {
                 result: openRouterResult
             ),
             codexLocalHelper: ProviderReadinessItem(
-                title: "Codex / ChatGPT",
+                title: "Codex",
                 requirement: .required,
                 result: codexResult
             )
@@ -57,10 +57,10 @@ struct ProviderReadiness: Equatable {
                 requirement: .optional,
                 result: openRouterConnected
                     ? .passed
-                    : .failed(reason: "OpenRouter는 설정에서 연결할 수 있습니다.")
+                    : .failed(reason: "설정에서 연결하세요.")
             ),
             codexLocalHelper: ProviderReadinessItem(
-                title: "Codex / ChatGPT",
+                title: "Codex",
                 requirement: .required,
                 result: .failed(reason: "Codex 로그인이 필요합니다.")
             )

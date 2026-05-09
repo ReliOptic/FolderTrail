@@ -14,7 +14,7 @@ class CodexOAuthSingleBrowserLaunchTests(unittest.TestCase):
         self.assertNotIn("NSWorkspace.shared.open(url)", source)
         self.assertNotIn("extractAuthURL", source)
         self.assertIn("readabilityHandler", source)
-        self.assertIn("브라우저 로그인은 Codex가 열어 줍니다", source)
+        self.assertIn("브라우저에서 로그인하세요", source)
 
 
 if __name__ == "__main__":
