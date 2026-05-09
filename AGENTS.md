@@ -12,6 +12,8 @@ For FolderTrail v0.1 implementation:
 - Shape issues as independently reviewable vertical slices with explicit blockers.
 - Open or update one PR per issue and keep development evidence in the PR body/comments.
 - Do not batch unrelated issues into one branch or PR.
+- Do not say done unless acceptance evidence proves the user-visible behavior works.
+- If the user-visible flow was not verified, say what remains unverified.
 - Keep context small; use fresh review/QA passes instead of reviewing in the same long implementation context.
 - Record out-of-scope decisions in issues/PRs, not stale one-off repo docs.
 - After merge, delete the issue branch; GitHub keeps the PR, commits, discussion, and issue timeline.

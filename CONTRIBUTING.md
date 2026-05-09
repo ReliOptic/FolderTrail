@@ -61,7 +61,21 @@ REFACTOR: simplify while tests stay green
 
 Tests should describe public behavior, not private implementation details. Prefer deep modules: small public interfaces with meaningful behavior behind them, tested from the outside. If a behavior is hard to test, improve the feedback loop before adding more implementation.
 
-### 5. Review and merge
+### 5. Prove done with acceptance evidence
+
+Done means verified acceptance. Do not call a PR or issue done just because tests passed or the branch merged.
+
+For each issue, collect acceptance evidence that proves the promised user-visible behavior:
+
+- RED evidence: the first focused behavior test failed for the right reason.
+- GREEN evidence: the focused behavior test passed after the smallest implementation.
+- Acceptance evidence: the issue acceptance criteria were checked against the app behavior.
+- Smoke evidence: UI, Finder, auth, packaging, or workflow changes include a manual or scripted smoke check when locally possible.
+- Known gaps: anything not verified is named plainly in the PR and issue comment.
+
+If user-visible behavior was not verified, say “not verified yet” and keep the issue open or create a follow-up issue. Do not hide unverified work behind a successful unit test, merge, or generated artifact.
+
+### 6. Review and merge
 
 Before marking a PR ready:
 
@@ -126,7 +140,10 @@ FolderTrail works with user folders, so safety is part of every contribution:
 ## PR checklist
 
 - [ ] Links the issue
-- [ ] Shows the RED/GREEN loop or explains why it is docs-only
+- [ ] RED evidence: one behavior test failed for the right reason
+- [ ] GREEN evidence: the same behavior passed after the implementation
 - [ ] Covers user-visible behavior through public interfaces
+- [ ] Acceptance evidence: issue criteria checked against behavior
+- [ ] Manual or scripted smoke check included when UI/Finder/auth/workflow behavior changed
 - [ ] Includes verification evidence
-- [ ] Calls out known gaps or follow-ups
+- [ ] Known gaps or follow-ups are called out explicitly
