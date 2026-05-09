@@ -27,11 +27,12 @@ class RunProgressCancelTests(unittest.TestCase):
         self.assertIn("case cancelled", model)
         self.assertIn("@Published private(set) var stepText", model)
         self.assertIn("@Published private(set) var elapsedSeconds", model)
-        self.assertIn("func start(prompt: String, sourceFolderURL: URL)", model)
+        self.assertIn("func start(", model)
+        self.assertIn("workspaceMode: WorkspacePreparationMode = .copiedWorkspace", model)
         self.assertIn("func cancel()", model)
-        self.assertIn("runPipeline(prompt, sourceFolderURL) { state in", model)
+        self.assertIn("runPipeline(prompt, sourceFolderURL, workspaceMode) { state in", model)
 
-        self.assertIn("runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL)", prompt)
+        self.assertIn("runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL, workspaceMode: workspaceMode)", prompt)
         self.assertIn("runModel.cancel()", prompt)
         self.assertIn('Button("정지")', prompt)
         self.assertIn("elapsedTimeText", prompt)
@@ -102,7 +103,7 @@ class RunProgressCancelTests(unittest.TestCase):
                     let source = URL(fileURLWithPath: NSTemporaryDirectory())
                         .appendingPathComponent("FolderTrailCancelSmoke", isDirectory: true)
 
-                    let done = FolderTrailPromptRunModel(runPipeline: { prompt, sourceURL, onState in
+                    let done = FolderTrailPromptRunModel(runPipeline: { prompt, sourceURL, _, onState in
                         expect(prompt == "정리", "prompt should pass through")
                         onState(.workspaceReady)
                         onState(.manifestBuilt)
@@ -114,7 +115,7 @@ class RunProgressCancelTests(unittest.TestCase):
                     expect(done.stepText == "완료", "successful run should end with done text")
                     expect(done.elapsedSeconds >= 0, "elapsed seconds should be available")
 
-                    let cancellable = FolderTrailPromptRunModel(runPipeline: { _, _, onState in
+                    let cancellable = FolderTrailPromptRunModel(runPipeline: { _, _, _, onState in
                         onState(.manifestBuilt)
                         while !Task.isCancelled {
                             try await Task.sleep(nanoseconds: 20_000_000)

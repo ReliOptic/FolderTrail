@@ -13,18 +13,23 @@ enum PreflightCheckResult: Equatable {
     }
 }
 
+enum PreflightWorkspaceMode: Equatable {
+    case copiedWorkspace
+    case directSource
+}
+
 enum PreflightCheckID: String, CaseIterable {
     case folderReadable
     case workspaceWritable
     case codexAvailable
     case codexAuthenticated
 
-    var title: String {
+    func title(for workspaceMode: PreflightWorkspaceMode = .copiedWorkspace) -> String {
         switch self {
         case .folderReadable:
             return "폴더를 읽을 수 있음"
         case .workspaceWritable:
-            return "작업 복사본을 만들 수 있음"
+            return workspaceMode == .copiedWorkspace ? "작업 복사본을 만들 수 있음" : "원본 폴더에 쓸 수 있음"
         case .codexAvailable:
             return "Codex CLI 설치됨"
         case .codexAuthenticated:
@@ -42,11 +47,8 @@ enum PreflightCheckID: String, CaseIterable {
 
 struct PreflightCheckState: Identifiable, Equatable {
     let id: PreflightCheckID
+    let title: String
     var result: PreflightCheckResult
-
-    var title: String {
-        id.title
-    }
 }
 
 enum PreflightCheck {
@@ -55,23 +57,30 @@ enum PreflightCheck {
 
     static func runAll(
         for folderURL: URL,
+        workspaceMode: PreflightWorkspaceMode = .copiedWorkspace,
         fileManager: FileManager = .default
     ) -> [PreflightCheckState] {
         return PreflightCheckID.allCases.map { checkID in
             PreflightCheckState(
                 id: checkID,
+                title: checkID.title(for: workspaceMode),
                 result: run(
                     checkID,
                     folderURL: folderURL,
+                    workspaceMode: workspaceMode,
                     fileManager: fileManager
                 )
             )
         }
     }
 
-    static func pendingChecks() -> [PreflightCheckState] {
+    static func pendingChecks(workspaceMode: PreflightWorkspaceMode = .copiedWorkspace) -> [PreflightCheckState] {
         PreflightCheckID.allCases.map {
-            PreflightCheckState(id: $0, result: .pending)
+            PreflightCheckState(
+                id: $0,
+                title: $0.title(for: workspaceMode),
+                result: .pending
+            )
         }
     }
 
@@ -86,13 +95,16 @@ enum PreflightCheck {
     private static func run(
         _ checkID: PreflightCheckID,
         folderURL: URL,
+        workspaceMode: PreflightWorkspaceMode,
         fileManager: FileManager
     ) -> PreflightCheckResult {
         switch checkID {
         case .folderReadable:
             return checkFolderReadable(folderURL, fileManager: fileManager)
         case .workspaceWritable:
-            return checkSiblingWorkspaceWritable(folderURL, fileManager: fileManager)
+            return workspaceMode == .copiedWorkspace
+                ? checkSiblingWorkspaceWritable(folderURL, fileManager: fileManager)
+                : checkSelectedFolderWritable(folderURL, fileManager: fileManager)
         case .codexAvailable:
             return checkCodexAvailable()
         case .codexAuthenticated:
@@ -129,6 +141,28 @@ enum PreflightCheck {
         } catch {
             try? fileManager.removeItem(at: probeURL)
             return .failed(reason: "이 폴더 옆에 작업 복사본을 만들 수 없습니다.")
+        }
+    }
+
+    private static func checkSelectedFolderWritable(
+        _ folderURL: URL,
+        fileManager: FileManager
+    ) -> PreflightCheckResult {
+        let probeURL = folderURL.appendingPathComponent(
+            ".foldertrail-preflight-\(UUID().uuidString)",
+            isDirectory: true
+        )
+
+        do {
+            try fileManager.createDirectory(
+                at: probeURL,
+                withIntermediateDirectories: false
+            )
+            try fileManager.removeItem(at: probeURL)
+            return .passed
+        } catch {
+            try? fileManager.removeItem(at: probeURL)
+            return .failed(reason: "이 폴더에 바로 정리 결과를 쓸 수 없습니다.")
         }
     }
 
@@ -249,10 +283,13 @@ final class PreflightRunner: ObservableObject {
         PreflightCheck.canProceedToConsent(checks)
     }
 
-    func run(for folderURL: URL) async {
-        checks = PreflightCheck.pendingChecks()
+    func run(
+        for folderURL: URL,
+        workspaceMode: PreflightWorkspaceMode = .copiedWorkspace
+    ) async {
+        checks = PreflightCheck.pendingChecks(workspaceMode: workspaceMode)
         let resolvedChecks = await Task.detached(priority: .userInitiated) {
-            PreflightCheck.runAll(for: folderURL)
+            PreflightCheck.runAll(for: folderURL, workspaceMode: workspaceMode)
         }.value
         checks = resolvedChecks
     }

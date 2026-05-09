@@ -26,7 +26,7 @@ class CodexLoginOnboardingTests(unittest.TestCase):
 
         self.assertIn("다시 확인", source)
         self.assertIn("rerunPreflight", source)
-        self.assertIn("await runner.run(for: folderURL)", source)
+        self.assertIn("await runner.run(for: folderURL, workspaceMode: preflightWorkspaceMode)", source)
 
 
 if __name__ == "__main__":

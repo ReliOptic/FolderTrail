@@ -31,7 +31,7 @@ class StartActionRunsPipelineTests(unittest.TestCase):
         self.assertIn("FolderTrailPromptRunModel.swift", project)
         self.assertIn("@StateObject private var runModel", prompt)
         self.assertIn("startRun()", prompt)
-        self.assertIn("runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL)", prompt)
+        self.assertIn("runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL, workspaceMode: workspaceMode)", prompt)
         self.assertIn("runStatusSection", prompt)
         self.assertIn("결과 폴더 열기", prompt)
         self.assertIn("정리 중", prompt)
@@ -102,7 +102,7 @@ class StartActionRunsPipelineTests(unittest.TestCase):
                     )
 
                     var calls: [(String, URL)] = []
-                    let model = FolderTrailPromptRunModel(runPipeline: { prompt, sourceURL, _ in
+                    let model = FolderTrailPromptRunModel(runPipeline: { prompt, sourceURL, _, _ in
                         calls.append((prompt, sourceURL))
                         return expected
                     })
@@ -117,7 +117,7 @@ class StartActionRunsPipelineTests(unittest.TestCase):
                     expect(status == .done, "run model should finish done")
                     expect(result?.workspaceURL == workspace, "run model should retain result")
 
-                    let failing = FolderTrailPromptRunModel(runPipeline: { _, _, _ in
+                    let failing = FolderTrailPromptRunModel(runPipeline: { _, _, _, _ in
                         throw PlannerAdapterError.networkFailure
                     })
                     await failing.run(prompt: "정리", sourceFolderURL: source)

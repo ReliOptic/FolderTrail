@@ -11,7 +11,7 @@ enum FolderTrailPromptRunStatus: Equatable {
 
 @MainActor
 final class FolderTrailPromptRunModel: ObservableObject {
-    typealias RunPipeline = (String, URL, @escaping FolderTrailRunPipeline.StateObserver) async throws -> FolderTrailRunResult
+    typealias RunPipeline = (String, URL, WorkspacePreparationMode, @escaping FolderTrailRunPipeline.StateObserver) async throws -> FolderTrailRunResult
 
     @Published private(set) var status: FolderTrailPromptRunStatus = .idle
     @Published private(set) var result: FolderTrailRunResult?
@@ -22,14 +22,19 @@ final class FolderTrailPromptRunModel: ObservableObject {
     private let runPipeline: RunPipeline
     private var activeRunTask: Task<Void, Never>?
     private var elapsedTask: Task<Void, Never>?
+    private var activeWorkspaceMode: WorkspacePreparationMode = .copiedWorkspace
 
     init(
-        runPipeline: @escaping RunPipeline = { prompt, sourceFolderURL, onState in
+        runPipeline: @escaping RunPipeline = { prompt, sourceFolderURL, workspaceMode, onState in
             try await FolderTrailRunPipeline(
                 planner: CodexPlannerAdapter(),
                 onState: onState
             )
-                .run(prompt: prompt, sourceFolderURL: sourceFolderURL)
+                .run(
+                    prompt: prompt,
+                    sourceFolderURL: sourceFolderURL,
+                    workspaceMode: workspaceMode
+                )
         }
     ) {
         self.runPipeline = runPipeline
@@ -40,15 +45,28 @@ final class FolderTrailPromptRunModel: ObservableObject {
         elapsedTask?.cancel()
     }
 
-    func run(prompt: String, sourceFolderURL: URL) async {
-        start(prompt: prompt, sourceFolderURL: sourceFolderURL)
+    func run(
+        prompt: String,
+        sourceFolderURL: URL,
+        workspaceMode: WorkspacePreparationMode = .copiedWorkspace
+    ) async {
+        start(
+            prompt: prompt,
+            sourceFolderURL: sourceFolderURL,
+            workspaceMode: workspaceMode
+        )
         await activeRunTask?.value
     }
 
-    func start(prompt: String, sourceFolderURL: URL) {
+    func start(
+        prompt: String,
+        sourceFolderURL: URL,
+        workspaceMode: WorkspacePreparationMode = .copiedWorkspace
+    ) {
         guard status != .running else { return }
 
         status = .running
+        activeWorkspaceMode = workspaceMode
         result = nil
         errorMessage = nil
         elapsedSeconds = 0
@@ -58,7 +76,7 @@ final class FolderTrailPromptRunModel: ObservableObject {
         activeRunTask?.cancel()
         activeRunTask = Task { [runPipeline] in
             do {
-                let runResult = try await runPipeline(prompt, sourceFolderURL) { state in
+                let runResult = try await runPipeline(prompt, sourceFolderURL, workspaceMode) { state in
                     Task { @MainActor in
                         self.apply(state)
                     }
@@ -113,15 +131,18 @@ final class FolderTrailPromptRunModel: ObservableObject {
 
     private func apply(_ state: FolderTrailRunState) {
         guard status == .running else { return }
-        stepText = Self.stepText(for: state)
+        stepText = Self.stepText(for: state, workspaceMode: activeWorkspaceMode)
     }
 
-    private static func stepText(for state: FolderTrailRunState) -> String {
+    private static func stepText(
+        for state: FolderTrailRunState,
+        workspaceMode: WorkspacePreparationMode = .copiedWorkspace
+    ) -> String {
         switch state {
         case .promptReceived:
             return "요청 확인 중"
         case .workspaceReady:
-            return "복사본 준비 중"
+            return workspaceMode == .copiedWorkspace ? "복사본 준비 중" : "원본 준비 중"
         case .manifestBuilt:
             return "목록 확인 중"
         case .planReady:

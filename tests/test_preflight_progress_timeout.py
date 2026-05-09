@@ -13,7 +13,7 @@ class PreflightProgressTimeoutTests(unittest.TestCase):
         source = PREFLIGHT_CHECK.read_text(encoding="utf-8")
 
         self.assertIn("static func pendingChecks", source)
-        self.assertIn("checks = PreflightCheck.pendingChecks()", source)
+        self.assertIn("checks = PreflightCheck.pendingChecks(workspaceMode: workspaceMode)", source)
         self.assertIn("Task.detached(priority: .userInitiated)", source)
         self.assertRegex(source, r"let resolvedChecks = await Task\.detached")
         self.assertIn("checks = resolvedChecks", source)
