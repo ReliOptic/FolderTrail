@@ -7,22 +7,20 @@ PROMPT = APP / "UX" / "PlaceholderPromptView.swift"
 CODEX_AUTH = APP / "UX" / "CodexChatGPTAuthView.swift"
 SETTINGS = APP / "App" / "FolderTrailApp.swift"
 PREFLIGHT = APP / "UX" / "PreflightView.swift"
+PROMPT_SETTINGS = APP / "UX" / "PromptSettingsSheet.swift"
 
 
 class SeparateAuthSurfacesTests(unittest.TestCase):
-    def test_issue_59_prompt_shows_openrouter_and_codex_chatgpt_as_distinct_logins(self):
+    def test_issue_59_settings_shows_openrouter_and_codex_chatgpt_as_distinct_logins(self):
         prompt = PROMPT.read_text(encoding="utf-8")
+        settings = PROMPT_SETTINGS.read_text(encoding="utf-8")
 
-        self.assertIn("CompactConnectionPanel", prompt)
-        self.assertIn("RequiredProviderRow", prompt)
-        self.assertIn("OptionalLocalHelperRow", prompt)
-        self.assertIn("ProviderConnectionSection", prompt)
-        self.assertIn("CodexChatGPTOAuthView", prompt)
-        self.assertIn("AI 제공자", prompt)
-        self.assertIn("OpenRouter", prompt)
-        self.assertIn("로컬 도우미", prompt)
-        self.assertIn("Codex / ChatGPT OAuth", prompt)
-        self.assertIn("별도 로그인", prompt)
+        self.assertNotIn("CompactConnectionPanel", prompt)
+        self.assertNotIn('Text("OpenRouter', prompt)
+        self.assertIn("ProviderConnectionSection", settings)
+        self.assertIn("CodexChatGPTOAuthView", settings)
+        self.assertIn("AI 제공자", settings)
+        self.assertIn("OpenRouter", settings)
 
     def test_issue_59_codex_chatgpt_oauth_view_launches_visible_browser_handoff(self):
         source = CODEX_AUTH.read_text(encoding="utf-8")

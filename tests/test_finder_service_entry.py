@@ -23,6 +23,8 @@ PREFLIGHT_VIEW = APP / "UX" / "PreflightView.swift"
 CONSENT_MODAL_VIEW = APP / "UX" / "ConsentModalView.swift"
 CODEX_CHATGPT_AUTH_VIEW = APP / "UX" / "CodexChatGPTAuthView.swift"
 WORKSPACE_COPY_SERVICE = APP / "Execution" / "WorkspaceCopyService.swift"
+PROMPT_SETTINGS_SHEET = APP / "UX" / "PromptSettingsSheet.swift"
+OPENROUTER_SETTINGS_VIEW = APP / "UX" / "OpenRouterSettingsView.swift"
 PROMPT_RUN_MODEL = APP / "Execution" / "FolderTrailPromptRunModel.swift"
 RUN_PIPELINE = APP / "Execution" / "FolderTrailRunPipeline.swift"
 SAFE_EXECUTOR = APP / "Execution" / "SafeExecutor.swift"
@@ -118,6 +120,8 @@ class FinderServiceEntryContractTests(unittest.TestCase):
                     str(CONSENT_MODAL_VIEW),
                     str(CODEX_CHATGPT_AUTH_VIEW),
                     str(WORKSPACE_COPY_SERVICE),
+                    str(PROMPT_SETTINGS_SHEET),
+                    str(OPENROUTER_SETTINGS_VIEW),
                     str(PROMPT_RUN_MODEL),
                     str(RUN_PIPELINE),
                     str(SAFE_EXECUTOR),

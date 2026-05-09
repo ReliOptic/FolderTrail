@@ -12,10 +12,9 @@ class ModernPromptChromeTests(unittest.TestCase):
     def test_issue_50_prompt_chrome_is_compact_and_uses_current_product_language(self):
         prompt = PROMPT.read_text(encoding="utf-8")
 
-        self.assertIn("PromptReadinessBar", prompt)
-        self.assertIn("OpenRouter 연결됨", prompt)
-        self.assertIn("OpenRouter는 설정에서 연결", prompt)
-        self.assertIn("Codex 로그인 필요", prompt)
+        self.assertIn("PromptStatusStrip", prompt)
+        self.assertIn("settingsButton", prompt)
+        self.assertNotIn('Text("OpenRouter', prompt)
         self.assertIn('Button("시작")', prompt)
         self.assertIn("폴더 바꾸기…", prompt)
         self.assertIn("중복 정리", prompt)

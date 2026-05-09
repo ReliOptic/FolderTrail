@@ -6,14 +6,12 @@ struct PreflightView: View {
     let folderURL: URL
 
     @ObservedObject private var runner: PreflightRunner
-    @ObservedObject private var providerSettings: OpenRouterProviderSettings
     private let onProceed: () -> Void
 
     init(folderURL: URL) {
         self.init(
             folderURL: folderURL,
             runner: PreflightRunner(),
-            providerSettings: OpenRouterProviderSettings.shared,
             onProceed: {}
         )
     }
@@ -21,13 +19,11 @@ struct PreflightView: View {
     init(
         folderURL: URL,
         runner: PreflightRunner,
-        providerSettings: OpenRouterProviderSettings,
         onProceed: @escaping () -> Void
     ) {
         self.folderURL = folderURL
         self.onProceed = onProceed
         _runner = ObservedObject(wrappedValue: runner)
-        _providerSettings = ObservedObject(wrappedValue: providerSettings)
     }
 
     var body: some View {
@@ -42,7 +38,6 @@ struct PreflightView: View {
                 .frame(maxHeight: 220)
             }
 
-            fallbackNote
             recoveryActions
             footerAction
         }
@@ -77,15 +72,6 @@ struct PreflightView: View {
     }
 
     @ViewBuilder
-    private var fallbackNote: some View {
-        if hasFailed(.providerConnected) {
-            Text("OpenRouter는 설정에서 연결할 수 있습니다.")
-                .font(FolderTrailDesign.Typography.meta)
-                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-        }
-    }
-
-    @ViewBuilder
     private var footerAction: some View {
         if runner.canProceedToConsent {
             Button("복사본 만들고 계속") {
@@ -106,10 +92,6 @@ struct PreflightView: View {
                 Button("시스템 설정 열기") {
                     openPrivacySettings()
                 }
-            }
-
-            if hasFailed(.providerConnected) {
-                ProviderConnectView(settings: providerSettings)
             }
 
             if hasFailed(.codexAuthenticated) {

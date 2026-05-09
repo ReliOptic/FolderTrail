@@ -16,19 +16,20 @@ class StatusSettingsEntryTests(unittest.TestCase):
         self.assertIn("openSettingsSheet", prompt)
         self.assertIn("showSettingsSheet", prompt)
         self.assertNotIn("showSettingsWindow:", prompt)
-        self.assertIn("OpenRouter 연결됨", prompt)
-        self.assertIn("OpenRouter는 설정에서 연결", prompt)
-        self.assertIn("Codex 로그인 필요", prompt)
+        self.assertNotIn('Text("OpenRouter', prompt)
+        self.assertNotIn("PromptReadinessBar", prompt)
         self.assertNotIn("Codex fallback 선택", prompt)
 
     def test_issue_41_settings_surface_mentions_v0_1_provider_and_local_helper(self):
         app = (APP / "App" / "FolderTrailApp.swift").read_text(encoding="utf-8")
+        prompt_settings = (APP / "UX" / "PromptSettingsSheet.swift").read_text(encoding="utf-8")
 
         self.assertIn("CodexChatGPTOAuthView", app)
         self.assertIn("v0.1 설정", app)
-        self.assertIn("OpenRouter 제공자 연결", app)
-        self.assertIn("Codex / ChatGPT OAuth", app)
-        self.assertNotIn("Advanced", app)
+        self.assertIn("OpenRouter", app)
+        self.assertIn("ProviderConnectView", prompt_settings)
+        self.assertIn("OpenRouterSettingsView", prompt_settings)
+        self.assertNotIn("Advanced", app + prompt_settings)
 
 
 if __name__ == "__main__":

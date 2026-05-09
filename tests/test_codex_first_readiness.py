@@ -70,7 +70,8 @@ class CodexFirstReadinessTests(unittest.TestCase):
         source = PREFLIGHT.read_text(encoding="utf-8")
 
         self.assertRegex(source, r"case \.folderReadable, \.workspaceWritable, \.codexAvailable, \.codexAuthenticated:\n\s+return true")
-        self.assertRegex(source, r"case \.providerConnected:\n\s+return false")
+        self.assertNotIn("providerConnected", source)
+        self.assertNotIn("OpenRouterCredentialStore.keychain.loadAPIKey", source)
 
     def test_issue_83_prompt_start_button_is_not_hidden_by_openrouter_connection(self):
         source = PROMPT.read_text(encoding="utf-8")

@@ -24,9 +24,9 @@ class PreflightActionClarityTests(unittest.TestCase):
 
         self.assertIn("var blocksProceed", source)
         self.assertRegex(source, r"case \.folderReadable, \.workspaceWritable, \.codexAvailable, \.codexAuthenticated:\n\s+return true")
-        self.assertRegex(source, r"case \.providerConnected:\n\s+return false")
+        self.assertNotIn("providerConnected", source)
         self.assertIn("checks.filter { $0.id.blocksProceed }", source)
-        self.assertIn("OpenRouter는 설정에서 연결할 수 있습니다", view)
+        self.assertNotIn("OpenRouter", view)
 
 
 if __name__ == "__main__":

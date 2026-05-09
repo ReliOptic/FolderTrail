@@ -16,7 +16,6 @@ enum PreflightCheckResult: Equatable {
 enum PreflightCheckID: String, CaseIterable {
     case folderReadable
     case workspaceWritable
-    case providerConnected
     case codexAvailable
     case codexAuthenticated
 
@@ -26,8 +25,6 @@ enum PreflightCheckID: String, CaseIterable {
             return "폴더를 읽을 수 있음"
         case .workspaceWritable:
             return "작업 복사본을 만들 수 있음"
-        case .providerConnected:
-            return "OpenRouter 연결됨"
         case .codexAvailable:
             return "Codex CLI 설치됨"
         case .codexAuthenticated:
@@ -39,8 +36,6 @@ enum PreflightCheckID: String, CaseIterable {
         switch self {
         case .folderReadable, .workspaceWritable, .codexAvailable, .codexAuthenticated:
             return true
-        case .providerConnected:
-            return false
         }
     }
 }
@@ -62,16 +57,13 @@ enum PreflightCheck {
         for folderURL: URL,
         fileManager: FileManager = .default
     ) -> [PreflightCheckState] {
-        let providerReadiness = loadProviderReadiness()
-
         return PreflightCheckID.allCases.map { checkID in
             PreflightCheckState(
                 id: checkID,
                 result: run(
                     checkID,
                     folderURL: folderURL,
-                    fileManager: fileManager,
-                    providerReadiness: providerReadiness
+                    fileManager: fileManager
                 )
             )
         }
@@ -94,20 +86,17 @@ enum PreflightCheck {
     private static func run(
         _ checkID: PreflightCheckID,
         folderURL: URL,
-        fileManager: FileManager,
-        providerReadiness: Result<ProviderReadiness, Error>
+        fileManager: FileManager
     ) -> PreflightCheckResult {
         switch checkID {
         case .folderReadable:
             return checkFolderReadable(folderURL, fileManager: fileManager)
         case .workspaceWritable:
             return checkSiblingWorkspaceWritable(folderURL, fileManager: fileManager)
-        case .providerConnected:
-            return providerReadinessResult(\.openRouter, from: providerReadiness)
         case .codexAvailable:
             return checkCodexAvailable()
         case .codexAuthenticated:
-            return providerReadinessResult(\.codexLocalHelper, from: providerReadiness)
+            return checkCodexAuthenticated()
         }
     }
 
@@ -140,27 +129,6 @@ enum PreflightCheck {
         } catch {
             try? fileManager.removeItem(at: probeURL)
             return .failed(reason: "이 폴더 옆에 작업 복사본을 만들 수 없습니다.")
-        }
-    }
-
-    private static func loadProviderReadiness() -> Result<ProviderReadiness, Error> {
-        Result {
-            try ProviderReadiness.evaluate(
-                openRouterAPIKey: { try OpenRouterCredentialStore.keychain.loadAPIKey() },
-                codexAuthenticated: isCodexAuthenticated
-            )
-        }
-    }
-
-    private static func providerReadinessResult(
-        _ keyPath: KeyPath<ProviderReadiness, ProviderReadinessItem>,
-        from providerReadiness: Result<ProviderReadiness, Error>
-    ) -> PreflightCheckResult {
-        switch providerReadiness {
-        case .success(let readiness):
-            return readiness[keyPath: keyPath].result
-        case .failure(let error):
-            return .failed(reason: error.localizedDescription)
         }
     }
 
