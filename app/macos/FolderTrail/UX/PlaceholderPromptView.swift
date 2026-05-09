@@ -123,12 +123,20 @@ struct PlaceholderPromptView: View {
 
             Spacer()
 
-            Button("시작") {
-                showPreflight = true
-            }
+            if runModel.status == .running {
+                Button("정지") {
+                    runModel.cancel()
+                }
                 .buttonStyle(FolderTrailPrimaryButtonStyle())
                 .keyboardShortcut(.defaultAction)
-                .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || runModel.status == .running)
+            } else {
+                Button("시작") {
+                    showPreflight = true
+                }
+                .buttonStyle(FolderTrailPrimaryButtonStyle())
+                .keyboardShortcut(.defaultAction)
+                .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
         }
     }
 
@@ -138,12 +146,23 @@ struct PlaceholderPromptView: View {
         case .idle:
             EmptyView()
         case .running:
-            HStack(spacing: FolderTrailDesign.Spacing.sm) {
-                ProgressView()
+            FolderTrailPanel {
+                HStack(spacing: FolderTrailDesign.Spacing.md) {
+                    ProgressView()
+                        .controlSize(.small)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("정리 중")
+                            .font(FolderTrailDesign.Typography.body.weight(.semibold))
+                        Text("\(runModel.stepText) · \(elapsedTimeText)")
+                            .font(FolderTrailDesign.Typography.meta)
+                            .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+                    }
+                    Spacer()
+                    Button("정지") {
+                        runModel.cancel()
+                    }
                     .controlSize(.small)
-                Text("정리 중")
-                    .font(FolderTrailDesign.Typography.meta)
-                    .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+                }
             }
         case .done:
             if let result = runModel.result {
@@ -164,6 +183,18 @@ struct PlaceholderPromptView: View {
                     Text(runModel.errorMessage ?? "정리를 완료하지 못했습니다. 다시 시도해 주세요.")
                         .font(FolderTrailDesign.Typography.meta)
                         .foregroundStyle(FolderTrailDesign.Palette.warning)
+                    Button("다시 시도") {
+                        startRun()
+                    }
+                    .controlSize(.small)
+                }
+            }
+        case .cancelled:
+            FolderTrailPanel {
+                VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.sm) {
+                    Text(runModel.errorMessage ?? "취소했습니다.")
+                        .font(FolderTrailDesign.Typography.meta)
+                        .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
                     Button("다시 시도") {
                         startRun()
                     }
@@ -221,9 +252,13 @@ struct PlaceholderPromptView: View {
     private func startRun() {
         showConsentModal = false
         showPreflight = false
-        Task {
-            await runModel.run(prompt: prompt, sourceFolderURL: selectedFolderURL)
-        }
+        runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL)
+    }
+
+    private var elapsedTimeText: String {
+        let minutes = runModel.elapsedSeconds / 60
+        let seconds = runModel.elapsedSeconds % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 
