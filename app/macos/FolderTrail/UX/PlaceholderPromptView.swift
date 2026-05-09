@@ -15,6 +15,7 @@ struct PlaceholderPromptView: View {
     @State private var selectedFolderURL: URL
     @State private var showPreflight = false
     @State private var showConsentModal = false
+    @State private var showSettingsSheet = false
     @FocusState private var promptFocused: Bool
     @ObservedObject private var providerSettings: OpenRouterProviderSettings
 
@@ -102,6 +103,11 @@ struct PlaceholderPromptView: View {
             }
             .interactiveDismissDisabled(true)
         }
+        .sheet(isPresented: $showSettingsSheet) {
+            PromptSettingsSheet(providerSettings: providerSettings)
+            .padding(FolderTrailDesign.Spacing.xl)
+            .frame(width: 420)
+        }
     }
 
     private var statusStrip: some View {
@@ -111,7 +117,7 @@ struct PlaceholderPromptView: View {
                 : selectedFolderURL.lastPathComponent,
             providerConnected: providerSettings.isConnected,
             settingsButton: {
-                openSettingsWindow()
+                openSettingsSheet()
             }
         )
     }
@@ -146,9 +152,8 @@ struct PlaceholderPromptView: View {
         }
     }
 
-    private func openSettingsWindow() {
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-        NSApp.activate(ignoringOtherApps: true)
+    private func openSettingsSheet() {
+        showSettingsSheet = true
     }
 }
 
@@ -206,5 +211,31 @@ private struct PromptChipButton: View {
         Button(title, action: action)
             .buttonStyle(FolderTrailChipButtonStyle())
             .controlSize(.small)
+    }
+}
+
+private struct PromptSettingsSheet: View {
+    @ObservedObject var providerSettings: OpenRouterProviderSettings
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
+            Text("v0.1 설정")
+                .font(FolderTrailDesign.Typography.section)
+            Text("OpenRouter 연결, Codex 로그인 확인, 실행 준비 상태만 빠르게 점검합니다.")
+                .font(FolderTrailDesign.Typography.meta)
+                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+
+            Divider()
+            ProviderConnectView(settings: providerSettings)
+
+            Divider()
+            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
+                Text("Codex 로그인")
+                    .font(FolderTrailDesign.Typography.body.weight(.semibold))
+                Text("Codex는 선택 사항입니다. 필요하면 시작 전 확인에서 `codex login`을 열고 OAuth 로그인을 마친 뒤 다시 확인합니다.")
+                    .font(FolderTrailDesign.Typography.meta)
+                    .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+            }
+        }
     }
 }
