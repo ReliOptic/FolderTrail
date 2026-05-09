@@ -16,7 +16,7 @@ class PreflightActionClarityTests(unittest.TestCase):
         self.assertIn("확인 중", view)
         self.assertIn("조치 필요", view)
         self.assertIn("계속할 수 없습니다", view)
-        self.assertIn("안전 작업공간 만들기", view)
+        self.assertIn("복사본 만들고 계속", view)
 
     def test_issue_38_codex_fallback_does_not_hide_primary_next_action(self):
         source = (APP / "Safety" / "PreflightCheck.swift").read_text(encoding="utf-8")

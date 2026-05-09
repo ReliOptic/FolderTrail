@@ -11,18 +11,18 @@ class FolderTrailVocabularyTests(unittest.TestCase):
 
         self.assertNotIn("개발용", prompt)
         self.assertIn("정리할 폴더", prompt)
-        self.assertIn("정리할 폴더 바꾸기…", prompt)
-        self.assertIn("안전 작업공간에서 시작", prompt)
+        self.assertIn("폴더 바꾸기…", prompt)
+        self.assertIn("복사본으로 정리 시작", prompt)
 
     def test_issue_40_preflight_and_provider_copy_are_user_facing(self):
         preflight_view = (APP / "UX" / "PreflightView.swift").read_text(encoding="utf-8")
         preflight_check = (APP / "Safety" / "PreflightCheck.swift").read_text(encoding="utf-8")
         provider = (APP / "UX" / "ProviderConnectView.swift").read_text(encoding="utf-8")
 
-        self.assertIn("시작 전 확인", preflight_view)
-        self.assertIn("안전 작업공간 만들기", preflight_view)
+        self.assertIn("정리 전 확인", preflight_view)
+        self.assertIn("복사본 만들고 계속", preflight_view)
         self.assertIn("폴더를 읽을 수 있음", preflight_check)
-        self.assertIn("안전 작업공간을 만들 수 있음", preflight_check)
+        self.assertIn("작업 복사본을 만들 수 있음", preflight_check)
         self.assertIn("OpenRouter 연결됨", preflight_check)
         self.assertIn("AI 연결", provider)
         self.assertIn("OpenRouter 연결", provider)

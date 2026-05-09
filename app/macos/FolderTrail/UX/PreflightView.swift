@@ -32,7 +32,7 @@ struct PreflightView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.md) {
-            Text("시작 전 확인")
+            Text("정리 전 확인")
                 .font(FolderTrailDesign.Typography.section)
 
             FolderTrailPanel {
@@ -88,7 +88,7 @@ struct PreflightView: View {
     @ViewBuilder
     private var footerAction: some View {
         if runner.canProceedToConsent {
-            Button("안전 작업공간 만들기") {
+            Button("복사본 만들고 계속") {
                 onProceed()
             }
             .buttonStyle(FolderTrailPrimaryButtonStyle())

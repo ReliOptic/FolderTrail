@@ -25,7 +25,7 @@ enum PreflightCheckID: String, CaseIterable {
         case .folderReadable:
             return "폴더를 읽을 수 있음"
         case .workspaceWritable:
-            return "안전 작업공간을 만들 수 있음"
+            return "작업 복사본을 만들 수 있음"
         case .providerConnected:
             return "OpenRouter 연결됨"
         case .codexAvailable:
@@ -124,7 +124,7 @@ enum PreflightCheck {
             return .passed
         } catch {
             try? fileManager.removeItem(at: probeURL)
-            return .failed(reason: "이 폴더 옆에 안전 작업공간을 만들 수 없습니다.")
+            return .failed(reason: "이 폴더 옆에 작업 복사본을 만들 수 없습니다.")
         }
     }
 
