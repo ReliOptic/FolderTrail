@@ -29,7 +29,8 @@ class DirectRunModeTests(unittest.TestCase):
 
         self.assertIn("WorkspacePreparationMode", prompt)
         self.assertIn("workspaceMode", prompt)
-        self.assertIn("빠른 모드: 복사 없이 원본에서 진행", prompt)
+        self.assertIn("빠른 모드", prompt)
+        self.assertIn("원본에서 바로 시작", prompt)
         self.assertIn("원본 폴더가 직접 변경될 수 있습니다", prompt)
         self.assertIn("workspaceMode: workspaceMode", prompt)
         self.assertIn("runModel.start(prompt: prompt, sourceFolderURL: selectedFolderURL, workspaceMode: workspaceMode)", prompt)

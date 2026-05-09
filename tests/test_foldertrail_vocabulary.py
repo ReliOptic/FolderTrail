@@ -12,7 +12,7 @@ class FolderTrailVocabularyTests(unittest.TestCase):
         self.assertNotIn("개발용", prompt)
         self.assertIn("정리할 폴더", prompt)
         self.assertIn("폴더 바꾸기…", prompt)
-        self.assertIn('Button("시작")', prompt)
+        self.assertIn("복사본으로 시작", prompt)
 
     def test_issue_40_preflight_and_provider_copy_are_user_facing(self):
         preflight_view = (APP / "UX" / "PreflightView.swift").read_text(encoding="utf-8")

@@ -76,7 +76,7 @@ class CodexFirstReadinessTests(unittest.TestCase):
     def test_issue_83_prompt_start_button_is_not_hidden_by_openrouter_connection(self):
         source = PROMPT.read_text(encoding="utf-8")
 
-        self.assertIn('Button("시작")', source)
+        self.assertIn("복사본으로 시작", source)
         self.assertNotIn("if providerSettings.isConnected", source)
 
 

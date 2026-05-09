@@ -38,7 +38,7 @@ class ActionFirstCopyTests(unittest.TestCase):
         provider = (APP / "UX" / "ProviderConnectView.swift").read_text(encoding="utf-8")
         prompt = PROMPT.read_text(encoding="utf-8")
 
-        self.assertIn('Button("시작")', prompt)
+        self.assertIn("복사본으로 시작", prompt)
         self.assertIn('Button("로그인")', auth)
         self.assertIn('Button("다시 확인")', auth)
         self.assertIn('Button("연결")', provider)

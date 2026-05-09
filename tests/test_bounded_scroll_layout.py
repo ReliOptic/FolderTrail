@@ -40,7 +40,7 @@ class BoundedScrollLayoutTests(unittest.TestCase):
 
         self.assertIn("if runModel.status == .running", footer)
         self.assertIn('Button("정지")', footer)
-        self.assertIn('Button("시작")', footer)
+        self.assertIn("primaryActionTitle", footer)
         self.assertEqual(footer.count(".buttonStyle(FolderTrailPrimaryButtonStyle())"), 2)
         self.assertNotIn('Button("시작") {\n                    showPreflight = true\n                }\n                .buttonStyle(FolderTrailPrimaryButtonStyle())\n                .keyboardShortcut(.defaultAction)\n                .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || runModel.status == .running)', footer)
 
