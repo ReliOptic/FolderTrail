@@ -107,7 +107,6 @@ final class SafeExecutor {
             }
         }
 
-        try writeTrail(trail)
         return trail
     }
 
@@ -194,10 +193,5 @@ final class SafeExecutor {
         let resolved = workspaceURL.appendingPathComponent(path).standardizedFileURL.path
         let root = workspaceURL.standardizedFileURL.path
         return resolved == root || resolved.hasPrefix(root + "/")
-    }
-
-    private func writeTrail(_ trail: ExecutionTrail) throws {
-        let data = try JSONEncoder().encode(trail)
-        try data.write(to: workspaceURL.appendingPathComponent("trail.json"))
     }
 }

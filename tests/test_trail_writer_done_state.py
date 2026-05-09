@@ -90,10 +90,19 @@ class TrailWriterDoneStateTests(unittest.TestCase):
             let fallback = TrailWriter.parseTrailCountersOrFallback(from: workspace.appendingPathComponent("missing.json"))
             expect(fallback.folders_created == 0 && fallback.review_needed == 0, "missing trail fallback")
 
-            let interrupted = ExecutionTrail(plan_version: "0.1", interrupted: true, action_logs: [], rejected_actions: [], validation_errors: [])
+            let interrupted = ExecutionTrail(
+                plan_version: "0.1",
+                interrupted: true,
+                action_logs: [
+                    ActionExecutionLog(type: "create_folder", status: "skipped", path: "Later", from: nil, to: nil, reason: "interrupted")
+                ],
+                rejected_actions: [RejectedAction(type: "delete", reason: "action_type_not_allowed")],
+                validation_errors: [ValidationError(type: "move", path: "../Escape", reason: "path_outside_workspace")]
+            )
+            let interruptedWorkspace = workspace.appendingPathComponent("Interrupted", isDirectory: true)
             let interruptedArtifacts = try TrailWriter().write(
                 trail: interrupted,
-                workspaceURL: workspace.appendingPathComponent("Interrupted", isDirectory: true),
+                workspaceURL: interruptedWorkspace,
                 sourceFolderPath: "/source",
                 userPrompt: "정리",
                 provider: "mock",
@@ -101,8 +110,16 @@ class TrailWriterDoneStateTests(unittest.TestCase):
                 manifestDetailLevel: "level_3_metadata",
                 summaryText: "작업이 중단되었습니다."
             )
-            let interruptedData = try Data(contentsOf: interruptedArtifacts.trailJSON)
-            expect(String(data: interruptedData, encoding: .utf8)!.contains("\"interrupted\":true"), "interrupted flag should be written")
+            expect(!FileManager.default.fileExists(atPath: interruptedWorkspace.appendingPathComponent("trail.json").path), "TrailWriter must keep trail inside .foldertrail")
+            let interruptedTrailText = String(data: try Data(contentsOf: interruptedArtifacts.trailJSON), encoding: .utf8)!
+            expect(interruptedTrailText.contains("\"interrupted\":true"), "interrupted flag should be written")
+            expect(interruptedTrailText.contains("rejected_actions"), "rejected actions should be preserved")
+            expect(interruptedTrailText.contains("action_type_not_allowed"), "rejection reason should be preserved")
+            expect(interruptedTrailText.contains("validation_errors"), "validation errors should be preserved")
+            expect(interruptedTrailText.contains("path_outside_workspace"), "validation reason should be preserved")
+
+            let interruptedStatusText = String(data: try Data(contentsOf: interruptedArtifacts.runtimeStatusJSON), encoding: .utf8)!
+            expect(interruptedStatusText.contains("\"current_status\":\"interrupted\""), "runtime status should reflect interruption")
             '''
         )
 
