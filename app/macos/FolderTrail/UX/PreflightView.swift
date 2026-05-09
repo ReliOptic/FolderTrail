@@ -78,8 +78,8 @@ struct PreflightView: View {
 
     @ViewBuilder
     private var fallbackNote: some View {
-        if hasFailed(.codexAvailable) || hasFailed(.codexAuthenticated) {
-            Text("Codex / ChatGPT OAuth는 선택 사항입니다. OpenRouter 연결로 먼저 진행할 수 있습니다.")
+        if hasFailed(.providerConnected) {
+            Text("OpenRouter는 설정에서 연결할 수 있습니다.")
                 .font(FolderTrailDesign.Typography.meta)
                 .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
         }

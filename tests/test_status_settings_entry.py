@@ -16,9 +16,9 @@ class StatusSettingsEntryTests(unittest.TestCase):
         self.assertIn("openSettingsSheet", prompt)
         self.assertIn("showSettingsSheet", prompt)
         self.assertNotIn("showSettingsWindow:", prompt)
-        self.assertIn("OpenRouter 준비됨", prompt)
-        self.assertIn("OpenRouter 연결 필요", prompt)
-        self.assertIn("로컬 도우미 선택 사항", prompt)
+        self.assertIn("OpenRouter 연결됨", prompt)
+        self.assertIn("OpenRouter는 설정에서 연결", prompt)
+        self.assertIn("Codex 로그인 필요", prompt)
         self.assertNotIn("Codex fallback 선택", prompt)
 
     def test_issue_41_settings_surface_mentions_v0_1_provider_and_local_helper(self):

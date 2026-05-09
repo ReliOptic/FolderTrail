@@ -20,7 +20,7 @@ struct ProviderReadiness: Equatable {
     let codexLocalHelper: ProviderReadinessItem
 
     var canProceed: Bool {
-        openRouter.isReady
+        codexLocalHelper.isReady
     }
 
     static func evaluate(
@@ -30,21 +30,21 @@ struct ProviderReadiness: Equatable {
         let rawKey = try openRouterAPIKey()?.trimmingCharacters(in: .whitespacesAndNewlines)
         let openRouterResult: PreflightCheckResult = rawKey?.isEmpty == false
             ? .passed
-            : .failed(reason: "OpenRouter를 연결해야 AI 정리를 시작할 수 있습니다.")
+            : .failed(reason: "OpenRouter는 설정에서 연결할 수 있습니다.")
 
         let codexResult: PreflightCheckResult = codexAuthenticated()
             ? .passed
-            : .failed(reason: "Codex / ChatGPT OAuth는 선택 사항입니다. 없어도 OpenRouter로 먼저 진행할 수 있습니다.")
+            : .failed(reason: "Codex 로그인이 필요합니다.")
 
         return ProviderReadiness(
             openRouter: ProviderReadinessItem(
                 title: "OpenRouter",
-                requirement: .required,
+                requirement: .optional,
                 result: openRouterResult
             ),
             codexLocalHelper: ProviderReadinessItem(
                 title: "Codex / ChatGPT",
-                requirement: .optional,
+                requirement: .required,
                 result: codexResult
             )
         )
@@ -54,15 +54,15 @@ struct ProviderReadiness: Equatable {
         ProviderReadiness(
             openRouter: ProviderReadinessItem(
                 title: "OpenRouter",
-                requirement: .required,
+                requirement: .optional,
                 result: openRouterConnected
                     ? .passed
-                    : .failed(reason: "OpenRouter를 연결해야 AI 정리를 시작할 수 있습니다.")
+                    : .failed(reason: "OpenRouter는 설정에서 연결할 수 있습니다.")
             ),
             codexLocalHelper: ProviderReadinessItem(
                 title: "Codex / ChatGPT",
-                requirement: .optional,
-                result: .failed(reason: "Codex / ChatGPT OAuth는 선택 사항입니다. 없어도 OpenRouter로 먼저 진행할 수 있습니다.")
+                requirement: .required,
+                result: .failed(reason: "Codex 로그인이 필요합니다.")
             )
         )
     }

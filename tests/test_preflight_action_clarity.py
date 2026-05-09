@@ -23,10 +23,10 @@ class PreflightActionClarityTests(unittest.TestCase):
         view = (APP / "UX" / "PreflightView.swift").read_text(encoding="utf-8")
 
         self.assertIn("var blocksProceed", source)
-        self.assertRegex(source, r"case \.codexAvailable, \.codexAuthenticated:\n\s+return false")
+        self.assertRegex(source, r"case \.folderReadable, \.workspaceWritable, \.codexAvailable, \.codexAuthenticated:\n\s+return true")
+        self.assertRegex(source, r"case \.providerConnected:\n\s+return false")
         self.assertIn("checks.filter { $0.id.blocksProceed }", source)
-        self.assertIn("Codex / ChatGPT OAuth는 선택 사항입니다", view)
-        self.assertIn("OpenRouter 연결로 먼저 진행할 수 있습니다", view)
+        self.assertIn("OpenRouter는 설정에서 연결할 수 있습니다", view)
 
 
 if __name__ == "__main__":

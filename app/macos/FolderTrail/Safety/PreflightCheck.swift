@@ -37,9 +37,9 @@ enum PreflightCheckID: String, CaseIterable {
 
     var blocksProceed: Bool {
         switch self {
-        case .folderReadable, .workspaceWritable, .providerConnected:
+        case .folderReadable, .workspaceWritable, .codexAvailable, .codexAuthenticated:
             return true
-        case .codexAvailable, .codexAuthenticated:
+        case .providerConnected:
             return false
         }
     }
