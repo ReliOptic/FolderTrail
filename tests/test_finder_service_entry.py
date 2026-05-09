@@ -19,6 +19,7 @@ OPENROUTER_KEYCHAIN = APP / "Safety" / "OpenRouterKeychain.swift"
 PREFLIGHT_CHECK = APP / "Safety" / "PreflightCheck.swift"
 PREFLIGHT_VIEW = APP / "UX" / "PreflightView.swift"
 CONSENT_MODAL_VIEW = APP / "UX" / "ConsentModalView.swift"
+CODEX_CHATGPT_AUTH_VIEW = APP / "UX" / "CodexChatGPTAuthView.swift"
 WORKSPACE_COPY_SERVICE = APP / "Execution" / "WorkspaceCopyService.swift"
 
 
@@ -104,6 +105,7 @@ class FinderServiceEntryContractTests(unittest.TestCase):
                     str(PREFLIGHT_CHECK),
                     str(PREFLIGHT_VIEW),
                     str(CONSENT_MODAL_VIEW),
+                    str(CODEX_CHATGPT_AUTH_VIEW),
                     str(WORKSPACE_COPY_SERVICE),
                     str(main),
                     "-o",

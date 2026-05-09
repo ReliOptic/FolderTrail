@@ -18,14 +18,14 @@ class PreflightActionClarityTests(unittest.TestCase):
         self.assertIn("계속할 수 없습니다", view)
         self.assertIn("복사본 만들고 계속", view)
 
-    def test_issue_38_codex_fallback_does_not_hide_primary_next_action(self):
+    def test_issue_38_codex_chatgpt_oauth_does_not_hide_primary_next_action(self):
         source = (APP / "Safety" / "PreflightCheck.swift").read_text(encoding="utf-8")
         view = (APP / "UX" / "PreflightView.swift").read_text(encoding="utf-8")
 
         self.assertIn("var blocksProceed", source)
         self.assertRegex(source, r"case \.codexAvailable, \.codexAuthenticated:\n\s+return false")
         self.assertIn("checks.filter { $0.id.blocksProceed }", source)
-        self.assertIn("Codex fallback은 선택 사항입니다", view)
+        self.assertIn("Codex / ChatGPT OAuth는 선택 사항입니다", view)
         self.assertIn("OpenRouter 연결로 먼저 진행할 수 있습니다", view)
 
 

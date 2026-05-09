@@ -42,9 +42,7 @@ struct PlaceholderPromptView: View {
                     .lineLimit(1)
             }
 
-            if !providerSettings.isConnected {
-                ProviderConnectView(settings: providerSettings)
-            }
+            PromptConnectionPanel(providerSettings: providerSettings)
 
             HStack(spacing: 8) {
                 ForEach(recommendedPrompts, id: \.self) { recommendedPrompt in
@@ -218,6 +216,45 @@ private struct PromptChipButton: View {
     }
 }
 
+private struct PromptConnectionPanel: View {
+    @ObservedObject var providerSettings: OpenRouterProviderSettings
+
+    var body: some View {
+        FolderTrailPanel {
+            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.md) {
+                Text("연결")
+                    .font(FolderTrailDesign.Typography.section)
+                Text("OpenRouter와 Codex / ChatGPT OAuth는 서로 다른 로그인입니다.")
+                    .font(FolderTrailDesign.Typography.meta)
+                    .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+
+                ProviderConnectionSection(providerSettings: providerSettings)
+
+                Divider()
+
+                CodexChatGPTOAuthView()
+            }
+        }
+    }
+}
+
+private struct ProviderConnectionSection: View {
+    @ObservedObject var providerSettings: OpenRouterProviderSettings
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
+            Text("AI 제공자")
+                .font(FolderTrailDesign.Typography.body.weight(.semibold))
+            Text("OpenRouter")
+                .font(FolderTrailDesign.Typography.meta.weight(.semibold))
+            Text("AI 모델 호출에 쓰는 제공자 연결입니다. Codex / ChatGPT OAuth와 별개입니다.")
+                .font(FolderTrailDesign.Typography.meta)
+                .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
+            ProviderConnectView(settings: providerSettings)
+        }
+    }
+}
+
 private struct PromptSettingsSheet: View {
     @ObservedObject var providerSettings: OpenRouterProviderSettings
 
@@ -225,21 +262,15 @@ private struct PromptSettingsSheet: View {
         VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.lg) {
             Text("v0.1 설정")
                 .font(FolderTrailDesign.Typography.section)
-            Text("OpenRouter 연결, Codex 로그인 확인, 정리 준비 상태만 빠르게 점검합니다.")
+            Text("OpenRouter 제공자 연결과 Codex / ChatGPT OAuth는 서로 다른 로그인입니다.")
                 .font(FolderTrailDesign.Typography.meta)
                 .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
 
             Divider()
-            ProviderConnectView(settings: providerSettings)
+            ProviderConnectionSection(providerSettings: providerSettings)
 
             Divider()
-            VStack(alignment: .leading, spacing: FolderTrailDesign.Spacing.xs) {
-                Text("Codex 로그인")
-                    .font(FolderTrailDesign.Typography.body.weight(.semibold))
-                Text("Codex는 선택 사항입니다. 필요하면 시작 전 확인에서 `codex login`을 열고 OAuth 로그인을 마친 뒤 다시 확인합니다.")
-                    .font(FolderTrailDesign.Typography.meta)
-                    .foregroundStyle(FolderTrailDesign.Palette.secondaryText)
-            }
+            CodexChatGPTOAuthView()
         }
     }
 }

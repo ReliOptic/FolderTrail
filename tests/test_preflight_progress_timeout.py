@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app" / "macos" / "FolderTrail"
 PREFLIGHT_CHECK = APP / "Safety" / "PreflightCheck.swift"
 PREFLIGHT_VIEW = APP / "UX" / "PreflightView.swift"
+CODEX_AUTH = APP / "UX" / "CodexChatGPTAuthView.swift"
 
 
 class PreflightProgressTimeoutTests(unittest.TestCase):
@@ -19,7 +20,7 @@ class PreflightProgressTimeoutTests(unittest.TestCase):
 
     def test_issue_52_codex_checks_have_bounded_timeout_and_rerun_is_visible(self):
         source = PREFLIGHT_CHECK.read_text(encoding="utf-8")
-        view = PREFLIGHT_VIEW.read_text(encoding="utf-8")
+        view = PREFLIGHT_VIEW.read_text(encoding="utf-8") + CODEX_AUTH.read_text(encoding="utf-8")
 
         self.assertIn("codexCommandTimeout", source)
         self.assertIn("timeout: TimeInterval = codexCommandTimeout", source)
