@@ -35,6 +35,8 @@ Before coding, keep the design note short:
 
 For v0.1, follow the dependency map in [`docs/ISSUE_MAP.md`](docs/ISSUE_MAP.md). Do not bundle unrelated milestones into one PR. If a QA pass finds new work, create or update an issue instead of silently expanding the current PR.
 
+Use [`docs/IMPLEMENTATION_STATUS.md`](docs/IMPLEMENTATION_STATUS.md) as the current public status ledger and [`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) as the GitHub maintenance contract. If a PR changes implementation completeness, release readiness, provider/auth behavior, safety behavior, or documentation truth, update the status ledger in the same PR.
+
 ### 3. Branch and open a draft PR early
 
 Use one focused branch per issue. Each issue should be an independently reviewable vertical slice with clear blockers, not a vague phase of a large plan:

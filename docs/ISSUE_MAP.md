@@ -1,5 +1,7 @@
 # Issue Map — FolderTrail v0.1
 
+> Historical dependency map for the original v0.1 slice. For current implementation completeness, release readiness, and live GitHub state, use [`IMPLEMENTATION_STATUS.md`](IMPLEMENTATION_STATUS.md).
+
 14 issues across 5 vertical milestones.
 
 ## Dependency Graph

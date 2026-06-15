@@ -1,0 +1,38 @@
+name: Implementation gap
+about: Track a mismatch between intended behavior, implementation, tests, or docs.
+title: "Implementation gap: "
+labels: [needs-triage]
+body:
+  - type: textarea
+    id: gap
+    attributes:
+      label: Gap
+      description: What is missing, stale, misleading, or unverified?
+      placeholder: "Example: README says provider-neutral, but the app now requires Codex auth."
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link issue/PR/docs/code/tests that prove the gap.
+      placeholder: "docs/PRD.md, docs/DECISIONS.md, issue #83, test file, screenshot..."
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: What exact update or verification closes this gap?
+      placeholder: "Docs updated, stale claim removed, verification attached to PR."
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Execution mode
+      options:
+        - AFK
+        - HITL
+    validations:
+      required: true

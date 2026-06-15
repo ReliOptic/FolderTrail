@@ -1,5 +1,8 @@
 # FolderTrail SLC PRD v0.1 — Final
 
+> ⚠️ **갱신 고지**: 이 문서는 v0.1 초안이며 이후 Issue #83(Codex-first) 등으로 핵심 방향이 변경됨.
+> 현행 유효 결정은 `docs/DECISIONS.md`를 정본으로 참조할 것. 본문 일부는 DECISIONS.md 기준으로 정정됨(2026-06-15).
+
 ## 0. 문서 목적
 
 이 문서는 FolderTrail v0.1을 **Simple, Lovable, Complete(SLC)** 기준으로 개발하기 위한 최종 제품 기획안이다.
@@ -145,7 +148,7 @@ v0.1은 아래 흐름을 끝까지 닫는다.
 | Adaptive Manifest Builder | 파일 수 기반 detail level 자동 조정 |
 | OpenRouter Planner Adapter | manifest + prompt → JSON action plan 생성 |
 | Safe Executor | action plan 검증 후 FileManager로 실행 |
-| Local Codex CLI Fallback | 고급 fallback runtime |
+| Codex CLI Adapter (Primary for Codex users) | Codex 인증 사용자의 주 실행 경로; OpenRouter는 optional enhancement |
 | Compact Status | 작업 내용을 요약 상태로 표시 (앱 소유 state machine) |
 | Trail Summary | 변경 요약 표시 |
 | Result Folder Open | 결과 폴더 열기 |
@@ -313,7 +316,7 @@ v0.1은 첫 번째 폴더만 처리한다. 파일 선택 시 안내 메시지를
 1. 사용자가 Finder에서 폴더를 우클릭한다.
 2. 서비스 메뉴에서 New FolderTrail을 선택한다.
 3. FolderTrail 플로팅 창이 열린다.
-4. provider가 연결되지 않은 경우 Connect Provider 화면을 먼저 보여준다.
+4. Codex 미인증인 경우 Preflight에서 안내한다. (OpenRouter 미연결은 메인 흐름을 차단하지 않으며 Settings에서만 연결 가능)
 5. 선택된 폴더명이 표시된다.
 6. 사용자가 자연어로 요청한다.
 7. FolderTrail이 접근 권한과 provider 상태를 확인한다.
@@ -361,7 +364,7 @@ FolderTrail Core
 
 Provider Adapters
  ├─ OpenRouter Planner Adapter     ← Primary (v0.1)
- ├─ Local Codex CLI Adapter        ← Fallback (v0.1)
+ ├─ Codex CLI Adapter               ← Primary for Codex users (v0.1)
  └─ Codex SDK Adapter              ← Deferred (v0.2 검증 후)
 ```
 
@@ -370,7 +373,7 @@ Provider Adapters
 | Provider | v0.1 역할 | 파일 변경 권한 | 안전 모델 |
 |---|---|---|---|
 | OpenRouter Planner | action plan 생성 | **없음** | Safe Executor 통과 |
-| Local Codex CLI | fallback runtime | 있음 | Copied workspace + 동의 |
+| Codex CLI Adapter | Primary for Codex users (CLI-based) | 있음 | Copied workspace + 동의 |
 | Codex SDK | 검증 보류 | TBD | v0.2 결정 |
 
 핵심 원칙:
@@ -396,14 +399,19 @@ Codex SDK가 v0.2 Primary Adapter로 올라오려면 다음이 확인되어야 �
 
 ---
 
-## 10. OpenRouter Connection — OAuth PKCE
+## 10. OpenRouter Connection (Optional Enhancement)
 
 ### 10.1 연결 방식
 
-FolderTrail v0.1은 OpenRouter 연결을 **OAuth PKCE-first**로 구현한다.
+FolderTrail v0.1은 **Codex-first** 구조를 기반으로 한다. Codex 인증이 required이며 OpenRouter 연결은 optional enhancement다. OpenRouter 미연결 상태에서도 Codex 인증만 완료되면 메인 흐름이 진행된다.
+
+OpenRouter를 연결하려는 경우 OAuth PKCE 방식으로 연결한다(Settings에서만 접근 가능).
 
 ```text
-Primary:
+[Codex-first 기본 경로]
+Codex 인증 완료 → Preflight 통과 → 메인 흐름 진행
+
+[OpenRouter 선택적 연결 — Settings 전용]
 Connect OpenRouter → Browser OAuth PKCE → API key exchange → macOS Keychain 저장
 
 Fallback (고급 옵션):
@@ -632,8 +640,8 @@ Weekly popular 목록은 자동으로 기본값을 바꾸지 않는다. Discover
 | Selected folder path | NSPasteboard에서 path 수신 | 폴더를 다시 선택해주세요 |
 | Read access | 파일 목록 scan 가능 | 폴더 접근 권한이 필요합니다 |
 | Workspace write access | sibling 복사본 생성 가능 | 이 위치에 복사본을 만들 수 없습니다 |
-| Provider connected | OpenRouter key 유효 | Provider를 연결해주세요 |
-| Codex CLI (fallback only) | `codex --version` 성공 | Codex CLI 설치가 필요합니다 |
+| Codex CLI 설치 | `codex --version` 성공 | Codex CLI 설치가 필요합니다 |
+| Codex 인증 | `codex login status` 성공 | Codex 로그인 후 다시 확인해 주세요 |
 
 Full Disk Access는 기본 요구사항이 아니다. 필요 시에만 안내한다.
 
@@ -951,6 +959,7 @@ Done View
 | Status State Machine | app-owned deterministic status |
 | Trail Writer | summary.md, trail.json, runtime_status.json |
 | Result Opener | 결과 폴더 열기 |
+| WorkspaceModePolicy | 실행 모드 결정 (복사/직접) + 전체 모드 관련 문자열 단일 소유자 |
 
 ---
 
@@ -1218,7 +1227,7 @@ FolderTrail은 오픈소스 프로젝트다.
 - SwiftUI shell, NSServicesProvider
 - Workspace Copier, Manifest Builder, Safe Executor
 - OpenRouter Planner Adapter
-- Local Codex CLI Fallback Adapter
+- Codex CLI Adapter
 - Trail Writer
 
 오픈소스 외 범위:
