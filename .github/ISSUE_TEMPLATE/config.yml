@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Current implementation status
+    url: https://github.com/ReliOptic/FolderTrail/blob/main/docs/IMPLEMENTATION_STATUS.md
+    about: Check current milestone and release-readiness status before opening a new issue.
+  - name: Maintenance guide
+    url: https://github.com/ReliOptic/FolderTrail/blob/main/docs/MAINTENANCE.md
+    about: Read the issue/PR/release maintenance rules.

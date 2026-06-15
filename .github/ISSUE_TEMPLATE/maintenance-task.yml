@@ -1,0 +1,41 @@
+name: Maintenance task
+about: Track release, docs, QA, triage, or repository hygiene work.
+title: "Maintenance: "
+labels: [needs-triage]
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: Task
+      description: What maintenance work needs to happen?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - GitHub triage
+        - Documentation
+        - Release packaging
+        - Manual QA
+        - CI/tests
+        - Repo hygiene
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: What command, artifact, screenshot, or human check proves completion?
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Execution mode
+      options:
+        - AFK
+        - HITL
+    validations:
+      required: true
